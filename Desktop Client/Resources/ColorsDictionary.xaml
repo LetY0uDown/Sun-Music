@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="MainBackground" Color="#ffffff" />
+
+    <SolidColorBrush x:Key="SidebarBackground" Color="#3589bf" />
+
+    <SolidColorBrush x:Key="TitlebarBackground" Color="#153879" />    
+    <SolidColorBrush x:Key="TitlebarForeground" Color="#ffffff" />
+
+    <SolidColorBrush x:Key="MusicPlayerBackground" Color="#0072bb" />
+    <SolidColorBrush x:Key="PlayerUIForeground" Color="#000000" />
+
+    <SolidColorBrush x:Key="RegularButtonBackground" Color="#7fafdf" />
+    <SolidColorBrush x:Key="RegularButtonHoveredBackground" Color="#3f7faf" />
+    <SolidColorBrush x:Key="RegularButtonPressedBackground" Color="#5f5fbf" />
+
+    <SolidColorBrush x:Key="PlaceholderTextForeground" Color="Black" />
+</ResourceDictionary>
