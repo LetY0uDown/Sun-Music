@@ -1,4 +1,5 @@
-﻿using Desktop_Client.Core.Tools.Attributes;
+﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,10 @@ internal static class ServiceCollectionExtensions
             }
 
             if (isSingleton)
-                serviceCollection.AddSingleton(service);
+                serviceCollection.AddSingleton(service, service);
 
             if (isTransient)
-                serviceCollection.AddTransient(service);
+                serviceCollection.AddTransient(service, service);
         }
     }
 
@@ -42,7 +43,7 @@ internal static class ServiceCollectionExtensions
 
         AddServices(services, viewModels, true);
     }
-
+    // TODO: Change Page and Window types to interfaces and not break this all
     internal static void AddPages(this IServiceCollection services)
     {
         var pages = Assembly.GetExecutingAssembly()

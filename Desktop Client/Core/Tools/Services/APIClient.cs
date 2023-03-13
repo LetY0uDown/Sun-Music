@@ -1,9 +1,10 @@
 ﻿using Desktop_Client.Core.Abstracts;
+using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.Tools;
+namespace Desktop_Client.Core.Tools.Services;
 
 internal class APIClient : IAPIClient
 {
@@ -12,17 +13,20 @@ internal class APIClient : IAPIClient
     };
 
     private readonly string _hostURL;
+    private readonly IConfiguration _config;
 
-    public APIClient ()
+    public APIClient(IConfiguration config)
     {
-        _hostURL = App.Configuration["HostURL"];
+        _config = config;
+        _hostURL = _config["HostURL:HTTP"];
     }
 
-    public async Task<bool> DeleteAsync (string url)
+    public async Task<bool> DeleteAsync(string url)
     {
         bool isSuccess;
 
-        using (RestClient client = new(_hostURL)) {
+        using (RestClient client = new(_hostURL))
+        {
             RestRequest request = new(url);
 
             var response = await client.DeleteAsync(request);
@@ -33,17 +37,19 @@ internal class APIClient : IAPIClient
         return isSuccess;
     }
 
-    public async Task<TEntity> GetAsync<TEntity> (string url) where TEntity : class
+    public async Task<TEntity> GetAsync<TEntity>(string url) where TEntity : class
     {
         TEntity entity;
 
-        using (RestClient client = new(_hostURL)) {
+        using (RestClient client = new(_hostURL))
+        {
             RestRequest request = new(url);
 
             var response = await client.GetAsync(request);
 
-            if (!response.IsSuccessStatusCode) {
-                // Handle error
+            if (!response.IsSuccessStatusCode)
+            {
+                InfoBox.Show(response.Content, response.StatusCode.ToString());
             }
 
             entity = JsonSerializer.Deserialize<TEntity>(response.Content, _jsonOptions);
@@ -52,17 +58,19 @@ internal class APIClient : IAPIClient
         return entity;
     }
 
-    public async Task<TResponse> PostAsync<TEntity, TResponse> (TEntity value, string url) where TEntity : class
+    public async Task<TResponse> PostAsync<TEntity, TResponse>(TEntity value, string url) where TEntity : class
     {
         TResponse resp;
 
-        using (RestClient client = new(_hostURL)) {
+        using (RestClient client = new(_hostURL))
+        {
             RestRequest request = new RestRequest(url).AddJsonBody(value);
 
             var response = await client.PostAsync(request);
 
-            if (!response.IsSuccessStatusCode) {
-                // Handle error
+            if (!response.IsSuccessStatusCode)
+            {
+                InfoBox.Show(response.Content, response.StatusCode.ToString());
             }
 
             resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
@@ -71,17 +79,19 @@ internal class APIClient : IAPIClient
         return resp;
     }
 
-    public async Task<TResponse> PutAsync<TEntity, TResponse> (TEntity value, string url) where TEntity : class
+    public async Task<TResponse> PutAsync<TEntity, TResponse>(TEntity value, string url) where TEntity : class
     {
         TResponse resp;
 
-        using (RestClient client = new(_hostURL)) {
+        using (RestClient client = new(_hostURL))
+        {
             RestRequest request = new RestRequest(url).AddJsonBody(value);
 
             var response = await client.PutAsync(request);
 
-            if (!response.IsSuccessStatusCode) {
-                // Handle error
+            if (!response.IsSuccessStatusCode)
+            {
+                InfoBox.Show(response.Content, response.StatusCode.ToString());
             }
 
             resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
@@ -90,11 +100,12 @@ internal class APIClient : IAPIClient
         return resp;
     }
 
-    public async Task<bool> SendFileAsync (string filePath, string url)
+    public async Task<bool> SendFileAsync(string filePath, string url)
     {
         bool isSuccess;
 
-        using (RestClient client = new(_hostURL)) {
+        using (RestClient client = new(_hostURL))
+        {
             RestRequest request = new RestRequest(url).AddFile("file", filePath, "multipart/form-data");
 
             var response = await client.PostAsync(request);

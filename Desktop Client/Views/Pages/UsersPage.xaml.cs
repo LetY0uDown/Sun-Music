@@ -1,19 +1,20 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
+using System;
 using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[Singleton]
-public partial class TracksPage : Page, INavigationPage
+[Transient]
+public partial class UsersPage : Page, INavigationPage
 {
-    public TracksPage()
+    public UsersPage()
     {
         InitializeComponent();
     }
 
     public void Display()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

@@ -37,7 +37,8 @@ public class AuthController : ControllerBase
 
             user.ID = _hashGen.GenerateHash();
 
-            var entity = await _db.Users.AddAsync(user);
+            await _db.Users.AddAsync(user);
+            await _db.SaveChangesAsync();
 
             return new AuthorizeData (
                 user.ID,

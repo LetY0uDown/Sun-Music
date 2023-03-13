@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Pages;
+using Desktop_Client.Views.Windows;
 using Models.Client;
 using Models.Database;
 using System;
@@ -29,6 +30,12 @@ public sealed class LoginViewModel : ViewModel
             };
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "/Login");
+
+            if (authData is not null)
+            {
+                App.AuthorizeData = authData;
+                _navigation.SetMainWindow<MainWindow>();
+            }
         });
 
         RedirectToRegistrationCommand = new(o => {

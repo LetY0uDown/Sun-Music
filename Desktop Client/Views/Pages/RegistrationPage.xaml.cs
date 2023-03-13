@@ -1,22 +1,25 @@
-﻿using Desktop_Client.Core.Tools.Attributes;
+﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
-using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Views.Pages;
 
 [Transient]
-public partial class RegistrationPage : Page
+public partial class RegistrationPage : Page, INavigationPage
 {
     private RegistrationViewModel _viewModel;
 
     public RegistrationPage(RegistrationViewModel viewModel)
     {
         InitializeComponent();
-        
+
         _viewModel = viewModel;
+    }
+
+    public void Display()
+    {
         DataContext = _viewModel;
     }
 

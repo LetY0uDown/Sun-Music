@@ -30,15 +30,12 @@ public sealed class DatabaseContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
+            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
         }
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
-        modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
-
         modelBuilder.Entity<Album>(entity =>
         {
             entity.ToTable("albums");

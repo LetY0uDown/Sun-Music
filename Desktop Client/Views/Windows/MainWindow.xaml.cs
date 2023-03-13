@@ -11,7 +11,7 @@ using System.Windows.Media.Animation;
 namespace Desktop_Client.Views.Windows;
 
 [Singleton]
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INavigationWindow
 {
     private double _rowHeight;
     private double _rowsCount;
@@ -19,15 +19,31 @@ public partial class MainWindow : Window
 
     private bool _isPlayingTrack = false;
 
-    public MainWindow (MainViewModel viewModel, INavigationService navigation)
+    private readonly MainNavigationViewModel _viewModel;
+    private readonly INavigationService _navigation;
+
+    public MainWindow (MainNavigationViewModel viewModel, INavigationService navigation)
     {
         InitializeComponent();
 
-        DataContext = viewModel;
-
-        navigation.SetViewModel(viewModel);
+        _viewModel = viewModel;
+        _navigation = navigation;
 
         _rowsCount = NavBar.RowDefinitions.Count;
+    }
+
+    public void Display()
+    {
+        Show();
+
+        DataContext = _viewModel;
+
+        _navigation.SetViewModel(_viewModel);
+    }
+
+    void INavigationWindow.Hide()
+    {
+        Hide();
     }
 
     private void Window_SizeChanged (object sender, SizeChangedEventArgs e)

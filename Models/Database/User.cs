@@ -10,7 +10,6 @@ public partial class User : Entity
         TrackLikes = new HashSet<TrackLike>();
     }
 
-    public string Id { get; set; } = null!;
     public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;
     public byte[] ImageBytes { get; set; } = null!;

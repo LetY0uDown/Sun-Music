@@ -7,16 +7,34 @@ using System.Windows;
 namespace Desktop_Client.Views.Windows;
 
 [Transient]
-public partial class AuthWindow : Window
+public partial class AuthWindow : Window, INavigationWindow
 {
+    private readonly AuthNavigationViewModel _viewModel;
+
+    private readonly INavigationService _navigation;
+
     public AuthWindow(AuthNavigationViewModel viewModel, INavigationService navigation)
     {
         InitializeComponent();
 
-        DataContext = viewModel;
-        navigation.SetViewModel(viewModel);
+        _viewModel = viewModel;
+        _navigation = navigation;
+    }
 
-        navigation.SetCurrentPage<RegistrationPage>();
+    public void Display()
+    {
+        Show();
+
+        DataContext = _viewModel;
+
+        _navigation.SetViewModel(_viewModel);
+
+        _navigation.SetCurrentPage<RegistrationPage>();
+    }
+
+    void INavigationWindow.Hide()
+    {
+        Hide();
     }
 
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)

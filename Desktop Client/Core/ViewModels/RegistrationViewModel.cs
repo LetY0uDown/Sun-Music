@@ -38,6 +38,10 @@ public sealed class RegistrationViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "/Register");
 
+            if (authData is not null)
+                App.AuthorizeData = authData;
+
+
         }, b => !string.IsNullOrWhiteSpace(Username) &&
                 !string.IsNullOrWhiteSpace(Password));
 
