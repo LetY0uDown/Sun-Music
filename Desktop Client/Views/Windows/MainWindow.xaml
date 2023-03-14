@@ -101,9 +101,11 @@
                             </StackPanel>
                         </RadioButton>
 
-                        <RadioButton Grid.Row="2" Style="{StaticResource NavigationButton}"
+                        <RadioButton Grid.Row="2"
                                      Click="NavButton_Click" Foreground="#54fdf6"
-                                     GroupName="NavButtons">
+                                     GroupName="NavButtons" 
+                                     Command="{Binding NavigateToUsersCommand}"
+                                     Style="{StaticResource NavigationButton}">
                             <StackPanel>
                                 <icon:MaterialIcon Kind="AccountGroup"/>
                                 <TextBlock HorizontalAlignment="Center"

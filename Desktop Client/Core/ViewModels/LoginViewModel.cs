@@ -29,7 +29,7 @@ public sealed class LoginViewModel : ViewModel
                 ImageBytes = Array.Empty<byte>()
             };
 
-            var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "/Login");
+            var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Login");
 
             if (authData is not null)
             {

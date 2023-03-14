@@ -11,11 +11,12 @@ internal sealed class BytesToImageConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         var bytes = (byte[])value;
-
+        
         BitmapImage image = new();
 
-        using (MemoryStream ms = new(bytes))
-        {
+        if (bytes is null || bytes.Length == 0) return null;
+
+        using (MemoryStream ms = new(bytes)) {
             image.BeginInit();
             image.StreamSource = ms;
             image.CacheOption = BitmapCacheOption.OnLoad;

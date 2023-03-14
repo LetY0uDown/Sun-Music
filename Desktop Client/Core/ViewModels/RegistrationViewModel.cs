@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Pages;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Client;
 using Models.Database;
@@ -17,11 +18,13 @@ public sealed class RegistrationViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
     private readonly INavigationService _navigation;
+    private readonly IConfiguration _config;
 
-    public RegistrationViewModel(IAPIClient apiClient, INavigationService navigation)
+    public RegistrationViewModel(IAPIClient apiClient, INavigationService navigation, IConfiguration config)
     {
         _apiClient = apiClient;
         _navigation = navigation;
+        _config = config;
 
         RedirectToLoginCommand = new(o => {
             _navigation.SetCurrentPage<LoginPage>();
@@ -36,7 +39,7 @@ public sealed class RegistrationViewModel : ViewModel
                 ImageBytes = GetBytesFromImage(ProfilePicture)
             };
 
-            var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "/Register");
+            var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
 
             if (authData is not null)
                 App.AuthorizeData = authData;
@@ -47,7 +50,7 @@ public sealed class RegistrationViewModel : ViewModel
 
         SelectPictureCommand = new(o => {
             var fileDialog = new OpenFileDialog {
-                Filter = "Image Files (*.jpg, *.png, *.jpeg, *.webp)|*.jpg;*.png;*.jpeg;*.webp"
+                Filter = _config["ImagesFilter"]
             };
 
             if (fileDialog.ShowDialog() == true) {
@@ -86,7 +89,7 @@ public sealed class RegistrationViewModel : ViewModel
 
         byte[] imageBytes;
 
-        using (MemoryStream stream = new MemoryStream())
+        using (MemoryStream stream = new())
         {
             encoder.Save(stream);
             imageBytes = stream.ToArray();

@@ -8,7 +8,7 @@ public record class PublicUser
 
     public byte[]? ImageBytes { get; init; }
 
-    public static explicit operator PublicUser(User user)
+    public static implicit operator PublicUser(User user)
     {
         return new PublicUser
         {

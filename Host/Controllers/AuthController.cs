@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
             var isNameUnique = _db.Users.Any(u => u.Username == user.Username);
 
             if (isNameUnique) {
-                Forbid("User with this username already exist");
+                return Forbid("Bearer");
             }
 
             user.Password = _passEncoder.Encode(user.Password);
@@ -70,7 +70,7 @@ public class AuthController : ControllerBase
         }
 
         if (userInDB.Password != user.Password) {
-            return Forbid("Wrong password");
+            return Forbid("Bearer");
         }
 
         return new AuthorizeData (

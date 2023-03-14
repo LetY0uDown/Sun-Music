@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -23,15 +24,22 @@ internal class APIClient : IAPIClient
 
     public async Task<bool> DeleteAsync(string url)
     {
-        bool isSuccess;
+        bool isSuccess = false;
 
         using (RestClient client = new(_hostURL))
         {
             RestRequest request = new(url);
 
-            var response = await client.DeleteAsync(request);
+            try
+            {
+                var response = await client.DeleteAsync(request);
 
-            isSuccess = response.IsSuccessful;
+                isSuccess = response.IsSuccessful;
+            }
+            catch (Exception e)
+            {
+                InfoBox.Show(e.Message, "Error");
+            }
         }
 
         return isSuccess;
@@ -39,20 +47,27 @@ internal class APIClient : IAPIClient
 
     public async Task<TEntity> GetAsync<TEntity>(string url) where TEntity : class
     {
-        TEntity entity;
+        TEntity entity = default;
 
         using (RestClient client = new(_hostURL))
         {
             RestRequest request = new(url);
 
-            var response = await client.GetAsync(request);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                InfoBox.Show(response.Content, response.StatusCode.ToString());
-            }
+                var response = await client.GetAsync(request);
 
-            entity = JsonSerializer.Deserialize<TEntity>(response.Content, _jsonOptions);
+                if (!response.IsSuccessStatusCode)
+                {
+                    InfoBox.Show(response.Content, response.StatusCode.ToString());
+                }
+
+                entity = JsonSerializer.Deserialize<TEntity>(response.Content, _jsonOptions);
+            }
+            catch (Exception e)
+            {
+                InfoBox.Show(e.Message, "Error");
+            }
         }
 
         return entity;
@@ -60,20 +75,27 @@ internal class APIClient : IAPIClient
 
     public async Task<TResponse> PostAsync<TEntity, TResponse>(TEntity value, string url) where TEntity : class
     {
-        TResponse resp;
+        TResponse resp = default;
 
         using (RestClient client = new(_hostURL))
         {
             RestRequest request = new RestRequest(url).AddJsonBody(value);
 
-            var response = await client.PostAsync(request);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                InfoBox.Show(response.Content, response.StatusCode.ToString());
-            }
+                var response = await client.PostAsync(request);
 
-            resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
+                if (!response.IsSuccessStatusCode)
+                {
+                    InfoBox.Show(response.Content, response.StatusCode.ToString());
+                }
+
+                resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
+            }
+            catch (Exception e)
+            {
+                InfoBox.Show(e.Message, "Error");
+            }
         }
 
         return resp;
@@ -81,20 +103,27 @@ internal class APIClient : IAPIClient
 
     public async Task<TResponse> PutAsync<TEntity, TResponse>(TEntity value, string url) where TEntity : class
     {
-        TResponse resp;
+        TResponse resp = default;
 
         using (RestClient client = new(_hostURL))
         {
             RestRequest request = new RestRequest(url).AddJsonBody(value);
 
-            var response = await client.PutAsync(request);
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                InfoBox.Show(response.Content, response.StatusCode.ToString());
-            }
+                var response = await client.PutAsync(request);
 
-            resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
+                if (!response.IsSuccessStatusCode)
+                {
+                    InfoBox.Show(response.Content, response.StatusCode.ToString());
+                }
+
+                resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
+            }
+            catch (Exception e)
+            {
+                InfoBox.Show(e.Message, "Error");
+            }
         }
 
         return resp;
@@ -102,15 +131,22 @@ internal class APIClient : IAPIClient
 
     public async Task<bool> SendFileAsync(string filePath, string url)
     {
-        bool isSuccess;
+        bool isSuccess = default;
 
         using (RestClient client = new(_hostURL))
         {
             RestRequest request = new RestRequest(url).AddFile("file", filePath, "multipart/form-data");
 
-            var response = await client.PostAsync(request);
+            try
+            {
+                var response = await client.PostAsync(request);
 
-            isSuccess = response.IsSuccessful;
+                isSuccess = response.IsSuccessful;
+            }
+            catch (Exception e)
+            {
+                InfoBox.Show(e.Message, "Error");
+            }
         }
 
         return isSuccess;

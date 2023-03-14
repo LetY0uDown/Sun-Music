@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
-using System;
+using Desktop_Client.Core.ViewModels;
 using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
@@ -8,13 +9,17 @@ namespace Desktop_Client.Views.Pages;
 [Transient]
 public partial class UsersPage : Page, INavigationPage
 {
-    public UsersPage()
+    private readonly UsersListViewModel _viewModel;
+
+    public UsersPage(UsersListViewModel viewModel)
     {
         InitializeComponent();
+
+        _viewModel = viewModel;
     }
 
     public void Display()
     {
-        throw new NotImplementedException();
+        DataContext = _viewModel;
     }
 }
