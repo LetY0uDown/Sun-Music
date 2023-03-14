@@ -2,5 +2,5 @@
 
 namespace Desktop_Client.Core.Tools.Attributes;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 internal class TransientAttribute : Attribute { }

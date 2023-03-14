@@ -21,13 +21,13 @@ public partial class App : Application
     private static IHost ConfigureHosting()
     {
         var builder = new ConfigurationBuilder()
-                            .SetBasePath(Directory.GetCurrentDirectory() + "/Resources/")
-                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                          .SetBasePath(Directory.GetCurrentDirectory() + "/Resources/")
+                          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
         var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder().ConfigureServices(services =>
         {
             services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<IAPIClient, APIClient>();
+            services.AddTransient<IAPIClient, APIClient>();
             services.AddSingleton(typeof(IConfiguration), builder.Build());
 
             services.RegisterViewModels<ViewModel>();

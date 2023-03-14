@@ -1,5 +1,4 @@
-﻿using Desktop_Client.Core.Abstracts;
-using Desktop_Client.Core.Tools.Attributes;
+﻿using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
