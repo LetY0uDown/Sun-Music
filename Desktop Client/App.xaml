@@ -11,13 +11,17 @@
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/ColorsDictionary.xaml" />
-
+                
+                <!-- Styles -->
                 <ResourceDictionary Source="Resources/Styles/NavigationButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/TitleBarButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/OptionsButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RegularButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/UserDataTextBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RedirectButtonStyle.xaml" />
+                
+                <!-- Templates -->
+                <ResourceDictionary Source="Resources/Templates/PublicUserTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

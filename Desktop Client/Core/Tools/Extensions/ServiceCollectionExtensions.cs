@@ -38,7 +38,7 @@ internal static class ServiceCollectionExtensions
         var viewModels = Assembly.GetExecutingAssembly()
                                  .GetTypes()
                                  .Where(t => !t.IsAbstract &&
-                                              t.IsSubclassOf(typeof(TViewModel))).ToList();
+                                              t.IsSubclassOf(typeof(TViewModel)));
 
         AddServices(services, viewModels, true);
     }
@@ -47,7 +47,7 @@ internal static class ServiceCollectionExtensions
     {
         var pages = Assembly.GetExecutingAssembly()
                             .GetTypes()
-                            .Where(t => t.IsSubclassOf(typeof(Page))).ToList();
+                            .Where(t => t.IsSubclassOf(typeof(Page)));
 
         AddServices(services, pages);
     }
@@ -56,7 +56,7 @@ internal static class ServiceCollectionExtensions
     {
         var pages = Assembly.GetExecutingAssembly()
                             .GetTypes()
-                            .Where(t => t.IsSubclassOf(typeof(Window))).ToList();
+                            .Where(t => t.IsSubclassOf(typeof(Window)));
 
         AddServices(services, pages);
     }
