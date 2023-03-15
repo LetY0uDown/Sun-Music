@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Desktop_Client.Core.Tools;
+namespace Desktop_Client.Core.Tools.Extensions;
 
 internal static class ServiceCollectionExtensions
 {

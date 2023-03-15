@@ -1,11 +1,12 @@
 ﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.Tools.Services;
+namespace Desktop_Client.Core.Services;
 
 internal class APIClient : IAPIClient
 {

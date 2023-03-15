@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Desktop_Client.Core.Tools;
 
-internal static class ParamSetter
+internal static class PropertiesSetter
 {
     internal static void SetParameters(object obj, params (string Name, object Value)[] objects)
     {
@@ -36,9 +36,9 @@ internal static class ParamSetter
                 // TODO: Throw real excepton
             }
 
-            var param = objects.Where(o => o.Name == a.Name && o.Value.GetType() == a.ParamType).FirstOrDefault();
+            var (name, value) = objects.Where(o => o.Name == a.Name && o.Value.GetType() == a.ParamType).FirstOrDefault();
 
-            propInfo.SetValue(obj, param.Value);
+            propInfo.SetValue(obj, value);
         }
     }
 }

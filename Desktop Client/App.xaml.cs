@@ -1,5 +1,4 @@
 ﻿using Desktop_Client.Core.Abstracts;
-using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Windows;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Models.Client;
 using System.IO;
 using System.Windows;
-using Desktop_Client.Core.Tools.Services;
+using Desktop_Client.Core.Tools.Extensions;
+using Desktop_Client.Core.Services;
 
 namespace Desktop_Client;
 

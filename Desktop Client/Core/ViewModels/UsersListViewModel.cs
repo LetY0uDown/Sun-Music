@@ -31,7 +31,7 @@ public sealed class UsersListViewModel : ViewModel
             Users = new(_usersOriginal);
         });
 
-        OpenUserProfile = new(async o => {
+        OpenUserProfile = new(o => {
             _navigation.SetCurrentPage<UserProfilePage>(("UserID", SelectedUser.ID));
         }, b => SelectedUser is not null);
     }

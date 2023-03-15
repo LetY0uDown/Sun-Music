@@ -1,9 +1,10 @@
 ﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Desktop_Client.Core.Tools.Services;
+namespace Desktop_Client.Core.Services;
 
 internal sealed class NavigationService : INavigationService
 {
@@ -15,7 +16,7 @@ internal sealed class NavigationService : INavigationService
     {
         var page = App.Host.Services.GetRequiredService<T>();
 
-        ParamSetter.SetParameters(page, parameters);
+        PropertiesSetter.SetParameters(page, parameters);
 
         SetPage(page);
     }
@@ -29,7 +30,7 @@ internal sealed class NavigationService : INavigationService
     {
         var window = App.Host.Services.GetRequiredService<T>();
 
-        ParamSetter.SetParameters(window, parameters);
+        PropertiesSetter.SetParameters(window, parameters);
 
         SetWindow(window);
     }
