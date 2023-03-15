@@ -13,6 +13,8 @@ namespace Desktop_Client.Views.Windows;
 [Singleton]
 public partial class MainWindow : Window, INavigationWindow
 {
+    private bool _hasBeenDisplayed = false;
+
     private double _rowHeight;
     private double _rowsCount;
     private int _selectedRowIndex = 0;
@@ -24,17 +26,20 @@ public partial class MainWindow : Window, INavigationWindow
 
     public MainWindow (MainNavigationViewModel viewModel, INavigationService navigation)
     {
-        InitializeComponent();
-
         _viewModel = viewModel;
         _navigation = navigation;
-
-        _rowsCount = NavBar.RowDefinitions.Count;
     }
 
     public void Display()
     {
+        InitializeComponent();
+
         Show();
+
+        _rowsCount = NavBar.RowDefinitions.Count;
+
+        _rowHeight = NavigationCanvas.ActualHeight / _rowsCount;
+        SelectionFlag.Height = _rowHeight;
 
         DataContext = _viewModel;
 
@@ -45,17 +50,11 @@ public partial class MainWindow : Window, INavigationWindow
     {
         Hide();
     }
-
-    private void Window_SizeChanged (object sender, SizeChangedEventArgs e)
-    {
-        _rowHeight = NavigationCanvas.ActualHeight / _rowsCount;
-        SelectionFlag.Height = _rowHeight;
-
-        Canvas.SetTop(SelectionFlag, _selectedRowIndex * _rowHeight);
-    }
-
+    
     private void NavButton_Click (object sender, RoutedEventArgs e)
     {
+        // Canvas.SetTop(SelectionFlag, _selectedRowIndex * _rowHeight);
+
         var button = sender as RadioButton;
         _selectedRowIndex = Grid.GetRow(button);
 

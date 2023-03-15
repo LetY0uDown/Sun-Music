@@ -15,14 +15,14 @@ public partial class AuthWindow : Window, INavigationWindow
 
     public AuthWindow(AuthNavigationViewModel viewModel, INavigationService navigation)
     {
-        InitializeComponent();
-
         _viewModel = viewModel;
         _navigation = navigation;
     }
 
     public void Display()
     {
+        InitializeComponent();
+
         Show();
 
         DataContext = _viewModel;

@@ -15,4 +15,6 @@ public sealed class UserProfileViewModel : ViewModel
         _apiClient = apiClient;
         _navigation = navigation;
     }
+
+    public string UserID { get; set; }
 }

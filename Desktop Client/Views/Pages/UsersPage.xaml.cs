@@ -1,5 +1,4 @@
 ﻿using Desktop_Client.Core.Abstracts;
-using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
 using System.Windows.Controls;
@@ -13,13 +12,13 @@ public partial class UsersPage : Page, INavigationPage
 
     public UsersPage(UsersListViewModel viewModel)
     {
-        InitializeComponent();
-
         _viewModel = viewModel;
     }
 
     public void Display()
     {
+        InitializeComponent();
+
         DataContext = _viewModel;
     }
 }

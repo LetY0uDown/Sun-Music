@@ -9,11 +9,10 @@ public partial class TracksPage : Page, INavigationPage
 {
     public TracksPage()
     {
-        InitializeComponent();
     }
 
     public void Display()
     {
-        throw new System.NotImplementedException();
+        InitializeComponent();
     }
 }

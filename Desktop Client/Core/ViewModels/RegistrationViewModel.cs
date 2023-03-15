@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Pages;
+using Desktop_Client.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Client;
@@ -42,7 +43,10 @@ public sealed class RegistrationViewModel : ViewModel
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
 
             if (authData is not null)
+            {
                 App.AuthorizeData = authData;
+                _navigation.SetMainWindow<MainWindow>();
+            }
 
 
         }, b => !string.IsNullOrWhiteSpace(Username) &&

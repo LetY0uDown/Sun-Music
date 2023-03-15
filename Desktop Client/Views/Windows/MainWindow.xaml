@@ -12,7 +12,6 @@
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         WindowStyle="None"
         Background="#ffffff"
-        SizeChanged="Window_SizeChanged"
         d:DataContext="{d:DesignInstance Type=vm:MainNavigationViewModel,
                                          IsDesignTimeCreatable=True}">
 

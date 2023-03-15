@@ -13,13 +13,13 @@ public partial class RegistrationPage : Page, INavigationPage
 
     public RegistrationPage(RegistrationViewModel viewModel)
     {
-        InitializeComponent();
-
         _viewModel = viewModel;
     }
 
     public void Display()
     {
+        InitializeComponent();
+
         DataContext = _viewModel;
     }
 

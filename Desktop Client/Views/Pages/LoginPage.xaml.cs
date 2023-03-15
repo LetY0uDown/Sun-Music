@@ -12,12 +12,13 @@ public partial class LoginPage : Page, INavigationPage
 
     public LoginPage(LoginViewModel viewModel)
     {
-        InitializeComponent();
         _viewModel = viewModel;
     }
 
     public void Display()
     {
+        InitializeComponent();
+
         DataContext = _viewModel;
     }
 

@@ -4,6 +4,8 @@ namespace Models.Client;
 
 public record class PublicUser
 {
+    public string ID { get; init; }
+
     public string Username { get; init; }
 
     public byte[]? ImageBytes { get; init; }
@@ -12,6 +14,7 @@ public record class PublicUser
     {
         return new PublicUser
         {
+            ID = user.ID,
             Username = user.Username,
             ImageBytes = user.ImageBytes
         };
