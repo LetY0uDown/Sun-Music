@@ -11,17 +11,15 @@ namespace Desktop_Client.Core.Tools.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    private static void AddServices(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes = false)
+    private static void AddServices (IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes = false)
     {
-        foreach (var service in services)
-        {
+        foreach (var service in services) {
             var attributes = service.GetCustomAttributes(inheritAttributes);
 
             var isSingleton = attributes.FirstOrDefault(o => o is SingletonAttribute) is not null;
             var isTransient = attributes.FirstOrDefault(o => o is TransientAttribute) is not null;
 
-            if (isTransient == isSingleton)
-            {
+            if (isTransient == isSingleton) {
                 throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
             }
 
@@ -33,7 +31,7 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    internal static void RegisterViewModels<TViewModel>(this IServiceCollection services)
+    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services)
     {
         var viewModels = Assembly.GetExecutingAssembly()
                                  .GetTypes()
@@ -43,7 +41,7 @@ internal static class ServiceCollectionExtensions
         AddServices(services, viewModels, true);
     }
     // TODO: Change Page and Window types to interfaces and not break this all
-    internal static void AddPages(this IServiceCollection services)
+    internal static void AddPages (this IServiceCollection services)
     {
         var pages = Assembly.GetExecutingAssembly()
                             .GetTypes()
@@ -52,7 +50,7 @@ internal static class ServiceCollectionExtensions
         AddServices(services, pages);
     }
 
-    internal static void AddWindows(this IServiceCollection services)
+    internal static void AddWindows (this IServiceCollection services)
     {
         var pages = Assembly.GetExecutingAssembly()
                             .GetTypes()

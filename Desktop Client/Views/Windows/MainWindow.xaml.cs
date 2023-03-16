@@ -13,8 +13,6 @@ namespace Desktop_Client.Views.Windows;
 [Singleton]
 public partial class MainWindow : Window, INavigationWindow
 {
-    private bool _hasBeenDisplayed = false;
-
     private double _rowHeight;
     private double _rowsCount;
     private int _selectedRowIndex = 0;
@@ -30,7 +28,7 @@ public partial class MainWindow : Window, INavigationWindow
         _navigation = navigation;
     }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
 
@@ -46,11 +44,11 @@ public partial class MainWindow : Window, INavigationWindow
         _navigation.SetViewModel(_viewModel);
     }
 
-    void INavigationWindow.Hide()
+    void INavigationWindow.Hide ()
     {
         Hide();
     }
-    
+
     private void NavButton_Click (object sender, RoutedEventArgs e)
     {
         // Canvas.SetTop(SelectionFlag, _selectedRowIndex * _rowHeight);

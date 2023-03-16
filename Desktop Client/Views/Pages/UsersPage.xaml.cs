@@ -10,12 +10,12 @@ public partial class UsersPage : Page, INavigationPage
 {
     private readonly UsersListViewModel _viewModel;
 
-    public UsersPage(UsersListViewModel viewModel)
+    public UsersPage (UsersListViewModel viewModel)
     {
         _viewModel = viewModel;
     }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
 

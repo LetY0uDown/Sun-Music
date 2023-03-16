@@ -7,13 +7,13 @@ public sealed class DatabaseContext : DbContext
 {
     private readonly IConfiguration _configuration;
 
-    public DatabaseContext(IConfiguration configuration)
+    public DatabaseContext (IConfiguration configuration)
     {
         _configuration = configuration;
 
         Database.EnsureCreated();
     }
-    
+
     public DbSet<Album> Albums { get; set; }
     public DbSet<AlbumTrack> AlbumTracks { get; set; }
     public DbSet<Artist> Artists { get; set; }
@@ -26,18 +26,16 @@ public sealed class DatabaseContext : DbContext
     public DbSet<TrackLike> TrackLikes { get; set; }
     public DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
+        if (!optionsBuilder.IsConfigured) {
+            optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
+            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
         }
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Album>(entity =>
-        {
+        modelBuilder.Entity<Album>(entity => {
             entity.ToTable("albums");
 
             entity.HasIndex(e => e.ArtistId, "IX_Albums_ArtistID");
@@ -54,8 +52,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_Albums_Artists_ArtistID");
         });
 
-        modelBuilder.Entity<AlbumTrack>(entity =>
-        {
+        modelBuilder.Entity<AlbumTrack>(entity => {
             entity.ToTable("albumtracks");
 
             entity.HasIndex(e => e.AlbumID, "IX_AlbumTracks_AlbumID");
@@ -79,8 +76,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_AlbumTracks_MusicTracks_TrackID");
         });
 
-        modelBuilder.Entity<Artist>(entity =>
-        {
+        modelBuilder.Entity<Artist>(entity => {
             entity.ToTable("artists");
 
             entity.Property(e => e.ID).HasColumnName("ID");
@@ -90,19 +86,17 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.StartYear).HasMaxLength(6);
         });
 
-        modelBuilder.Entity<Chat>(entity =>
-        {
+        modelBuilder.Entity<Chat>(entity => {
             entity.ToTable("chats");
 
             entity.HasIndex(e => e.CreatorID, "IX_Chats_CreatorID");
-            
+
             entity.Property(e => e.ID).HasColumnName("ID");
 
             entity.Property(e => e.CreatorID).HasColumnName("CreatorID");
         });
 
-        modelBuilder.Entity<ChatMember>(entity =>
-        {
+        modelBuilder.Entity<ChatMember>(entity => {
             entity.ToTable("chatmembers");
 
             entity.HasIndex(e => e.ChatId, "IX_ChatMembers_ChatID");
@@ -126,8 +120,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_ChatMembers_Users_UserID");
         });
 
-        modelBuilder.Entity<Message>(entity =>
-        {
+        modelBuilder.Entity<Message>(entity => {
             entity.ToTable("messages");
 
             entity.HasIndex(e => e.ChatID, "IX_Messages_ChatID");
@@ -151,8 +144,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_Messages_Users_SenderID");
         });
 
-        modelBuilder.Entity<MusicTrack>(entity =>
-        {
+        modelBuilder.Entity<MusicTrack>(entity => {
             entity.ToTable("musictracks");
 
             entity.Property(e => e.ID).HasColumnName("ID");
@@ -160,8 +152,7 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.ReleaseDate).HasMaxLength(6);
         });
 
-        modelBuilder.Entity<Playlist>(entity =>
-        {
+        modelBuilder.Entity<Playlist>(entity => {
             entity.ToTable("playlists");
 
             entity.HasIndex(e => e.UserID, "IX_Playlists_UserID");
@@ -176,8 +167,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_Playlists_Users_UserID");
         });
 
-        modelBuilder.Entity<PlaylistTrack>(entity =>
-        {
+        modelBuilder.Entity<PlaylistTrack>(entity => {
             entity.ToTable("playlisttracks");
 
             entity.HasIndex(e => e.PlaylistID, "IX_PlaylistTracks_PlaylistID");
@@ -201,8 +191,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_PlaylistTracks_MusicTracks_TrackID");
         });
 
-        modelBuilder.Entity<TrackLike>(entity =>
-        {
+        modelBuilder.Entity<TrackLike>(entity => {
             entity.ToTable("tracklikes");
 
             entity.HasIndex(e => e.TrackID, "IX_TrackLikes_TrackID");
@@ -226,8 +215,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_TrackLikes_Users_UserID");
         });
 
-        modelBuilder.Entity<User>(entity =>
-        {
+        modelBuilder.Entity<User>(entity => {
             entity.ToTable("users");
 
             entity.Property(e => e.ID).HasColumnName("ID");

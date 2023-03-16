@@ -1,4 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Services;
+using Desktop_Client.Core.Tools.Extensions;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Windows;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Models.Client;
 using System.IO;
 using System.Windows;
-using Desktop_Client.Core.Tools.Extensions;
-using Desktop_Client.Core.Services;
 
 namespace Desktop_Client;
 
@@ -18,14 +18,13 @@ public partial class App : Application
 
     internal static IHost Host { get; private set; }
 
-    private static IHost ConfigureHosting()
+    private static IHost ConfigureHosting ()
     {
         var builder = new ConfigurationBuilder()
                           .SetBasePath(Directory.GetCurrentDirectory() + "/Resources/")
                           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-        var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder().ConfigureServices(services =>
-        {
+        var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder().ConfigureServices(services => {
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IAPIClient, APIClient>();
             services.AddSingleton(typeof(IConfiguration), builder.Build());
@@ -38,7 +37,7 @@ public partial class App : Application
         return hostBuilder.Build();
     }
 
-    private void Application_Startup(object sender, StartupEventArgs e)
+    private void Application_Startup (object sender, StartupEventArgs e)
     {
         Host = ConfigureHosting();
 

@@ -21,7 +21,7 @@ public sealed class RegistrationViewModel : ViewModel
     private readonly INavigationService _navigation;
     private readonly IConfiguration _config;
 
-    public RegistrationViewModel(IAPIClient apiClient, INavigationService navigation, IConfiguration config)
+    public RegistrationViewModel (IAPIClient apiClient, INavigationService navigation, IConfiguration config)
     {
         _apiClient = apiClient;
         _navigation = navigation;
@@ -32,8 +32,7 @@ public sealed class RegistrationViewModel : ViewModel
         });
 
         RegistrationCommand = new(async o => {
-            User user = new()
-            {
+            User user = new() {
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
@@ -42,8 +41,7 @@ public sealed class RegistrationViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
 
-            if (authData is not null)
-            {
+            if (authData is not null) {
                 App.AuthorizeData = authData;
                 _navigation.SetMainWindow<MainWindow>();
             }
@@ -84,17 +82,17 @@ public sealed class RegistrationViewModel : ViewModel
 
     public BitmapImage ProfilePicture { get; set; }
 
-    private static byte[] GetBytesFromImage(BitmapImage image)
+    private static byte[] GetBytesFromImage (BitmapImage image)
     {
-        if (image is null) return Array.Empty<byte>();
+        if (image is null)
+            return Array.Empty<byte>();
 
         JpegBitmapEncoder encoder = new();
         encoder.Frames.Add(BitmapFrame.Create(image));
 
         byte[] imageBytes;
 
-        using (MemoryStream stream = new())
-        {
+        using (MemoryStream stream = new()) {
             encoder.Save(stream);
             imageBytes = stream.ToArray();
         }

@@ -12,14 +12,14 @@ public class JWTTokenGenerator : IAuthTokenGen
 
     private readonly SymmetricSecurityKey _securityKey;
 
-    public JWTTokenGenerator(IConfiguration config)
+    public JWTTokenGenerator (IConfiguration config)
     {
         _config = config;
 
         _securityKey = new(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
     }
 
-    public string GetToken(string username, string password)
+    public string GetToken (string username, string password)
     {
         List<Claim> claims = new() {
             new(ClaimTypes.Name, username),

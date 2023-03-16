@@ -4,10 +4,10 @@ using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Pages;
 using Models.Client;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
@@ -21,7 +21,7 @@ public sealed class UsersListViewModel : ViewModel
     private readonly IAPIClient _ApiClient;
     private readonly INavigationService _navigation;
 
-    public UsersListViewModel(IAPIClient client, INavigationService navigation)
+    public UsersListViewModel (IAPIClient client, INavigationService navigation)
     {
         _ApiClient = client;
         _navigation = navigation;
@@ -40,8 +40,7 @@ public sealed class UsersListViewModel : ViewModel
     {
         get => _searchText;
 
-        set
-        {
+        set {
             _searchText = value;
             Users = new(_usersOriginal.Where(u => u.Username.ToLower().Contains(SearchText.ToLower())));
         }

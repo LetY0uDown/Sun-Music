@@ -12,7 +12,7 @@ public sealed class UserProfileViewModel : ViewModel
     private readonly IAPIClient _apiClient;
     private readonly INavigationService _navigation;
 
-    public UserProfileViewModel(IAPIClient apiClient, INavigationService navigation)
+    public UserProfileViewModel (IAPIClient apiClient, INavigationService navigation)
     {
         _apiClient = apiClient;
         _navigation = navigation;
@@ -20,8 +20,7 @@ public sealed class UserProfileViewModel : ViewModel
 
     public string UserID
     {
-        set
-        {
+        set {
             Task.Run(async () => User = await _apiClient.GetAsync<User>($"u/{value}"));
         }
     }

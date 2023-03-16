@@ -11,7 +11,7 @@ public sealed class MainNavigationViewModel : NavigationViewModel
 {
     private readonly INavigationService _navigation;
 
-    public MainNavigationViewModel(INavigationService navigation)
+    public MainNavigationViewModel (INavigationService navigation)
     {
         _navigation = navigation;
 

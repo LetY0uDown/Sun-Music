@@ -11,19 +11,19 @@ public partial class RegistrationPage : Page, INavigationPage
 {
     private RegistrationViewModel _viewModel;
 
-    public RegistrationPage(RegistrationViewModel viewModel)
+    public RegistrationPage (RegistrationViewModel viewModel)
     {
         _viewModel = viewModel;
     }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
 
         DataContext = _viewModel;
     }
 
-    private void passVisibileCB_Click(object sender, RoutedEventArgs e)
+    private void passVisibileCB_Click (object sender, RoutedEventArgs e)
     {
         var isVisible = (bool)(sender as CheckBox).IsChecked;
 

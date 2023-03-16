@@ -9,7 +9,7 @@ internal class TracksViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
 
-    public TracksViewModel(IAPIClient apiClient)
+    public TracksViewModel (IAPIClient apiClient)
     {
         _apiClient = apiClient;
     }

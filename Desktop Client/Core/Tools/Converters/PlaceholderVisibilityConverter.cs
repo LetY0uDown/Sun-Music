@@ -9,7 +9,9 @@ internal sealed class PlaceholderVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return string.IsNullOrWhiteSpace(value.ToString()) ? Visibility.Visible : Visibility.Hidden;
+        return string.IsNullOrWhiteSpace(value.ToString())
+                   ? Visibility.Visible
+                   : Visibility.Hidden;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

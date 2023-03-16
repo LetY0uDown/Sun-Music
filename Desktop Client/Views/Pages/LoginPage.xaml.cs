@@ -10,12 +10,12 @@ public partial class LoginPage : Page, INavigationPage
 {
     private readonly LoginViewModel _viewModel;
 
-    public LoginPage(LoginViewModel viewModel)
+    public LoginPage (LoginViewModel viewModel)
     {
         _viewModel = viewModel;
     }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
 
@@ -24,6 +24,6 @@ public partial class LoginPage : Page, INavigationPage
 
     private void passVisibileCB_Click (object sender, System.Windows.RoutedEventArgs e)
     {
-        
+
     }
 }

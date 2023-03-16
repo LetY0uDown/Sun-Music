@@ -6,7 +6,7 @@ namespace Desktop_Client.Core.Tools;
 
 internal static class PropertiesSetter
 {
-    internal static void SetParameters(object obj, params (string Name, object Value)[] objects)
+    internal static void SetParameters (object obj, params (string Name, object Value)[] objects)
     {
         var classType = obj.GetType();
 
@@ -14,25 +14,21 @@ internal static class PropertiesSetter
 
         var paramAttributes = attributes.Where(a => a is ParameterAttribute).Cast<ParameterAttribute>();
 
-        if (!paramAttributes.Any())
-        {
+        if (!paramAttributes.Any()) {
             throw new InvalidOperationException("Class does not have Parameters");
         }
 
         var props = classType.GetProperties().Where(p => p.CanWrite);
 
-        if (!props.Any())
-        {
+        if (!props.Any()) {
             throw new InvalidOperationException("No public properties with accesible set method");
         }
 
         // TODO: Check is there is multiple attributes with same type and name
-        foreach (var a in paramAttributes)
-        {
+        foreach (var a in paramAttributes) {
             var propInfo = props.Where(p => p.Name == a.Name && p.PropertyType == a.ParamType).FirstOrDefault();
 
-            if (propInfo is null)
-            {
+            if (propInfo is null) {
                 // TODO: Throw real excepton
             }
 

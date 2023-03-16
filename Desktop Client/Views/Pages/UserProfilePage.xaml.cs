@@ -10,14 +10,14 @@ public partial class UserProfilePage : Page, INavigationPage
 {
     private readonly UserProfileViewModel _viewModel;
 
-    public UserProfilePage(UserProfileViewModel viewModel)
+    public UserProfilePage (UserProfileViewModel viewModel)
     {
         _viewModel = viewModel;
     }
 
     public string UserID { get; set; }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
 

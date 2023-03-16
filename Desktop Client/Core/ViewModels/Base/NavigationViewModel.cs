@@ -9,8 +9,7 @@ public abstract class NavigationViewModel : ViewModel
     public INavigationPage CurrentPage
     {
         get => _navigationPage;
-        set
-        {
+        set {
             _navigationPage = value;
             _navigationPage.Display();
         }

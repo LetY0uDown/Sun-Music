@@ -16,7 +16,7 @@ public sealed class LoginViewModel : ViewModel
     private readonly IAPIClient _apiClient;
     private readonly INavigationService _navigation;
 
-    public LoginViewModel(IAPIClient apiClient, INavigationService navigation)
+    public LoginViewModel (IAPIClient apiClient, INavigationService navigation)
     {
         _apiClient = apiClient;
         _navigation = navigation;
@@ -31,8 +31,7 @@ public sealed class LoginViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Login");
 
-            if (authData is not null)
-            {
+            if (authData is not null) {
                 App.AuthorizeData = authData;
                 _navigation.SetMainWindow<MainWindow>();
             }

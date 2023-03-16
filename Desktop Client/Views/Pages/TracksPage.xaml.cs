@@ -7,11 +7,11 @@ namespace Desktop_Client.Views.Pages;
 [Singleton]
 public partial class TracksPage : Page, INavigationPage
 {
-    public TracksPage()
+    public TracksPage ()
     {
     }
 
-    public void Display()
+    public void Display ()
     {
         InitializeComponent();
     }

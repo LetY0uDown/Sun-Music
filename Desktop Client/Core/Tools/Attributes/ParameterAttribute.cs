@@ -6,7 +6,7 @@ namespace Desktop_Client.Core.Tools.Attributes;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class ParameterAttribute : Attribute
 {
-    public ParameterAttribute(Type paramType, string name)
+    public ParameterAttribute (Type paramType, string name)
     {
         ParamType = paramType;
         Name = name;
@@ -16,10 +16,16 @@ public class ParameterAttribute : Attribute
 
     public Type ParamType { get; private init; }
 
-    public override bool Equals([NotNullWhen(true)] object? obj)
+    public override bool Equals ([NotNullWhen(true)] object? obj)
     {
-        var second = obj as ParameterAttribute;
+        if (obj is ParameterAttribute second)
+            return Name == second.Name && ParamType == second.ParamType;
 
-        return Name == second.Name && ParamType == second.ParamType;
+        return false;
+    }
+
+    public override int GetHashCode ()
+    {
+        return base.GetHashCode();
     }
 }

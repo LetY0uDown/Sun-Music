@@ -12,8 +12,9 @@ internal sealed class LongTitleConverter : IValueConverter
 
         var title = value.ToString();
 
-        return title.Length > maxLenght ? title[0..maxLenght] + ".."
-                                        : title;
+        return title.Length > maxLenght 
+                    ? title[0..maxLenght] + ".."
+                    : title;
     }
 
     public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
