@@ -1,8 +1,10 @@
-﻿namespace Desktop_Client.Core.Abstracts;
+﻿using System.Threading.Tasks;
+
+namespace Desktop_Client.Core.Abstracts;
 
 public interface INavigationWindow
 {
-    void Display();
+    Task Display();
 
-    void Hide();
+    Task Hide();
 }

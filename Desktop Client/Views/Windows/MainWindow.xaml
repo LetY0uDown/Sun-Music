@@ -127,7 +127,8 @@
                                  Margin="25" GroupName="NavButtons"
                                  Style="{StaticResource OptionsButton}"
                                  Checked="OptionsButton_Checked"
-                                 Unchecked="OptionsButton_Unchecked">
+                                 Unchecked="OptionsButton_Unchecked"
+                                 Command="{Binding NavigateToSettingsCommand}">
                         <icon:MaterialIcon Kind="Gear" />
                     </RadioButton>
                 </Grid>

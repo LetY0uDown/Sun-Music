@@ -6,17 +6,17 @@ using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[Singleton]
-public partial class TracksPage : Page, INavigationPage
+[Transient]
+public partial class OptionsPage : Page, INavigationPage
 {
-    private readonly TracksViewModel _viewModel;
+    private readonly OptionsViewModel _viewModel;
 
-    public TracksPage (TracksViewModel viewModel)
-    {
+    public OptionsPage(OptionsViewModel viewModel)
+    {        
         _viewModel = viewModel;
     }
 
-    public async Task Display ()
+    public async Task Display()
     {
         InitializeComponent();
 

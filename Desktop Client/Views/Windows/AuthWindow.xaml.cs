@@ -2,6 +2,7 @@
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
 using Desktop_Client.Views.Pages;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Desktop_Client.Views.Windows;
@@ -19,22 +20,25 @@ public partial class AuthWindow : Window, INavigationWindow
         _navigation = navigation;
     }
 
-    public void Display ()
+    public async Task Display ()
     {
         InitializeComponent();
 
         Show();
 
+        await _viewModel.Initialize();
         DataContext = _viewModel;
 
         _navigation.SetViewModel(_viewModel);
 
-        _navigation.SetCurrentPage<RegistrationPage>();
+        await _navigation.SetCurrentPage<LoginPage>();
     }
 
-    void INavigationWindow.Hide ()
+    Task INavigationWindow.Hide ()
     {
         Hide();
+
+        return Task.CompletedTask;
     }
 
     private void MinimizeButton_Click (object sender, RoutedEventArgs e)

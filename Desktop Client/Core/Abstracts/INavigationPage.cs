@@ -1,6 +1,8 @@
-﻿namespace Desktop_Client.Core.Abstracts;
+﻿using System.Threading.Tasks;
+
+namespace Desktop_Client.Core.Abstracts;
 
 public interface INavigationPage
 {
-    void Display();
+    Task Display();
 }

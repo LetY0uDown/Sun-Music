@@ -16,7 +16,7 @@ public class ParameterAttribute : Attribute
 
     public Type ParamType { get; private init; }
 
-    public override bool Equals ([NotNullWhen(true)] object? obj)
+    public override bool Equals ([NotNullWhen(true)] object obj)
     {
         if (obj is ParameterAttribute second)
             return Name == second.Name && ParamType == second.ParamType;

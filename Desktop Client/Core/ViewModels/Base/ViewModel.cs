@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Base;
 
@@ -12,5 +13,10 @@ public abstract class ViewModel : INotifyPropertyChanged
     protected void OnPropertyChanged ([CallerMemberName] string callerName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(callerName));
+    }
+
+    public virtual Task Initialize()
+    {
+        return Task.CompletedTask;
     }
 }

@@ -4,12 +4,12 @@ using Desktop_Client.Core.ViewModels.Base;
 
 namespace Desktop_Client.Core.ViewModels;
 
-[Singleton]
-public class TracksViewModel : ViewModel
+[Transient]
+public class TrackUploadingViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
 
-    public TracksViewModel (IAPIClient apiClient)
+    public TrackUploadingViewModel(IAPIClient apiClient)
     {
         _apiClient = apiClient;
     }

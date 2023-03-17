@@ -7,6 +7,7 @@ using Desktop_Client.Views.Windows;
 using Models.Client;
 using Models.Database;
 using System;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
@@ -19,10 +20,24 @@ public sealed class LoginViewModel : ViewModel
     public LoginViewModel (IAPIClient apiClient, INavigationService navigation)
     {
         _apiClient = apiClient;
-        _navigation = navigation;
+        _navigation = navigation;                
+    }
 
+    public UICommand LoginCommand { get; private set; }
+
+    public UICommand RedirectToRegistrationCommand { get; private set; }
+
+    public string Username { get; set; }
+
+    public string Password { get; set; }
+
+    public bool IsPasswordVisible { get; set; } = true;
+
+    public override Task Initialize()
+    {
         LoginCommand = new(async o => {
-            User user = new() {
+            User user = new()
+            {
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
@@ -40,15 +55,7 @@ public sealed class LoginViewModel : ViewModel
         RedirectToRegistrationCommand = new(o => {
             _navigation.SetCurrentPage<RegistrationPage>();
         });
+
+        return base.Initialize();
     }
-
-    public UICommand LoginCommand { get; private init; }
-
-    public UICommand RedirectToRegistrationCommand { get; private init; }
-
-    public string Username { get; set; }
-
-    public string Password { get; set; }
-
-    public bool IsPasswordVisible { get; set; } = true;
 }

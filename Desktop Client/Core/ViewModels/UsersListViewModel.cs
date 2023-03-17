@@ -25,15 +25,6 @@ public sealed class UsersListViewModel : ViewModel
     {
         _ApiClient = client;
         _navigation = navigation;
-
-        Task.Run(async () => {
-            _usersOriginal = await _ApiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
-            Users = new(_usersOriginal);
-        });
-
-        OpenUserProfile = new(o => {
-            _navigation.SetCurrentPage<UserProfilePage>(("UserID", SelectedUser.ID));
-        }, b => SelectedUser is not null);
     }
 
     public string SearchText
@@ -50,5 +41,15 @@ public sealed class UsersListViewModel : ViewModel
 
     public PublicUser SelectedUser { get; set; }
 
-    public UICommand OpenUserProfile { get; private init; }
+    public UICommand OpenUserProfile { get; private set; }
+
+    public override async Task Initialize()
+    {
+        _usersOriginal = await _ApiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
+        Users = new(_usersOriginal);
+
+        OpenUserProfile = new(o => {
+            _navigation.SetCurrentPage<UserProfilePage>(("UserID", SelectedUser.ID));
+        }, b => SelectedUser is not null);
+    }
 }

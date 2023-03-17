@@ -10,6 +10,7 @@ using Models.Client;
 using Models.Database;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Core.ViewModels;
@@ -26,7 +27,22 @@ public sealed class RegistrationViewModel : ViewModel
         _apiClient = apiClient;
         _navigation = navigation;
         _config = config;
+    }
 
+    public UICommand RegistrationCommand { get; private set; }
+
+    public UICommand RedirectToLoginCommand { get; private set; }
+
+    public UICommand SelectPictureCommand { get; private set; }
+
+    public string Username { get; set; }
+
+    public string Password { get; set; }
+
+    public BitmapImage ProfilePicture { get; set; }
+
+    public override Task Initialize()
+    {
         RedirectToLoginCommand = new(o => {
             _navigation.SetCurrentPage<LoginPage>();
         });
@@ -68,19 +84,9 @@ public sealed class RegistrationViewModel : ViewModel
                 ProfilePicture = picture;
             }
         });
+
+        return base.Initialize();
     }
-
-    public UICommand RegistrationCommand { get; private init; }
-
-    public UICommand RedirectToLoginCommand { get; private init; }
-
-    public UICommand SelectPictureCommand { get; private init; }
-
-    public string Username { get; set; }
-
-    public string Password { get; set; }
-
-    public BitmapImage ProfilePicture { get; set; }
 
     private static byte[] GetBytesFromImage (BitmapImage image)
     {

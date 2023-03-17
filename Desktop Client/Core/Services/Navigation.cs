@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
@@ -12,32 +13,48 @@ internal sealed class NavigationService : INavigationService
 
     public INavigationWindow MainWindow { get; private set; }
 
-    public void SetCurrentPage<T> (params (string Name, object Value)[] parameters) where T : INavigationPage
+    public async Task SetCurrentPage<T> (params (string Name, object Value)[] parameters) where T : INavigationPage
     {
         var page = App.Host.Services.GetRequiredService<T>();
 
         PropertiesSetter.SetParameters(page, parameters);
 
-        SetPage(page);
+        await SetPage(page);
     }
 
-    public void SetCurrentPage<T> () where T : INavigationPage
+    public async Task SetCurrentPage<T> () where T : INavigationPage
     {
-        SetPage(App.Host.Services.GetRequiredService<T>());
+        await SetPage(App.Host.Services.GetRequiredService<T>());
     }
 
-    public void SetMainWindow<T> (params (string Name, object Value)[] parameters) where T : INavigationWindow
+    public async Task SetMainWindow<T> (params (string Name, object Value)[] parameters) where T : INavigationWindow
     {
         var window = App.Host.Services.GetRequiredService<T>();
 
         PropertiesSetter.SetParameters(window, parameters);
 
-        SetWindow(window);
+        await SetWindow(window);
     }
 
-    public void SetMainWindow<T> () where T : INavigationWindow
+    public async Task SetMainWindow<T> () where T : INavigationWindow
     {
-        SetWindow(App.Host.Services.GetRequiredService<T>());
+        await SetWindow(App.Host.Services.GetRequiredService<T>());
+    }
+
+    public async Task DisplayWindow<T>(params (string Name, object Value)[] parameters) where T : INavigationWindow
+    {
+        var window = App.Host.Services.GetRequiredService<T>();
+
+        PropertiesSetter.SetParameters (window, parameters);
+
+        await window.Display();
+    }
+
+    public async Task DisplayWindow<T>() where T : INavigationWindow
+    {
+        var window = App.Host.Services.GetRequiredService<T>();
+
+        await window.Display();
     }
 
     public void SetViewModel (NavigationViewModel viewModel)
@@ -45,7 +62,7 @@ internal sealed class NavigationService : INavigationService
         _navigationVM = viewModel;
     }
 
-    void SetWindow (INavigationWindow window)
+    async Task SetWindow (INavigationWindow window)
     {
         MainWindow?.Hide();
 
@@ -56,14 +73,15 @@ internal sealed class NavigationService : INavigationService
             return;
         }
 
-        MainWindow.Display();
+        await MainWindow.Display();
     }
 
-    void SetPage (INavigationPage page)
+    async Task SetPage (INavigationPage page)
     {
         if (_navigationVM is null)
             throw new NullReferenceException("Navigation view model is null");
 
         _navigationVM.CurrentPage = page;
+        await _navigationVM.CurrentPage.Display();
     }
 }

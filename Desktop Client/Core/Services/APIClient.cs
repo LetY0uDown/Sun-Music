@@ -55,6 +55,8 @@ internal class APIClient : IAPIClient
 
                 if (!response.IsSuccessStatusCode) {
                     InfoBox.Show(response.Content, response.StatusCode.ToString());
+                    
+                    return default;
                 }
 
                 entity = JsonSerializer.Deserialize<TEntity>(response.Content, _jsonOptions);
@@ -79,6 +81,8 @@ internal class APIClient : IAPIClient
 
                 if (!response.IsSuccessStatusCode) {
                     InfoBox.Show(response.Content, response.StatusCode.ToString());
+
+                    return default;
                 }
 
                 resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
@@ -103,6 +107,8 @@ internal class APIClient : IAPIClient
 
                 if (!response.IsSuccessStatusCode) {
                     InfoBox.Show(response.Content, response.StatusCode.ToString());
+
+                    return default;
                 }
 
                 resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
@@ -115,12 +121,12 @@ internal class APIClient : IAPIClient
         return resp;
     }
 
-    public async Task<bool> SendFileAsync (string filePath, string url)
+    public async Task<bool> SendFileAsync (string filePath, string uri)
     {
         bool isSuccess = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(url).AddFile("file", filePath, "multipart/form-data");
+            RestRequest request = new RestRequest(uri).AddFile("file", filePath, "multipart/form-data");
 
             try {
                 var response = await client.PostAsync(request);

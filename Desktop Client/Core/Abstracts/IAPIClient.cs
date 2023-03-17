@@ -12,5 +12,5 @@ public interface IAPIClient
 
     Task<TResponse> PutAsync<TEntity, TResponse>(TEntity value, string url) where TEntity : class;
 
-    Task<bool> DeleteAsync(string url);
+    Task<bool> DeleteAsync(string uri);
 }

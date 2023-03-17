@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
 using Material.Icons;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -28,7 +29,7 @@ public partial class MainWindow : Window, INavigationWindow
         _navigation = navigation;
     }
 
-    public void Display ()
+    public async Task Display ()
     {
         InitializeComponent();
 
@@ -39,14 +40,17 @@ public partial class MainWindow : Window, INavigationWindow
         _rowHeight = NavigationCanvas.ActualHeight / _rowsCount;
         SelectionFlag.Height = _rowHeight;
 
+        await _viewModel.Initialize();
         DataContext = _viewModel;
 
         _navigation.SetViewModel(_viewModel);
     }
 
-    void INavigationWindow.Hide ()
+    Task INavigationWindow.Hide ()
     {
         Hide();
+
+        return Task.CompletedTask;
     }
 
     private void NavButton_Click (object sender, RoutedEventArgs e)

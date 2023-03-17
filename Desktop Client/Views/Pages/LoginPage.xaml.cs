@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
@@ -15,10 +16,11 @@ public partial class LoginPage : Page, INavigationPage
         _viewModel = viewModel;
     }
 
-    public void Display ()
+    public async Task Display ()
     {
         InitializeComponent();
 
+        await _viewModel.Initialize();
         DataContext = _viewModel;
     }
 

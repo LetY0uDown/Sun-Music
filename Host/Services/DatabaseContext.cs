@@ -29,8 +29,8 @@ public sealed class DatabaseContext : DbContext
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
+            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
         }
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
