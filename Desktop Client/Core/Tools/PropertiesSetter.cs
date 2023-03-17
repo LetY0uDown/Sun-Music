@@ -29,7 +29,7 @@ internal static class PropertiesSetter
             var propInfo = props.Where(p => p.Name == a.Name && p.PropertyType == a.ParamType).FirstOrDefault();
 
             if (propInfo is null) {
-                // TODO: Throw real excepton
+                throw new NullReferenceException("No property found with this name and type");
             }
 
             var (name, value) = objects.Where(o => o.Name == a.Name && o.Value.GetType() == a.ParamType).FirstOrDefault();
