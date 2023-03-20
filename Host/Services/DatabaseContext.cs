@@ -14,9 +14,6 @@ public sealed class DatabaseContext : DbContext
         Database.EnsureCreated();
     }
 
-    public DbSet<Album> Albums { get; set; }
-    public DbSet<AlbumTrack> AlbumTracks { get; set; }
-    public DbSet<Artist> Artists { get; set; }
     public DbSet<Chat> Chats { get; set; }
     public DbSet<ChatMember> ChatMembers { get; set; }
     public DbSet<Message> Messages { get; set; }
@@ -35,57 +32,6 @@ public sealed class DatabaseContext : DbContext
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Album>(entity => {
-            entity.ToTable("albums");
-
-            entity.HasIndex(e => e.ArtistId, "IX_Albums_ArtistID");
-
-            entity.Property(e => e.ID).HasColumnName("ID");
-
-            entity.Property(e => e.ArtistId).HasColumnName("ArtistID");
-
-            entity.Property(e => e.ReleaseDate).HasMaxLength(6);
-
-            entity.HasOne(d => d.Artist)
-                .WithMany(p => p.Albums)
-                .HasForeignKey(d => d.ArtistId)
-                .HasConstraintName("FK_Albums_Artists_ArtistID");
-        });
-
-        modelBuilder.Entity<AlbumTrack>(entity => {
-            entity.ToTable("albumtracks");
-
-            entity.HasIndex(e => e.AlbumID, "IX_AlbumTracks_AlbumID");
-
-            entity.HasIndex(e => e.TrackID, "IX_AlbumTracks_TrackID");
-
-            entity.Property(e => e.ID).HasColumnName("ID");
-
-            entity.Property(e => e.AlbumID).HasColumnName("AlbumID");
-
-            entity.Property(e => e.TrackID).HasColumnName("TrackID");
-
-            entity.HasOne(d => d.Album)
-                .WithMany(p => p.AlbumTracks)
-                .HasForeignKey(d => d.AlbumID)
-                .HasConstraintName("FK_AlbumTracks_Albums_AlbumID");
-
-            entity.HasOne(d => d.Track)
-                .WithMany(p => p.AlbumTracks)
-                .HasForeignKey(d => d.TrackID)
-                .HasConstraintName("FK_AlbumTracks_MusicTracks_TrackID");
-        });
-
-        modelBuilder.Entity<Artist>(entity => {
-            entity.ToTable("artists");
-
-            entity.Property(e => e.ID).HasColumnName("ID");
-
-            entity.Property(e => e.EndYear).HasMaxLength(6);
-
-            entity.Property(e => e.StartYear).HasMaxLength(6);
-        });
-
         modelBuilder.Entity<Chat>(entity => {
             entity.ToTable("chats");
 

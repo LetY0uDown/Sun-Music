@@ -52,7 +52,7 @@ public sealed class RegistrationViewModel : ViewModel
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
-                ImageBytes = GetBytesFromImage(ProfilePicture)
+                ImageBytes = ImageConverter.BytesFromImage(ProfilePicture)
             };
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
@@ -68,7 +68,7 @@ public sealed class RegistrationViewModel : ViewModel
 
         SelectPictureCommand = new(o => {
             var fileDialog = new OpenFileDialog {
-                Filter = _config["ImagesFilter"]
+                Filter = _config["Filters:Images"]
             };
 
             if (fileDialog.ShowDialog() == true) {
@@ -86,23 +86,5 @@ public sealed class RegistrationViewModel : ViewModel
         });
 
         return base.Initialize();
-    }
-
-    private static byte[] GetBytesFromImage (BitmapImage image)
-    {
-        if (image is null)
-            return Array.Empty<byte>();
-
-        JpegBitmapEncoder encoder = new();
-        encoder.Frames.Add(BitmapFrame.Create(image));
-
-        byte[] imageBytes;
-
-        using (MemoryStream stream = new()) {
-            encoder.Save(stream);
-            imageBytes = stream.ToArray();
-        }
-
-        return imageBytes;
     }
 }

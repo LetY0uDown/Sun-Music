@@ -10,12 +10,12 @@ namespace Host.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IPasswordEncoder _passEncoder;
-    private readonly IHashIDGenerator _hashGen;
+    private readonly IIDGenerator _hashGen;
     private readonly IAuthTokenGen _authTokenGen;
     private readonly ILogger _logger;
     private readonly DatabaseContext _db;
 
-    public AuthController(DatabaseContext db, IHashIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen)
+    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen)
     {
         _db = db;
         _hashGen = hashGen;
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
 
             user.Password = _passEncoder.Encode(user.Password);
 
-            user.ID = _hashGen.GenerateHash();
+            user.ID = _hashGen.GenerateID();
 
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();

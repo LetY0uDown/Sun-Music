@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IHashIDGenerator, HashIDGenerator>();
+builder.Services.AddSingleton<IIDGenerator, IDGenerator>();
 builder.Services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
 builder.Services.AddSingleton<IAuthTokenGen, JWTTokenGenerator>();
 
