@@ -16,12 +16,11 @@ internal static class ServiceCollectionExtensions
         foreach (var service in services) {
             var attributes = service.GetCustomAttributes(inheritAttributes);
 
-            var isSingleton = attributes.FirstOrDefault(o => o is SingletonAttribute) is not null;
-            var isTransient = attributes.FirstOrDefault(o => o is TransientAttribute) is not null;
+            var isSingleton = attributes.Any(o => o is SingletonAttribute);
+            var isTransient = attributes.Any(o => o is TransientAttribute);
 
-            if (isTransient == isSingleton) {
+            if (isTransient == isSingleton)
                 throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
-            }
 
             if (isSingleton)
                 serviceCollection.AddSingleton(service, service);
@@ -31,7 +30,7 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services)
+    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services) where TViewModel : class
     {
         var viewModels = Assembly.GetExecutingAssembly()
                                  .GetTypes()

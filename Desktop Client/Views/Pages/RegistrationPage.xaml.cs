@@ -1,6 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
-using Desktop_Client.Core.ViewModels;
+using Desktop_Client.Core.ViewModels.Auth;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +21,13 @@ public partial class RegistrationPage : Page, INavigationPage
     {
         InitializeComponent();
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
         DataContext = _viewModel;
+    }
+
+    public async Task Leave()
+    {
+        await _viewModel.Leave();
     }
 
     private void passVisibileCB_Click (object sender, RoutedEventArgs e)

@@ -20,7 +20,12 @@ public partial class OptionsPage : Page, INavigationPage
     {
         InitializeComponent();
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
         DataContext = _viewModel;
+    }
+
+    public async Task Leave()
+    {
+        await _viewModel.Leave();
     }
 }

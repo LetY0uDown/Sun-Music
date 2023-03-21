@@ -1,6 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
-using Desktop_Client.Core.ViewModels;
+using Desktop_Client.Core.ViewModels.Tracks;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -16,11 +16,16 @@ public partial class TracksPage : Page, INavigationPage
         _viewModel = viewModel;
     }
 
-    public async Task Display ()
+    public async Task Display()
     {
         InitializeComponent();
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
         DataContext = _viewModel;
+    }
+
+    public async Task Leave()
+    {
+        await _viewModel.Leave();
     }
 }

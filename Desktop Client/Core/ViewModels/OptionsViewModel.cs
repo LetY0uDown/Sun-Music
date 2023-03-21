@@ -24,7 +24,7 @@ public sealed class OptionsViewModel : ViewModel
 
     public User CurrentUser { get; set; }
 
-    public override async Task Initialize()
+    public override async Task Display()
     {
         CurrentUser = await _apiClient.GetAsync<User>($"u/{App.AuthorizeData.ID}");
 

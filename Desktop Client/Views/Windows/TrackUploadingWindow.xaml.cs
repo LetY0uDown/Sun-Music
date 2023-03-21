@@ -1,6 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
-using Desktop_Client.Core.ViewModels;
+using Desktop_Client.Core.ViewModels.Tracks;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,18 +20,18 @@ public partial class TrackUploadingWindow : Window, INavigationWindow
     {
         InitializeComponent();
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
 
         DataContext = _viewModel;
 
         Show();
     }
 
-    Task INavigationWindow.Hide()
+    async Task INavigationWindow.Hide()
     {
         Hide();
 
-        return Task.CompletedTask;
+        await _viewModel.Leave();
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)

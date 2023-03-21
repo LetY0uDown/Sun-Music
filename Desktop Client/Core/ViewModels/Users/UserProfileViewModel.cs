@@ -4,7 +4,7 @@ using Desktop_Client.Core.ViewModels.Base;
 using Models.Database;
 using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Users;
 
 [Transient]
 public sealed class UserProfileViewModel : ViewModel
@@ -18,12 +18,12 @@ public sealed class UserProfileViewModel : ViewModel
         _navigation = navigation;
     }
 
-    public string UserID
-    {
-        set {
-            Task.Run(async () => User = await _apiClient.GetAsync<User>($"u/{value}"));
-        }
-    }
+    public string UserID { get; set; }
 
     public User User { get; set; }
+
+    public override async Task Display()
+    {
+        User = await _apiClient.GetAsync<User>($"u/{UserID}");
+    }
 }

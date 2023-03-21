@@ -1,6 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
-using Desktop_Client.Core.ViewModels;
+using Desktop_Client.Core.ViewModels.Users;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -22,8 +22,13 @@ public partial class UserProfilePage : Page, INavigationPage
     {
         InitializeComponent();
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
         _viewModel.UserID = UserID;
         DataContext = _viewModel;
+    }
+
+    public async Task Leave()
+    {
+        await _viewModel.Leave();
     }
 }

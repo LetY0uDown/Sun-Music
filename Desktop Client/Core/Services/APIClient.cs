@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
-internal class APIClient : IAPIClient
+internal sealed class APIClient : IAPIClient
 {
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions {
         PropertyNameCaseInsensitive = true

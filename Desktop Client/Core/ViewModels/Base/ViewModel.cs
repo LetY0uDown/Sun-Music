@@ -15,8 +15,7 @@ public abstract class ViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(callerName));
     }
 
-    public virtual Task Initialize()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task Display() => Task.CompletedTask;
+
+    public virtual Task Leave() => Task.CompletedTask;
 }

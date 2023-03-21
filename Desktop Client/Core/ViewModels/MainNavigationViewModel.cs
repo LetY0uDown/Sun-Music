@@ -27,7 +27,7 @@ public sealed class MainNavigationViewModel : NavigationViewModel
 
     public UICommand NavigateToSettingsCommand { get; private set; }
 
-    public override Task Initialize()
+    public override Task Display()
     {
         NavigateToUsersCommand = new(o => {
             _navigation.SetCurrentPage<UsersPage>();
@@ -37,6 +37,6 @@ public sealed class MainNavigationViewModel : NavigationViewModel
             _navigation.SetCurrentPage<OptionsPage>();
         });
 
-        return base.Initialize();
+        return base.Display();
     }
 }

@@ -36,21 +36,21 @@ public partial class MainWindow : Window, INavigationWindow
         Show();
 
         _rowsCount = NavBar.RowDefinitions.Count;
-
+        
         _rowHeight = NavigationCanvas.ActualHeight / _rowsCount;
         SelectionFlag.Height = _rowHeight;
 
-        await _viewModel.Initialize();
+        await _viewModel.Display();
         DataContext = _viewModel;
 
         _navigation.SetViewModel(_viewModel);
     }
 
-    Task INavigationWindow.Hide ()
+    async Task INavigationWindow.Hide ()
     {
         Hide();
 
-        return Task.CompletedTask;
+        await _viewModel.Leave();
     }
 
     private void NavButton_Click (object sender, RoutedEventArgs e)

@@ -9,7 +9,7 @@ using Models.Database;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Tracks;
 
 [Transient]
 public class TrackUploadingViewModel : ViewModel
@@ -41,14 +41,17 @@ public class TrackUploadingViewModel : ViewModel
 
     public BitmapImage TrackImage { get; private set; }
 
-    public override Task Initialize()
+    public override Task Display()
     {
-        SelectFileCommand = new(o => {
-            OpenFileDialog fileDialog = new() {
+        SelectFileCommand = new(o =>
+        {
+            OpenFileDialog fileDialog = new()
+            {
                 Filter = _config["Filters:Music"]
             };
 
-            if ((bool)fileDialog.ShowDialog()) {
+            if ((bool)fileDialog.ShowDialog())
+            {
                 FilePath = fileDialog.FileName;
 
                 Track track = new(fileDialog.FileName);
@@ -57,7 +60,8 @@ public class TrackUploadingViewModel : ViewModel
                 Artist = track.Artist;
                 Album = track.Album;
 
-                _musicTrack = new() {
+                _musicTrack = new()
+                {
                     Title = track.Title,
                     ArtistName = track.Artist,
                     AlbumName = track.Album,
@@ -65,13 +69,16 @@ public class TrackUploadingViewModel : ViewModel
                 };
             }
         });
-        
-        SelectImageCommand = new(o => {
-            var fileDialog = new OpenFileDialog {
+
+        SelectImageCommand = new(o =>
+        {
+            var fileDialog = new OpenFileDialog
+            {
                 Filter = _config["Filters:Images"]
             };
 
-            if (fileDialog.ShowDialog() == true) {
+            if (fileDialog.ShowDialog() == true)
+            {
                 BitmapImage picture = new();
 
                 picture.BeginInit();
@@ -87,14 +94,16 @@ public class TrackUploadingViewModel : ViewModel
             }
         });
 
-        UploadTrackCommand = new(async o => {
+        UploadTrackCommand = new(async o =>
+        {
             var id = await _apiClient.PostAsync<MusicTrack, string>(_musicTrack, "Music");
 
-            if (id is not null) {
+            if (id is not null)
+            {
                 await _apiClient.SendFileAsync(FilePath, $"Music/File/{id}");
             }
         });
 
-        return base.Initialize();
+        return base.Display();
     }
 }

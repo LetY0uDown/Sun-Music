@@ -9,7 +9,7 @@ using Models.Database;
 using System;
 using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Auth;
 
 [Transient]
 public sealed class LoginViewModel : ViewModel
@@ -17,10 +17,10 @@ public sealed class LoginViewModel : ViewModel
     private readonly IAPIClient _apiClient;
     private readonly INavigationService _navigation;
 
-    public LoginViewModel (IAPIClient apiClient, INavigationService navigation)
+    public LoginViewModel(IAPIClient apiClient, INavigationService navigation)
     {
         _apiClient = apiClient;
-        _navigation = navigation;                
+        _navigation = navigation;
     }
 
     public UICommand LoginCommand { get; private set; }
@@ -33,9 +33,10 @@ public sealed class LoginViewModel : ViewModel
 
     public bool IsPasswordVisible { get; set; } = true;
 
-    public override Task Initialize()
+    public override Task Display()
     {
-        LoginCommand = new(async o => {
+        LoginCommand = new(async o =>
+        {
             User user = new()
             {
                 ID = string.Empty,
@@ -46,16 +47,18 @@ public sealed class LoginViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Login");
 
-            if (authData is not null) {
+            if (authData is not null)
+            {
                 App.AuthorizeData = authData;
                 _navigation.SetMainWindow<MainWindow>();
             }
         });
 
-        RedirectToRegistrationCommand = new(o => {
+        RedirectToRegistrationCommand = new(o =>
+        {
             _navigation.SetCurrentPage<RegistrationPage>();
         });
 
-        return base.Initialize();
+        return base.Display();
     }
 }

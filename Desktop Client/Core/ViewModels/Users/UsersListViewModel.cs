@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Users;
 
 [Transient]
 public sealed class UsersListViewModel : ViewModel
@@ -33,7 +33,9 @@ public sealed class UsersListViewModel : ViewModel
 
         set {
             _searchText = value;
-            Users = new(_usersOriginal.Where(u => u.Username.ToLower().Contains(SearchText.ToLower())));
+            Users = new(_usersOriginal.Where(u => 
+                                           u.Username.ToLower()
+                                                .Contains(SearchText.ToLower())));
         }
     }
 
@@ -43,7 +45,7 @@ public sealed class UsersListViewModel : ViewModel
 
     public UICommand OpenUserProfile { get; private set; }
 
-    public override async Task Initialize()
+    public override async Task Display()
     {
         _usersOriginal = await _ApiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
         Users = new(_usersOriginal);

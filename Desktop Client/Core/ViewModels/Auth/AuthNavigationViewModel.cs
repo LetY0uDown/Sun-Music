@@ -1,9 +1,8 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
-using System.Threading.Tasks;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Auth;
 
 [Transient]
 public sealed class AuthNavigationViewModel : NavigationViewModel

@@ -13,7 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Desktop_Client.Core.ViewModels;
+namespace Desktop_Client.Core.ViewModels.Auth;
 
 [Transient]
 public sealed class RegistrationViewModel : ViewModel
@@ -22,7 +22,7 @@ public sealed class RegistrationViewModel : ViewModel
     private readonly INavigationService _navigation;
     private readonly IConfiguration _config;
 
-    public RegistrationViewModel (IAPIClient apiClient, INavigationService navigation, IConfiguration config)
+    public RegistrationViewModel(IAPIClient apiClient, INavigationService navigation, IConfiguration config)
     {
         _apiClient = apiClient;
         _navigation = navigation;
@@ -41,14 +41,17 @@ public sealed class RegistrationViewModel : ViewModel
 
     public BitmapImage ProfilePicture { get; set; }
 
-    public override Task Initialize()
+    public override Task Display()
     {
-        RedirectToLoginCommand = new(o => {
+        RedirectToLoginCommand = new(o =>
+        {
             _navigation.SetCurrentPage<LoginPage>();
         });
 
-        RegistrationCommand = new(async o => {
-            User user = new() {
+        RegistrationCommand = new(async o =>
+        {
+            User user = new()
+            {
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
@@ -57,7 +60,8 @@ public sealed class RegistrationViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
 
-            if (authData is not null) {
+            if (authData is not null)
+            {
                 App.AuthorizeData = authData;
                 _navigation.SetMainWindow<MainWindow>();
             }
@@ -66,12 +70,15 @@ public sealed class RegistrationViewModel : ViewModel
         }, b => !string.IsNullOrWhiteSpace(Username) &&
                 !string.IsNullOrWhiteSpace(Password));
 
-        SelectPictureCommand = new(o => {
-            var fileDialog = new OpenFileDialog {
+        SelectPictureCommand = new(o =>
+        {
+            var fileDialog = new OpenFileDialog
+            {
                 Filter = _config["Filters:Images"]
             };
 
-            if (fileDialog.ShowDialog() == true) {
+            if (fileDialog.ShowDialog() == true)
+            {
                 BitmapImage picture = new();
 
                 picture.BeginInit();
@@ -85,6 +92,6 @@ public sealed class RegistrationViewModel : ViewModel
             }
         });
 
-        return base.Initialize();
+        return base.Display();
     }
 }

@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddSingleton<IIDGenerator, IDGenerator>();
 builder.Services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
 builder.Services.AddSingleton<IAuthTokenGen, JWTTokenGenerator>();
@@ -45,6 +47,8 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHub<MainHub>("MainHub");
 
 app.MapControllers();
 

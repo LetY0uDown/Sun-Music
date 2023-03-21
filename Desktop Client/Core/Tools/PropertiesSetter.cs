@@ -12,27 +12,31 @@ internal static class PropertiesSetter
 
         var attributes = classType.GetCustomAttributes(false);
 
-        var paramAttributes = attributes.Where(a => a is ParameterAttribute).Cast<ParameterAttribute>();
+        var paramAttributes = attributes.Where(a => a is ParameterAttribute)
+                                        .Cast<ParameterAttribute>();
 
-        if (!paramAttributes.Any()) {
+        if (!paramAttributes.Any())
             throw new InvalidOperationException("Class does not have Parameters");
-        }
 
-        var props = classType.GetProperties().Where(p => p.CanWrite);
+        var props = classType.GetProperties()
+                             .Where(p => p.CanWrite);
 
-        if (!props.Any()) {
+        if (!props.Any())
             throw new InvalidOperationException("No public properties with accesible set method");
-        }
 
         // TODO: Check is there is multiple attributes with same type and name
-        foreach (var a in paramAttributes) {
-            var propInfo = props.Where(p => p.Name == a.Name && p.PropertyType == a.ParamType).FirstOrDefault();
+        foreach (var attribute in paramAttributes) {
+            var propInfo = props.Where(prop => prop.Name == attribute.Name &&
+                                               prop.PropertyType == attribute.ParamType)
+                                .FirstOrDefault();
 
-            if (propInfo is null) {
+            if (propInfo is null)
                 throw new NullReferenceException("No property found with this name and type");
-            }
 
-            var (name, value) = objects.Where(o => o.Name == a.Name && o.Value.GetType() == a.ParamType).FirstOrDefault();
+            var value = objects.Where(o => o.Name == attribute.Name &&
+                                           o.Value.GetType() == attribute.ParamType)
+                               .Select(o => o.Value)
+                               .FirstOrDefault();
 
             propInfo.SetValue(obj, value);
         }

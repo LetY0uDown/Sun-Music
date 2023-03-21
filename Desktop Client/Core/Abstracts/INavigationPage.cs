@@ -5,4 +5,6 @@ namespace Desktop_Client.Core.Abstracts;
 public interface INavigationPage
 {
     Task Display();
+
+    Task Leave();
 }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:Desktop_Client.Core.ViewModels"
+        xmlns:vm="clr-namespace:Desktop_Client.Core.ViewModels.Tracks"
         xmlns:icon="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         mc:Ignorable="d"
         Title="TrackUploadingWindow" Height="450" Width="600"
