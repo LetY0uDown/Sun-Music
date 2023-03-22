@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Core.ViewModels.Tracks;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public class TrackUploadingViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;

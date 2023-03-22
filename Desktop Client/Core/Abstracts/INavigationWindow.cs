@@ -2,7 +2,7 @@
 
 namespace Desktop_Client.Core.Abstracts;
 
-public interface INavigationWindow
+public interface INavigationWindow : IView
 {
     Task Display();
 

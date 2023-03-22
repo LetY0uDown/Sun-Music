@@ -32,9 +32,9 @@ public sealed partial class App : Application
     private static HubConnection SetupHub(string host)
     {
         var connection = new HubConnectionBuilder()
-                                .WithUrl(host + "Hub")
-                                .WithAutomaticReconnect()
-                                .Build();
+                            .WithUrl(host + "Hub")
+                            .WithAutomaticReconnect()
+                            .Build();
 
         Task.Run(async () => await connection.StartAsync());
 
@@ -52,14 +52,12 @@ public sealed partial class App : Application
         var hub = SetupHub(config["HostURL:HTTP"]);
 
         var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder().ConfigureServices(services => {
-            services.AddSingleton<INavigationService, NavigationService>();
-            services.AddTransient<IAPIClient, APIClient>();
             services.AddSingleton(typeof(IConfiguration), config);
             services.AddSingleton(typeof(HubConnection), hub);
 
+            services.AddServices();
             services.RegisterViewModels<ViewModel>();
-            services.AddWindows();
-            services.AddPages();
+            services.AddViews();
         });
 
         return hostBuilder.Build();

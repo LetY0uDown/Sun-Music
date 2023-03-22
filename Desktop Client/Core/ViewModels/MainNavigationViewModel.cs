@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
-[Singleton]
+[HasLifetime(Lifetime.Transient)]
 public sealed class MainNavigationViewModel : NavigationViewModel
 {
     private readonly INavigationService _navigation;

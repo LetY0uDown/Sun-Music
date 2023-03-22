@@ -2,7 +2,7 @@
 
 namespace Desktop_Client.Core.Abstracts;
 
-public interface IAPIClient
+public interface IAPIClient : IService
 {
     Task<T> GetAsync<T>(string url) where T : class;
 

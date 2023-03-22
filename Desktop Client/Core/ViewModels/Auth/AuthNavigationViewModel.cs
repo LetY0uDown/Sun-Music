@@ -4,7 +4,7 @@ using Desktop_Client.Core.ViewModels.Base;
 
 namespace Desktop_Client.Core.ViewModels.Auth;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public sealed class AuthNavigationViewModel : NavigationViewModel
 {
     private readonly INavigationService _navigation;

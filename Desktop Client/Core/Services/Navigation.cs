@@ -1,5 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools;
+using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
+[HasLifetime(Lifetime.Singleton)]
 internal sealed class NavigationService : INavigationService
 {
     private NavigationViewModel _navigationVM;

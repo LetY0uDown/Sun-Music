@@ -7,26 +7,27 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Tracks;
 
-[Singleton]
+[HasLifetime(Lifetime.Transient)]
 public class TracksViewModel : ViewModel
 {
-    private bool _isHubConfigured = false;
-
     private readonly IAPIClient _apiClient;
+    private readonly IHubFactory _hubFactory;
+
     private readonly HubConnection _hub;
 
-    public TracksViewModel(IAPIClient apiClient, HubConnection hub)
+    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory)
     {
         _apiClient = apiClient;
-        _hub = hub;
+        _hubFactory = hubFactory;
     }
 
     public override async Task Display()
     {
-        await _hub.SendAsync("JoinGroup", "Tracks");
+        await _hubFactory.CreateHub("Music");
 
-        if (!_isHubConfigured)
-            ConfigureHubActions();
+        ConfigureHubActions();
+
+        await _hub.SendAsync("JoinGroup", "Tracks");
     }
 
     public override async Task Leave()
@@ -36,8 +37,6 @@ public class TracksViewModel : ViewModel
 
     private void ConfigureHubActions()
     {
-        _isHubConfigured = true;
-
         _hub.On<MusicTrack>("RecieveTrack", track => {
 
         });

@@ -11,7 +11,7 @@ using System.Windows.Media.Animation;
 
 namespace Desktop_Client.Views.Windows;
 
-[Singleton]
+[HasLifetime(Lifetime.Transient)]
 public partial class MainWindow : Window, INavigationWindow
 {
     private double _rowHeight;

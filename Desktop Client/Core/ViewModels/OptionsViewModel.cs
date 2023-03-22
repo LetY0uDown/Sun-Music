@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public sealed class OptionsViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
@@ -28,7 +28,7 @@ public sealed class OptionsViewModel : ViewModel
     {
         CurrentUser = await _apiClient.GetAsync<User>($"u/{App.AuthorizeData.ID}");
 
-        UploadTrackCommand = new(async o => {
+        UploadTrackCommand ??= new(async o => {
             await _navigation.DisplayWindow<TrackUploadingWindow>();
         });
     }

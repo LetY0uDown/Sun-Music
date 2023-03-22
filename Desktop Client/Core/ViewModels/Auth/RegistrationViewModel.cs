@@ -8,14 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Client;
 using Models.Database;
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Core.ViewModels.Auth;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public sealed class RegistrationViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;

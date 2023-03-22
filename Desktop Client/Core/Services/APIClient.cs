@@ -1,5 +1,6 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools;
+using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
+[HasLifetime(Lifetime.Transient)]
 internal sealed class APIClient : IAPIClient
 {
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions {

@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public partial class RegistrationPage : Page, INavigationPage
 {
     private RegistrationViewModel _viewModel;

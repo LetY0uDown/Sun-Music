@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Users;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public sealed class UsersListViewModel : ViewModel
 {
     private string _searchText;

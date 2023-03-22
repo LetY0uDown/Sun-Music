@@ -1,4 +1,5 @@
-﻿using Desktop_Client.Core.Tools.Attributes;
+﻿using Desktop_Client.Core.Abstracts;
+using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,50 +12,87 @@ namespace Desktop_Client.Core.Tools.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    private static void AddServices (IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes = false)
+    private static Type[] GetTypes()
     {
-        foreach (var service in services) {
-            var attributes = service.GetCustomAttributes(inheritAttributes);
+        return Assembly.GetExecutingAssembly()
+                       .GetTypes();
+    }
 
-            var isSingleton = attributes.Any(o => o is SingletonAttribute);
-            var isTransient = attributes.Any(o => o is TransientAttribute);
-
-            if (isTransient == isSingleton)
+    private static Lifetime DetermineLifetime(Type service, bool inheritAttributes)
+    {
+        var lifetimeAttribute = service.GetCustomAttributes(inheritAttributes)
+                                       .FirstOrDefault(s => s is HasLifetimeAttribute)
+                                       as HasLifetimeAttribute;
+        
+        if (lifetimeAttribute is null)
                 throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
 
-            if (isSingleton)
-                serviceCollection.AddSingleton(service, service);
+        return lifetimeAttribute.Lifetime;
+    }
 
-            if (isTransient)
+    private static void AddServiceTypesAsBaseTypes(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
+    {
+        foreach (var service in services)
+        {
+            var lifetime = DetermineLifetime(service, inheritAttributes);
+
+            if (lifetime == Lifetime.Singleton)
+            {
+                serviceCollection.AddSingleton(service, service.BaseType);
+                continue;
+            }
+
+            if (lifetime == Lifetime.Transient)
+                serviceCollection.AddTransient(service, service.BaseType);
+        }
+    }
+
+    private static void AddServiceTypesDirectly(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
+    {
+        foreach (var service in services)
+        {
+            var lifetime = DetermineLifetime(service, inheritAttributes);
+
+            if (lifetime == Lifetime.Singleton)
+            {
+                serviceCollection.AddSingleton(service, service);
+                continue;
+            }
+
+            if (lifetime == Lifetime.Transient)
                 serviceCollection.AddTransient(service, service);
         }
     }
 
-    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services) where TViewModel : class
+    private static void AddServiceTypes (IServiceCollection serviceCollection, IEnumerable<Type> services, bool useBaseType, bool inheritAttributes = false)
     {
-        var viewModels = Assembly.GetExecutingAssembly()
-                                 .GetTypes()
-                                 .Where(t => !t.IsAbstract &&
-                                              t.IsSubclassOf(typeof(TViewModel)));
-
-        AddServices(services, viewModels, true);
-    }
-    // TODO: Change Page and Window types to interfaces and not break this all
-    internal static void AddPages (this IServiceCollection services)
-    {
-        var pages = Assembly.GetExecutingAssembly()
-                            .GetTypes()
-                            .Where(t => t.IsSubclassOf(typeof(Page)));
-
-        AddServices(services, pages);
+        if (useBaseType)
+            AddServiceTypesAsBaseTypes(serviceCollection, services, inheritAttributes);
+        else
+            AddServiceTypesDirectly(serviceCollection, services, inheritAttributes);
     }
 
-    internal static void AddWindows (this IServiceCollection services)
+    internal static void AddServices(this IServiceCollection serviceCollection)
     {
-        var pages = Assembly.GetExecutingAssembly()
-                            .GetTypes()
-                            .Where(t => t.IsSubclassOf(typeof(Window)));
+        var services = GetTypes().Where(t => t.IsClass &&
+                                             t.IsAssignableTo(typeof(IService)));
 
-        AddServices(services, pages);
+        AddServiceTypes(serviceCollection, services, useBaseType: true);
+    }
+
+    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services)
+    {
+        var viewModels = GetTypes().Where(t => t.IsClass && !t.IsAbstract &&
+                                               t.IsAssignableTo(typeof(TViewModel)));
+
+        AddServiceTypes(services, viewModels, useBaseType: false, inheritAttributes: true);
+    }
+
+    internal static void AddViews (this IServiceCollection serviceCollection)
+    {
+        var pages = GetTypes().Where(t => t.IsClass &&
+                                          t.IsAssignableTo(typeof(IView)));
+
+        AddServiceTypes(serviceCollection, pages, useBaseType: false);
     }
 }

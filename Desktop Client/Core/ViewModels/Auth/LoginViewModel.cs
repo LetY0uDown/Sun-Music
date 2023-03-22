@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Auth;
 
-[Transient]
+[HasLifetime(Lifetime.Transient)]
 public sealed class LoginViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;

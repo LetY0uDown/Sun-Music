@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Abstracts;
 
-public interface INavigationService
+public interface INavigationService : IService
 {
     Task SetCurrentPage<T>(params (string Name, object Value)[] parameters) where T : INavigationPage;
 
