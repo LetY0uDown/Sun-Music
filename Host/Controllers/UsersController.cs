@@ -10,16 +10,15 @@ public class UsersController : ControllerBase
 {
     private readonly DatabaseContext _db;
 
-    public UsersController(DatabaseContext db)
+    public UsersController (DatabaseContext db)
     {
         _db = db;
     }
 
     [HttpGet("/u/{id}")]
-    public async Task<ActionResult<User>> GetUserByID([FromRoute] string id)
+    public async Task<ActionResult<User>> GetUserByID ([FromRoute] string id)
     {
-        try
-        {
+        try {
             var user = await _db.Users.FindAsync(id);
 
             if (user is null)
@@ -27,30 +26,26 @@ public class UsersController : ControllerBase
 
             return user;
         }
-        catch
-        {
+        catch {
             return BadRequest();
         }
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PublicUser>>> GetUserList()
+    public async Task<ActionResult<IEnumerable<PublicUser>>> GetUserList ()
     {
-        try
-        {
+        try {
             var users = _db.Users.ToList();
 
             List<PublicUser> publicUsers = new List<PublicUser>();
 
-            foreach (var u in users)
-            {
+            foreach (var u in users) {
                 publicUsers.Add(u);
             }
 
             return Ok(publicUsers);
         }
-        catch
-        {
+        catch {
             return BadRequest();
         }
     }

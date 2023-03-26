@@ -14,7 +14,7 @@ public class TracksController : ControllerBase
     private readonly IConfiguration _config;
     private readonly IHubContext<MainHub> _hub;
 
-    public TracksController(DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
+    public TracksController (DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
     {
         _database = database;
         _idGen = idGen;
@@ -22,8 +22,8 @@ public class TracksController : ControllerBase
         _hub = hub;
     }
 
-    [HttpGet("/Tracks/{id}")]
-    public IActionResult DownloadFile([FromRoute] string id)
+    [HttpGet("/Tracks/File/{id}")]
+    public IActionResult DownloadFile ([FromRoute] string id)
     {
         var track = _database.MusicTracks.Find(id);
 
@@ -41,7 +41,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet("/Tracks")]
-    public ActionResult<IEnumerable<MusicTrack>> GetTracks()
+    public ActionResult<IEnumerable<MusicTrack>> GetTracks ()
     {
         IEnumerable<MusicTrack> tracks;
 
@@ -56,7 +56,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("/Tracks/Upload")]
-    public async Task<ActionResult<string>> PostTrack([FromBody] MusicTrack track)
+    public async Task<ActionResult<string>> PostTrack ([FromBody] MusicTrack track)
     {
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
                                                           && t.ArtistName == track.ArtistName);
@@ -80,7 +80,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("/Tracks/Upload/File/{id}")]
-    public async Task<ActionResult<bool>> PostFile(IFormFile file, [FromRoute] string id)
+    public async Task<ActionResult<bool>> PostFile ([FromRoute] string id, [FromForm] IFormFile file)
     {
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
         var filePath = Path.Combine(path, file.FileName);
@@ -94,14 +94,14 @@ public class TracksController : ControllerBase
             return BadRequest();
 
         if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);  
+            Directory.CreateDirectory(path);
 
         track.FileName = file.FileName;
         await _database.SaveChangesAsync();
 
         try {
             using FileStream fs = new(path, FileMode.Create);
-                await file.CopyToAsync(fs);
+            await file.CopyToAsync(fs);
         }
         catch {
             return false;

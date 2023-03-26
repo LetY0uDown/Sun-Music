@@ -6,6 +6,7 @@ using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Database;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -19,7 +20,7 @@ public class TrackUploadingViewModel : ViewModel
 
     private MusicTrack _musicTrack;
 
-    public TrackUploadingViewModel(IAPIClient apiClient, IConfiguration config)
+    public TrackUploadingViewModel (IAPIClient apiClient, IConfiguration config)
     {
         _apiClient = apiClient;
         _config = config;
@@ -41,17 +42,14 @@ public class TrackUploadingViewModel : ViewModel
 
     public BitmapImage TrackImage { get; private set; }
 
-    public override Task Display()
+    public override Task Display ()
     {
-        SelectFileCommand = new(o =>
-        {
-            OpenFileDialog fileDialog = new()
-            {
+        SelectFileCommand = new(o => {
+            OpenFileDialog fileDialog = new() {
                 Filter = _config["Filters:Music"]
             };
 
-            if ((bool)fileDialog.ShowDialog())
-            {
+            if ((bool)fileDialog.ShowDialog()) {
                 FilePath = fileDialog.FileName;
 
                 Track track = new(fileDialog.FileName);
@@ -60,25 +58,29 @@ public class TrackUploadingViewModel : ViewModel
                 Artist = track.Artist;
                 Album = track.Album;
 
-                _musicTrack = new()
-                {
-                    Title = track.Title,
-                    ArtistName = track.Artist,
-                    AlbumName = track.Album,
-                    DurationMs = (int)track.DurationMs
+                _musicTrack = new() {
+                    Title = Title,
+                    ArtistName = Artist,
+                    AlbumName = Album,
+                    DurationMs = (int)track.DurationMs,
+                    ID = Guid.Empty.ToString(),
+                    FileName = fileDialog.FileName,
+                    ReleaseDate = DateTime.Now
                 };
             }
         });
 
-        SelectImageCommand = new(o =>
-        {
-            var fileDialog = new OpenFileDialog
-            {
+        SelectImageCommand = new(o => {
+            if (_musicTrack is null) {
+                InfoBox.Show("Сначала выбирете трек");
+                return;
+            }
+
+            var fileDialog = new OpenFileDialog {
                 Filter = _config["Filters:Images"]
             };
 
-            if (fileDialog.ShowDialog() == true)
-            {
+            if (fileDialog.ShowDialog() == true) {
                 BitmapImage picture = new();
 
                 picture.BeginInit();
@@ -94,13 +96,11 @@ public class TrackUploadingViewModel : ViewModel
             }
         });
 
-        UploadTrackCommand = new(async o =>
-        {
-            var id = await _apiClient.PostAsync<MusicTrack, string>(_musicTrack, "Music");
+        UploadTrackCommand = new(async o => {
+            var id = await _apiClient.PostAsync<MusicTrack, string>(_musicTrack, "Tracks/Upload");
 
-            if (id is not null)
-            {
-                await _apiClient.SendFileAsync(FilePath, $"Music/File/{id}");
+            if (id is not null) {
+                await _apiClient.SendFileAsync(FilePath, $"Tracks/Upload/File/{id}");
             }
         });
 

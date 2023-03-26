@@ -8,12 +8,12 @@ public class PasswordEncoder : IPasswordEncoder
 {
     private readonly IConfiguration _configuration;
 
-    public PasswordEncoder(IConfiguration configuration)
+    public PasswordEncoder (IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public string Encode(string pass)
+    public string Encode (string pass)
     {
         var saltBytes = Encoding.UTF8.GetBytes(_configuration["PasswordSalt"]);
 

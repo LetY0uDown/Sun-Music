@@ -63,8 +63,6 @@ public sealed class RegistrationViewModel : ViewModel
                 App.AuthorizeData = authData;
                 _navigation.SetMainWindow<MainWindow>();
             }
-
-
         }, b => !string.IsNullOrWhiteSpace(Username) &&
                 !string.IsNullOrWhiteSpace(Password));
 

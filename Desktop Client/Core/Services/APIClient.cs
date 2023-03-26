@@ -30,7 +30,7 @@ internal sealed class APIClient : IAPIClient
         bool isSuccess = false;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new(url);
+            RestRequest request = new(url, Method.Delete);
 
             try {
                 var response = await client.DeleteAsync(request);
@@ -50,14 +50,14 @@ internal sealed class APIClient : IAPIClient
         TEntity entity = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new(url);
+            RestRequest request = new(url, Method.Get);
 
             try {
                 var response = await client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode) {
                     InfoBox.Show(response.Content, response.StatusCode.ToString());
-                    
+
                     return default;
                 }
 
@@ -76,7 +76,7 @@ internal sealed class APIClient : IAPIClient
         TResponse resp = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(url).AddJsonBody(value);
+            RestRequest request = new RestRequest(url, Method.Post).AddJsonBody(value);
 
             try {
                 var response = await client.PostAsync(request);
@@ -102,7 +102,7 @@ internal sealed class APIClient : IAPIClient
         TResponse resp = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(url).AddJsonBody(value);
+            RestRequest request = new RestRequest(url, Method.Put).AddJsonBody(value);
 
             try {
                 var response = await client.PutAsync(request);
@@ -128,7 +128,7 @@ internal sealed class APIClient : IAPIClient
         bool isSuccess = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(uri).AddFile("file", filePath, "multipart/form-data");
+            RestRequest request = new RestRequest(uri, Method.Post).AddFile("file", filePath, "multipart/form-data");
 
             try {
                 var response = await client.PostAsync(request);
