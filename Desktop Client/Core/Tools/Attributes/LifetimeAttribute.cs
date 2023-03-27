@@ -3,9 +3,9 @@
 namespace Desktop_Client.Core.Tools.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-internal class HasLifetimeAttribute : Attribute 
+public class LifetimeAttribute : Attribute
 {
-    public HasLifetimeAttribute(Lifetime lifetime)
+    public LifetimeAttribute(Lifetime lifetime)
     {
         Lifetime = lifetime;
     }

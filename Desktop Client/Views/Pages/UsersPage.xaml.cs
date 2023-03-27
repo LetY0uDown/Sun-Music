@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public partial class UsersPage : Page, INavigationPage
 {
     private readonly UsersListViewModel _viewModel;

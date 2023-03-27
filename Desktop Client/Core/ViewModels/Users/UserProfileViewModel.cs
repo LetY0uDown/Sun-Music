@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Users;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class UserProfileViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;

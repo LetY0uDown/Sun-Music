@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Desktop_Client.Views.Windows;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public partial class AuthWindow : Window, INavigationWindow
 {
     private readonly AuthNavigationViewModel _viewModel;

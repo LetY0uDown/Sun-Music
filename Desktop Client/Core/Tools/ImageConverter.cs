@@ -6,6 +6,20 @@ namespace Desktop_Client.Core.Tools;
 
 internal static class ImageConverter
 {
+    internal static BitmapImage CreateImageFromFile(string fileName)
+    {
+        BitmapImage picture = new();
+
+        picture.BeginInit();
+
+        picture.UriSource = new(fileName);
+        picture.CacheOption = BitmapCacheOption.OnLoad;
+
+        picture.EndInit();
+
+        return picture;
+    }
+
     internal static BitmapImage ImageFromBytes(byte[] bytes)
     {
         BitmapImage image = new();

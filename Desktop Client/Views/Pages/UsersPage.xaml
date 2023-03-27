@@ -20,7 +20,7 @@
             <TextBox x:Name="searchTB" Padding="15 5"
                      MaxLength="16"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource UserDataTextBox}" FontSize="14"/>
+                     Style="{StaticResource UserDataTextBox}" FontSize="22"/>
 
             <TextBlock Text="Поиск.." VerticalAlignment="Center"
                            IsHitTestVisible="False"

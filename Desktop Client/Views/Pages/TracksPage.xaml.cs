@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public partial class TracksPage : Page, INavigationPage
 {
     private readonly TracksViewModel _viewModel;

@@ -1,9 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
-using Desktop_Client.Core.Services;
 using Desktop_Client.Core.Tools.Extensions;
 using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Windows;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,18 +27,6 @@ public sealed partial class App : Application
         navService.SetMainWindow<AuthWindow>();
     }
 
-    private static HubConnection SetupHub(string host)
-    {
-        var connection = new HubConnectionBuilder()
-                            .WithUrl(host + "Hub")
-                            .WithAutomaticReconnect()
-                            .Build();
-
-        Task.Run(async () => await connection.StartAsync());
-
-        return connection;
-    }
-
     private static IHost ConfigureHosting ()
     {
         var builder = new ConfigurationBuilder()
@@ -49,11 +35,8 @@ public sealed partial class App : Application
 
         var config = builder.Build();
 
-        var hub = SetupHub(config["HostURL:HTTP"]);
-
         var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder().ConfigureServices(services => {
             services.AddSingleton(typeof(IConfiguration), config);
-            services.AddSingleton(typeof(HubConnection), hub);
 
             services.AddServices();
             services.RegisterViewModels<ViewModel>();

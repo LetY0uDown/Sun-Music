@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Desktop_Client.Views.Windows;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public partial class TrackUploadingWindow : Window, INavigationWindow
 {
     private readonly TrackUploadingViewModel _viewModel;

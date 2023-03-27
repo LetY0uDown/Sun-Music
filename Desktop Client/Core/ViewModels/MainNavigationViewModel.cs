@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class MainNavigationViewModel : NavigationViewModel
 {
     private readonly INavigationService _navigation;
@@ -27,16 +27,20 @@ public sealed class MainNavigationViewModel : NavigationViewModel
 
     public UICommand NavigateToSettingsCommand { get; private set; }
 
-    public override Task Display()
+    public override async Task Display()
     {
-        NavigateToUsersCommand = new(o => {
-            _navigation.SetCurrentPage<UsersPage>();
+        NavigateToUsersCommand = new(async o => {
+            await _navigation.SetCurrentPage<UsersPage>();
         });
 
-        NavigateToSettingsCommand = new(o => {
-            _navigation.SetCurrentPage<OptionsPage>();
+        NavigateToSettingsCommand = new(async o => {
+            await _navigation.SetCurrentPage<OptionsPage>();
         });
 
-        return base.Display();
+        NavigateToTracksCommand = new(async o => {
+            await _navigation.SetCurrentPage<TracksPage>();
+        });
+
+        await _navigation.SetCurrentPage<TracksPage>();
     }
 }

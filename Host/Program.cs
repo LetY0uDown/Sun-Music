@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IAuthTokenGen, JWTTokenGenerator>();
 
 builder.Services.Configure<FormOptions>(options => {
     options.ValueLengthLimit = int.MaxValue;
-    options.MultipartBodyLengthLimit = long.MaxValue; // if don't set default value is: 128 MB
+    options.MultipartBodyLengthLimit = long.MaxValue;
     options.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
@@ -59,22 +59,5 @@ app.UseAuthorization();
 app.MapHub<MainHub>("MainHub");
 
 app.MapControllers();
-
-app.Use(async (context, next) => {
-    Console.WriteLine($"Request: {context.Request.Path}\n{context.GetEndpoint()?.DisplayName}\n{context.Request.ContentType}");
-
-    try {
-        if (context.Request.Form is not null && context.Request.Form.Count > 0) {
-            foreach (var form in context.Request.Form) {
-                Console.WriteLine($"{form.Key} - {form.Value}");
-            }
-        }
-    }
-    catch {
-
-    }
-
-    await next?.Invoke();
-});
 
 app.Run();

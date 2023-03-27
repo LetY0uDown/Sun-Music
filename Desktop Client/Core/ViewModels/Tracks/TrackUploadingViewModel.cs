@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Core.ViewModels.Tracks;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public class TrackUploadingViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
@@ -53,7 +53,7 @@ public class TrackUploadingViewModel : ViewModel
                 FilePath = fileDialog.FileName;
 
                 Track track = new(fileDialog.FileName);
-
+                
                 Title = track.Title;
                 Artist = track.Artist;
                 Album = track.Album;
@@ -81,22 +81,17 @@ public class TrackUploadingViewModel : ViewModel
             };
 
             if (fileDialog.ShowDialog() == true) {
-                BitmapImage picture = new();
-
-                picture.BeginInit();
-
-                picture.UriSource = new(fileDialog.FileName);
-                picture.CacheOption = BitmapCacheOption.OnLoad;
-
-                picture.EndInit();
-
-                TrackImage = picture;
+                TrackImage = ImageConverter.CreateImageFromFile(fileDialog.FileName);
 
                 _musicTrack.ImageBytes = ImageConverter.BytesFromImage(TrackImage);
             }
         });
 
         UploadTrackCommand = new(async o => {
+            _musicTrack.Title = Title;
+            _musicTrack.AlbumName = Album;
+            _musicTrack.ArtistName = Artist;
+
             var id = await _apiClient.PostAsync<MusicTrack, string>(_musicTrack, "Tracks/Upload");
 
             if (id is not null) {

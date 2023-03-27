@@ -50,7 +50,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBox x:Name="filePathTB" Padding="15 5"
-                         MaxLength="16"
+                         MaxLength="16" IsReadOnly="True"
                          Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource UserDataTextBox}"/>
 

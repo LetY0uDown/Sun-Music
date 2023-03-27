@@ -5,54 +5,56 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Desktop_Client.Core.Tools.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    private static Type[] GetTypes ()
+    private static Type[] GetTypes()
     {
         return Assembly.GetExecutingAssembly()
                        .GetTypes();
     }
 
-    private static Lifetime DetermineLifetime (Type service, bool inheritAttributes)
+    private static Lifetime DetermineLifetime(Type service, bool inheritAttributes)
     {
-#pragma warning disable IDE0019 // Use pattern matching
         var lifetimeAttribute = service.GetCustomAttributes(inheritAttributes)
-                                       .FirstOrDefault(s => s is HasLifetimeAttribute)
-                                       as HasLifetimeAttribute;
-#pragma warning restore IDE0019 // Use pattern matching
-
+                                       .FirstOrDefault(s => s is LifetimeAttribute)
+                                       as LifetimeAttribute;
+        
         if (lifetimeAttribute is null)
-            throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
+                throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
 
         return lifetimeAttribute.Lifetime;
     }
 
-    private static void AddServiceTypesAsBaseTypes (IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
+    private static void AddServiceTypesAsBaseTypes(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services) {
+        foreach (var service in services)
+        {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            var baseType = service.GetInterfaces().Where(i => nameof(i) != nameof(IService)).FirstOrDefault();
-
-            if (lifetime == Lifetime.Singleton) {
-                serviceCollection.AddSingleton(baseType, service);
+            if (lifetime == Lifetime.Singleton)
+            {
+                serviceCollection.AddSingleton(service, service.BaseType);
                 continue;
             }
 
             if (lifetime == Lifetime.Transient)
-                serviceCollection.AddTransient(baseType, service);
+                serviceCollection.AddTransient(service, service.BaseType);
         }
     }
 
-    private static void AddServiceTypesDirectly (IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
+    private static void AddServiceTypesDirectly(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services) {
+        foreach (var service in services)
+        {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            if (lifetime == Lifetime.Singleton) {
+            if (lifetime == Lifetime.Singleton)
+            {
                 serviceCollection.AddSingleton(service, service);
                 continue;
             }
@@ -70,7 +72,7 @@ internal static class ServiceCollectionExtensions
             AddServiceTypesDirectly(serviceCollection, services, inheritAttributes);
     }
 
-    internal static void AddServices (this IServiceCollection serviceCollection)
+    internal static void AddServices(this IServiceCollection serviceCollection)
     {
         var services = GetTypes().Where(t => t.IsClass &&
                                              t.IsAssignableTo(typeof(IService)));

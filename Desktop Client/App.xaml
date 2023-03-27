@@ -22,6 +22,7 @@
                 
                 <!-- Templates -->
                 <ResourceDictionary Source="Resources/Templates/PublicUserTemplate.xaml" />
+                <ResourceDictionary Source="Resources/Templates/TrackTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

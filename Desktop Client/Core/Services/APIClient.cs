@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 internal sealed class APIClient : IAPIClient
 {
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions {
@@ -121,25 +121,5 @@ internal sealed class APIClient : IAPIClient
         }
 
         return resp;
-    }
-
-    public async Task<bool> SendFileAsync (string filePath, string uri)
-    {
-        bool isSuccess = default;
-
-        using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(uri, Method.Post).AddFile("file", filePath, "multipart/form-data");
-
-            try {
-                var response = await client.PostAsync(request);
-
-                isSuccess = response.IsSuccessful;
-            }
-            catch (Exception e) {
-                InfoBox.Show(e.Message, "Error");
-            }
-        }
-
-        return isSuccess;
     }
 }

@@ -21,13 +21,13 @@
                 </Ellipse>
 
                 <icon:MaterialIcon Kind="UserCircleOutline"
-                                   Width="120" Height="120"/>
+                                   Width="80" Height="80"/>
             </Grid>
 
             <TextBlock Grid.Column="1"
-                           Text="{Binding Username}" FontSize="32"
-                           VerticalAlignment="Center" HorizontalAlignment="Left"
-                           Margin="15 0"/>
+                       Text="{Binding Username}" FontSize="26"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="15 0"/>
 
         </Grid>
     </DataTemplate>

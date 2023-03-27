@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
-[HasLifetime(Lifetime.Singleton)]
+[Lifetime(Lifetime.Singleton)]
 internal sealed class NavigationService : INavigationService
 {
     private NavigationViewModel _navigationVM;

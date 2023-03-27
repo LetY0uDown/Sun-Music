@@ -82,6 +82,7 @@
 
                         <RadioButton Style="{StaticResource NavigationButton}"
                                      Click="NavButton_Click" IsChecked="True"
+                                     Command="{Binding NavigateToTracksCommand}"
                                      Foreground="#ede7f3" GroupName="NavButtons">
                             <StackPanel>
                                 <icon:MaterialIcon Kind="Music" />

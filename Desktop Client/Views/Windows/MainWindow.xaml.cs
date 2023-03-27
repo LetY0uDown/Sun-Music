@@ -11,7 +11,7 @@ using System.Windows.Media.Animation;
 
 namespace Desktop_Client.Views.Windows;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public partial class MainWindow : Window, INavigationWindow
 {
     private double _rowHeight;
@@ -40,10 +40,11 @@ public partial class MainWindow : Window, INavigationWindow
         _rowHeight = NavigationCanvas.ActualHeight / _rowsCount;
         SelectionFlag.Height = _rowHeight;
 
-        await _viewModel.Display();
         DataContext = _viewModel;
 
         _navigation.SetViewModel(_viewModel);
+
+        await _viewModel.Display();
     }
 
     async Task INavigationWindow.Hide ()

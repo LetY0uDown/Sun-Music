@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Desktop_Client.Views.Pages;
 
-[HasLifetime(Lifetime.Transient), Parameter(typeof(string), nameof(UserID))]
+[Lifetime(Lifetime.Transient), Parameter(typeof(string), nameof(UserID))]
 public partial class UserProfilePage : Page, INavigationPage
 {
     private readonly UserProfileViewModel _viewModel;

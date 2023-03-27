@@ -5,5 +5,5 @@ namespace Desktop_Client.Core.Abstracts;
 
 public interface IHubFactory : IService
 {
-    Task<HubConnection> CreateHub(string route);
+    Task<HubConnection> CreateHub();
 }

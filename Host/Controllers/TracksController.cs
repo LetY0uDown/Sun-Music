@@ -67,10 +67,8 @@ public class TracksController : ControllerBase
         track.ID = _idGen.GenerateID();
 
         try {
-            _database.MusicTracks.Add(track);
+            await _database.MusicTracks.AddAsync(track);
             await _database.SaveChangesAsync();
-
-            await _hub.Clients.Group("Tracks").SendAsync("RecieveTrack", track);
         }
         catch {
             // TODO: catch exception
@@ -85,25 +83,29 @@ public class TracksController : ControllerBase
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
         var filePath = Path.Combine(path, file.FileName);
 
-        var track = _database.MusicTracks.Find(id);
+        try
+        {
+            var track = _database.MusicTracks.Find(id);
 
-        if (track is null)
-            return NotFound();
+            if (track is null)
+                return NotFound();
 
-        if (System.IO.File.Exists(filePath))
-            return BadRequest();
+            if (System.IO.File.Exists(filePath))
+                return BadRequest();
 
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
 
-        track.FileName = file.FileName;
-        await _database.SaveChangesAsync();
+            track.FileName = file.FileName;
+            await _database.SaveChangesAsync();
 
-        try {
-            using FileStream fs = new(path, FileMode.Create);
+            await _hub.Clients.Group("Tracks").SendAsync("RecieveTrack", track);
+                    
+            using FileStream fs = new(filePath, FileMode.Create);
             await file.CopyToAsync(fs);
         }
-        catch {
+        catch (Exception e) {
+            Console.WriteLine(e.Message);
             return false;
         }
 

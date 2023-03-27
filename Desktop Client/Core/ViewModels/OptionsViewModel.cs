@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class OptionsViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;

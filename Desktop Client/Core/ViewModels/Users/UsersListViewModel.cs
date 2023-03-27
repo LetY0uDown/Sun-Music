@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Users;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class UsersListViewModel : ViewModel
 {
     private string _searchText;
 
     private IEnumerable<PublicUser> _usersOriginal;
 
-    private readonly IAPIClient _ApiClient;
+    private readonly IAPIClient _apiClient;
     private readonly INavigationService _navigation;
 
     public UsersListViewModel (IAPIClient client, INavigationService navigation)
     {
-        _ApiClient = client;
+        _apiClient = client;
         _navigation = navigation;
     }
 
@@ -47,7 +47,7 @@ public sealed class UsersListViewModel : ViewModel
 
     public override async Task Display()
     {
-        _usersOriginal = await _ApiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
+        _usersOriginal = await _apiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
         Users = new(_usersOriginal);
 
         OpenUserProfile = new(o => {

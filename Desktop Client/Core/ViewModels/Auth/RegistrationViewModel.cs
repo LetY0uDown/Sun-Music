@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace Desktop_Client.Core.ViewModels.Auth;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class RegistrationViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
@@ -41,15 +41,12 @@ public sealed class RegistrationViewModel : ViewModel
 
     public override Task Display()
     {
-        RedirectToLoginCommand = new(o =>
-        {
+        RedirectToLoginCommand = new(o => {
             _navigation.SetCurrentPage<LoginPage>();
         });
 
-        RegistrationCommand = new(async o =>
-        {
-            User user = new()
-            {
+        RegistrationCommand = new(async o => {
+            User user = new() {
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
@@ -58,33 +55,20 @@ public sealed class RegistrationViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Register");
 
-            if (authData is not null)
-            {
+            if (authData is not null) {
                 App.AuthorizeData = authData;
-                _navigation.SetMainWindow<MainWindow>();
+                await _navigation.SetMainWindow<MainWindow>();
             }
         }, b => !string.IsNullOrWhiteSpace(Username) &&
                 !string.IsNullOrWhiteSpace(Password));
 
-        SelectPictureCommand = new(o =>
-        {
-            var fileDialog = new OpenFileDialog
-            {
+        SelectPictureCommand = new(o => {
+            var fileDialog = new OpenFileDialog {
                 Filter = _config["Filters:Images"]
             };
 
-            if (fileDialog.ShowDialog() == true)
-            {
-                BitmapImage picture = new();
-
-                picture.BeginInit();
-
-                picture.UriSource = new(fileDialog.FileName);
-                picture.CacheOption = BitmapCacheOption.OnLoad;
-
-                picture.EndInit();
-
-                ProfilePicture = picture;
+            if (fileDialog.ShowDialog() == true) {
+                ProfilePicture = ImageConverter.CreateImageFromFile(fileDialog.FileName);
             }
         });
 

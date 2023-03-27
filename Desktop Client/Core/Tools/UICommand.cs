@@ -15,10 +15,7 @@ public sealed class UICommand : ICommand
         _execute = execute;
     }
 
-    public UICommand (Action<object> execute, Func<object, bool> canExecute) : this(execute)
-    {
-        _canExecute = canExecute;
-    }
+    public UICommand (Action<object> execute, Func<object, bool> canExecute) : this(execute) => _canExecute = canExecute;
 
     public event EventHandler CanExecuteChanged
     {

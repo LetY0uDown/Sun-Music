@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Auth;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 public sealed class LoginViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
@@ -35,10 +35,8 @@ public sealed class LoginViewModel : ViewModel
 
     public override Task Display()
     {
-        LoginCommand = new(async o =>
-        {
-            User user = new()
-            {
+        LoginCommand = new(async o => {
+            User user = new() {
                 ID = string.Empty,
                 Username = Username,
                 Password = Password,
@@ -47,16 +45,14 @@ public sealed class LoginViewModel : ViewModel
 
             var authData = await _apiClient.PostAsync<User, AuthorizeData>(user, "Login");
 
-            if (authData is not null)
-            {
+            if (authData is not null) {
                 App.AuthorizeData = authData;
-                _navigation.SetMainWindow<MainWindow>();
+                await _navigation.SetMainWindow<MainWindow>();
             }
         });
 
-        RedirectToRegistrationCommand = new(o =>
-        {
-            _navigation.SetCurrentPage<RegistrationPage>();
+        RedirectToRegistrationCommand = new(async o => {
+            await _navigation.SetCurrentPage<RegistrationPage>();
         });
 
         return base.Display();

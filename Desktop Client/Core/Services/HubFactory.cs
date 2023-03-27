@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Services;
 
-[HasLifetime(Lifetime.Transient)]
+[Lifetime(Lifetime.Transient)]
 internal sealed class HubFactory : IHubFactory
 {
     private readonly IConfiguration _config;
@@ -16,10 +16,10 @@ internal sealed class HubFactory : IHubFactory
         _config = config;
     }
 
-    public async Task<HubConnection> CreateHub(string route)
+    public async Task<HubConnection> CreateHub()
     {
         var connection = new HubConnectionBuilder()
-                            .WithUrl(_config["HostURL:HTTP"] + route)
+                            .WithUrl(_config["HostURL:HTTP"] + "MainHub")
                             .WithAutomaticReconnect()
                             .Build();
 
