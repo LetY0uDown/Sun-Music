@@ -109,14 +109,4 @@ public partial class MainWindow : Window, INavigationWindow
     {
         SelectionFlag.Visibility = Visibility.Visible;
     }
-
-    private void PlayPauseButton_Click (object sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-
-        _isPlayingTrack = !_isPlayingTrack;
-
-        PlayPauseIcon.Kind = _isPlayingTrack ? MaterialIconKind.Play
-                                             : MaterialIconKind.Pause;
-    }
 }

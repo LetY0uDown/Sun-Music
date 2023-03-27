@@ -22,21 +22,33 @@ internal class FileManager : IFileManager
         _hostURL = _config["HostURL:HTTP"];
     }
 
-    public Task<Stream> DownloadStream()
+    public async Task<Stream> DownloadStream(string fileID, string path)
     {
-        throw new NotImplementedException();
+        var fullPath = Path.Combine(path, fileID);
+
+        Stream stream = null!;
+
+        using (RestClient client = new(_hostURL)) {
+            RestRequest request = new(fullPath, Method.Get);
+
+            try {
+                stream = await client.DownloadStreamAsync(request);
+            } catch (Exception e) {
+                InfoBox.Show(e.Message, "Error");
+            }
+        }
+
+        return stream;
     }
 
-    public async Task SendFileAsync(string filePath, string uri)
+    public async Task UploadFileAsync(string filePath, string path)
     {
-        using (RestClient client = new(_hostURL))
-        {
-            RestRequest request = new RestRequest(uri, Method.Post).AddFile("file", filePath, "multipart/form-data");
+        using (RestClient client = new(_hostURL)) {
+            RestRequest request = new RestRequest(path, Method.Post).AddFile("file", filePath, "multipart/form-data");
 
             try {
                 var response = await client.PostAsync(request);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 InfoBox.Show(e.Message, "Error");
             }
         }

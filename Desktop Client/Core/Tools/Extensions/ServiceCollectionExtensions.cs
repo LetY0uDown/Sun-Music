@@ -23,48 +23,51 @@ internal static class ServiceCollectionExtensions
         var lifetimeAttribute = service.GetCustomAttributes(inheritAttributes)
                                        .FirstOrDefault(s => s is LifetimeAttribute)
                                        as LifetimeAttribute;
-        
+
         if (lifetimeAttribute is null)
-                throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
+            throw new InvalidOperationException($"Cannot determine lifetime of the service {service.FullName}");
 
         return lifetimeAttribute.Lifetime;
     }
 
     private static void AddServiceTypesAsBaseTypes(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services)
-        {
+        foreach (var service in services) {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            if (lifetime == Lifetime.Singleton)
-            {
-                serviceCollection.AddSingleton(service, service.BaseType);
+            var baseType = service.GetInterfaces()
+                                  .Where(i => nameof(i) != nameof(IService))
+                                  .FirstOrDefault();
+
+
+            if (lifetime == Lifetime.Singleton) {
+                serviceCollection.AddSingleton(baseType, service);
                 continue;
             }
 
-            if (lifetime == Lifetime.Transient)
-                serviceCollection.AddTransient(service, service.BaseType);
+            if (lifetime == Lifetime.Transient) {
+                serviceCollection.AddTransient(baseType, service);
+            }
         }
     }
 
     private static void AddServiceTypesDirectly(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services)
-        {
+        foreach (var service in services) {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            if (lifetime == Lifetime.Singleton)
-            {
+            if (lifetime == Lifetime.Singleton) {
                 serviceCollection.AddSingleton(service, service);
                 continue;
             }
 
-            if (lifetime == Lifetime.Transient)
+            if (lifetime == Lifetime.Transient) {
                 serviceCollection.AddTransient(service, service);
+            }
         }
     }
 
-    private static void AddServiceTypes (IServiceCollection serviceCollection, IEnumerable<Type> services, bool useBaseType, bool inheritAttributes = false)
+    private static void AddServiceTypes(IServiceCollection serviceCollection, IEnumerable<Type> services, bool useBaseType, bool inheritAttributes = false)
     {
         if (useBaseType)
             AddServiceTypesAsBaseTypes(serviceCollection, services, inheritAttributes);
@@ -80,7 +83,7 @@ internal static class ServiceCollectionExtensions
         AddServiceTypes(serviceCollection, services, useBaseType: true);
     }
 
-    internal static void RegisterViewModels<TViewModel> (this IServiceCollection services)
+    internal static void RegisterViewModels<TViewModel>(this IServiceCollection services)
     {
         var viewModels = GetTypes().Where(t => t.IsClass && !t.IsAbstract &&
                                                t.IsAssignableTo(typeof(TViewModel)));
@@ -88,7 +91,7 @@ internal static class ServiceCollectionExtensions
         AddServiceTypes(services, viewModels, useBaseType: false, inheritAttributes: true);
     }
 
-    internal static void AddViews (this IServiceCollection serviceCollection)
+    internal static void AddViews(this IServiceCollection serviceCollection)
     {
         var pages = GetTypes().Where(t => t.IsClass &&
                                           t.IsAssignableTo(typeof(IView)));

@@ -17,13 +17,14 @@ public class TrackUploadingViewModel : ViewModel
 {
     private readonly IAPIClient _apiClient;
     private readonly IConfiguration _config;
-
+    private readonly IFileManager _fileManager;
     private MusicTrack _musicTrack;
 
-    public TrackUploadingViewModel (IAPIClient apiClient, IConfiguration config)
+    public TrackUploadingViewModel (IAPIClient apiClient, IConfiguration config, IFileManager fileManager)
     {
         _apiClient = apiClient;
         _config = config;
+        _fileManager = fileManager;
     }
 
     public UICommand SelectFileCommand { get; private set; }
@@ -95,7 +96,7 @@ public class TrackUploadingViewModel : ViewModel
             var id = await _apiClient.PostAsync<MusicTrack, string>(_musicTrack, "Tracks/Upload");
 
             if (id is not null) {
-                await _apiClient.SendFileAsync(FilePath, $"Tracks/Upload/File/{id}");
+                await _fileManager.UploadFileAsync(FilePath, $"Tracks/Upload/File/{id}");
             }
         });
 

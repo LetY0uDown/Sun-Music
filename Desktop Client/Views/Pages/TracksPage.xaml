@@ -35,11 +35,11 @@
         <ListBox Background="Transparent" Grid.Row="1"
                  HorizontalContentAlignment="Stretch"
                  ItemTemplate="{StaticResource ResourceKey=MusicTrack}"
-                 ItemsSource="{Binding Tracks}" >
+                 ItemsSource="{Binding Tracks}" SelectedItem="{Binding SelectedTrack}">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Прослушать" />
-                    <MenuItem Header="Скачать" />
+                    <MenuItem Header="Скачать" Command="{Binding DownloadTrackCommand}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

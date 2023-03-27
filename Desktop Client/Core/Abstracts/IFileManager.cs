@@ -5,7 +5,7 @@ namespace Desktop_Client.Core.Abstracts;
 
 public interface IFileManager : IService
 {
-    Task<Stream> DownloadStream();
+    Task<Stream> DownloadStream(string fileID, string path);
 
-    Task SendFileAsync(string filePath, string url);
+    Task UploadFileAsync(string filePath, string path);
 }

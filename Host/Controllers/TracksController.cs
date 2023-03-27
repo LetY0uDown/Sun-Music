@@ -37,7 +37,7 @@ public class TracksController : ControllerBase
 
         var stream = new FileStream(path, FileMode.Open);
 
-        return File(stream, "APPLICATION/octet - stream");
+        return File(stream, "application/octet-stream");
     }
 
     [HttpGet("/Tracks")]
@@ -61,8 +61,9 @@ public class TracksController : ControllerBase
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
                                                           && t.ArtistName == track.ArtistName);
 
-        if (isTrackExist)
+        if (isTrackExist) {
             return BadRequest();
+        }
 
         track.ID = _idGen.GenerateID();
 
@@ -83,8 +84,7 @@ public class TracksController : ControllerBase
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
         var filePath = Path.Combine(path, file.FileName);
 
-        try
-        {
+        try {
             var track = _database.MusicTracks.Find(id);
 
             if (track is null)
@@ -103,8 +103,7 @@ public class TracksController : ControllerBase
                     
             using FileStream fs = new(filePath, FileMode.Create);
             await file.CopyToAsync(fs);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Console.WriteLine(e.Message);
             return false;
         }

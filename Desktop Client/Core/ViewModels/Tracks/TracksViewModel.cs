@@ -3,9 +3,11 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Models.Database;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,18 +22,23 @@ public class TracksViewModel : ViewModel
 
     private readonly IAPIClient _apiClient;
     private readonly IHubFactory _hubFactory;
-
+    private readonly IConfiguration _config;
+    private readonly IFileManager _fileManager;
     private HubConnection _hub;
 
-    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory)
+    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory, IConfiguration config, IFileManager fileManager)
     {
         _apiClient = apiClient;
         _hubFactory = hubFactory;
+        _config = config;
+        _fileManager = fileManager;
     }
 
     public UICommand DownloadTrackCommand { get; private set; }
 
     public ObservableCollection<MusicTrack> Tracks { get; private set; }
+
+    public MusicTrack SelectedTrack { get; set; }
 
     public string SearchText
     {
@@ -45,8 +52,15 @@ public class TracksViewModel : ViewModel
     public override async Task Display()
     {
         DownloadTrackCommand = new(async o => {
+            var stream = await _fileManager.DownloadStream(SelectedTrack.ID, "Tracks/File");
 
-        });
+            var path = Path.Combine(_config["DownloadedMusicPath"], SelectedTrack.FileName);
+
+            using (FileStream fs = new(path, FileMode.OpenOrCreate)) {
+                await stream.CopyToAsync(fs);
+            }
+
+        }, b => SelectedTrack is not null);
 
         _hub = await _hubFactory.CreateHub();
 
