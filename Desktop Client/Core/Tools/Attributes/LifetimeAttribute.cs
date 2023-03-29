@@ -2,6 +2,9 @@
 
 namespace Desktop_Client.Core.Tools.Attributes;
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+public class BaseTypeAttribute : Attribute { }
+
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class LifetimeAttribute : Attribute
 {
@@ -10,7 +13,7 @@ public class LifetimeAttribute : Attribute
         Lifetime = lifetime;
     }
 
-    public Lifetime Lifetime { get; private init; }
+    public Lifetime Lifetime { get; }
 }
 
 public enum Lifetime

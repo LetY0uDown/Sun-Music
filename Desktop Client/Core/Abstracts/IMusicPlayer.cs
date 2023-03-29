@@ -1,8 +1,10 @@
-﻿using Models.Database;
+﻿using Desktop_Client.Core.Tools.Attributes;
+using Models.Database;
 using System.Collections.Generic;
 
 namespace Desktop_Client.Core.Abstracts;
 
+[BaseType]
 public interface IMusicPlayer : IService
 {
     void SetTrack(MusicTrack track);

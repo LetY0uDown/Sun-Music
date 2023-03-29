@@ -144,8 +144,8 @@
 
                     <Frame Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" />
 
-                    <!-- Music Player -->
-                    <controls:MusicPlayer Grid.Row="1"/>
+                    <Frame Content="{Binding MusicPlayer}" NavigationUIVisibility="Hidden"
+                           Grid.Row="1"/>
                 </Grid>
             </Grid>
         </Grid>

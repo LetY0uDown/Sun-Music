@@ -38,7 +38,7 @@
                  ItemsSource="{Binding Tracks}" SelectedItem="{Binding SelectedTrack}">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Прослушать" />
+                    <MenuItem Header="Прослушать" Command="{Binding ListenTrackCommand}"/>
                     <MenuItem Header="Скачать" Command="{Binding DownloadTrackCommand}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>

@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Desktop_Client.Core.Tools.Attributes;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Abstracts;
 
+[BaseType]
 public interface IAPIClient : IService
 {
     Task<T> GetAsync<T>(string url) where T : class;

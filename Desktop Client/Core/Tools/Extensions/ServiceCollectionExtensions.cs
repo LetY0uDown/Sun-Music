@@ -18,6 +18,21 @@ internal static class ServiceCollectionExtensions
                        .GetTypes();
     }
 
+    private static Type GetBaseType(Type type)
+    {
+        var interfaces = type.GetInterfaces();
+
+        foreach (var i in interfaces) {
+            var attributes = i.GetCustomAttributes();
+
+            if (attributes.Any(a => a is BaseTypeAttribute)) {
+                return i;
+            }
+        }
+
+        throw new InvalidOperationException($"Can not get base type for {type.FullName}");
+    }
+
     private static Lifetime DetermineLifetime(Type service, bool inheritAttributes)
     {
         var lifetimeAttribute = service.GetCustomAttributes(inheritAttributes)
@@ -35,10 +50,7 @@ internal static class ServiceCollectionExtensions
         foreach (var service in services) {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            var baseType = service.GetInterfaces()
-                                  .Where(i => nameof(i) != nameof(IService))
-                                  .FirstOrDefault();
-
+            var baseType = GetBaseType(service);
 
             if (lifetime == Lifetime.Singleton) {
                 serviceCollection.AddSingleton(baseType, service);

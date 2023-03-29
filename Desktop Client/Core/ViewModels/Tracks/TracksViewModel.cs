@@ -24,15 +24,19 @@ public class TracksViewModel : ViewModel
     private readonly IHubFactory _hubFactory;
     private readonly IConfiguration _config;
     private readonly IFileManager _fileManager;
+    private readonly IMusicPlayer _musicPlayer;
     private HubConnection _hub;
 
-    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory, IConfiguration config, IFileManager fileManager)
+    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory, IConfiguration config, IFileManager fileManager, IMusicPlayer musicPlayer)
     {
         _apiClient = apiClient;
         _hubFactory = hubFactory;
         _config = config;
         _fileManager = fileManager;
+        _musicPlayer = musicPlayer;
     }
+
+    public UICommand ListenTrackCommand { get; private set; }
 
     public UICommand DownloadTrackCommand { get; private set; }
 
@@ -60,6 +64,10 @@ public class TracksViewModel : ViewModel
                 await stream.CopyToAsync(fs);
             }
 
+        }, b => SelectedTrack is not null);
+
+        ListenTrackCommand = new(o => {
+            _musicPlayer.SetTrack(SelectedTrack);
         }, b => SelectedTrack is not null);
 
         _hub = await _hubFactory.CreateHub();

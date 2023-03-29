@@ -1,8 +1,10 @@
-﻿using Desktop_Client.Core.ViewModels.Base;
+﻿using Desktop_Client.Core.Tools.Attributes;
+using Desktop_Client.Core.ViewModels.Base;
 using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Abstracts;
 
+[BaseType]
 public interface INavigationService : IService
 {
     Task SetCurrentPage<T>(params (string Name, object Value)[] parameters) where T : INavigationPage;

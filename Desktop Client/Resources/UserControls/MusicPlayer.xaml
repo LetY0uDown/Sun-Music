@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:icon="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="1350"
-             xmlns:icon="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF">
+             d:DesignHeight="150" d:DesignWidth="1350">
     
     <Grid Grid.Row="1" Background="{StaticResource MusicPlayerBackground}">
         <Grid.RowDefinitions>
@@ -41,14 +41,26 @@
 
             <!-- Track Info -->
             <StackPanel Orientation="Horizontal" Margin="15 0 0 0">
-                <Border Background="Black" 
-                                        Height="70" Width="70"
-                                        CornerRadius="5"/>
+                <Grid Width="90" Height="90">
+                    <Border CornerRadius="5"
+                            BorderBrush="{StaticResource MusicPlayerBackground}"
+                            BorderThickness="4" Panel.ZIndex="1" Margin="7">
+                        <Rectangle Panel.ZIndex="1">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{Binding TrackPicture, Converter={StaticResource BytesToImage}}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Border>
+
+                    <icon:MaterialIcon Kind="Image"/>
+                </Grid>
 
                 <StackPanel Margin="10 0 0 0" VerticalAlignment="Center">
-                    <TextBlock Text="Track title" FontWeight="DemiBold"
-                                               FontSize="32" Foreground="{StaticResource PlayerUIForeground}"/>
-                    <TextBlock Text="Artist" FontSize="26" Foreground="{StaticResource PlayerUIForeground}"/>
+                    <TextBlock Text="{Binding Title}" FontWeight="DemiBold"
+                               FontSize="32" Foreground="{StaticResource PlayerUIForeground}"/>
+                    
+                    <TextBlock Text="{Binding Artist}" 
+                               FontSize="26" Foreground="{StaticResource PlayerUIForeground}"/>
                 </StackPanel>
             </StackPanel>
 
@@ -79,12 +91,12 @@
                                                        HorizontalAlignment="Left"/>
 
                     <Slider VerticalAlignment="Center" Margin="50 0 50 0"
-                                            Maximum="100" Minimum="0" Value="50"
-                                            x:Name="VolumeSlider"/>
+                            Maximum="100" Minimum="0" Value="50"
+                            x:Name="VolumeSlider"/>
 
                     <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                               FontSize="20"
-                                               Text="{Binding ElementName=VolumeSlider, Path=Value, StringFormat=0}"/>
+                               FontSize="20"
+                               Text="{Binding ElementName=VolumeSlider, Path=Value, StringFormat=0}"/>
                 </Grid>
             </Grid>
         </Grid>
