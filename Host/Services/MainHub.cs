@@ -4,7 +4,7 @@ namespace Host.Services;
 
 public sealed class MainHub : Hub
 {
-    public async Task JoinGround (string groupName)
+    public async Task JoinGroup (string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
     }

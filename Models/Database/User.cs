@@ -1,4 +1,6 @@
-﻿namespace Models.Database;
+﻿using System.Text.Json.Serialization;
+
+namespace Models.Database;
 
 public partial class User : Entity
 {
@@ -17,8 +19,12 @@ public partial class User : Entity
 
     public byte[]? ImageBytes { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<ChatMember> Chatmembers { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Message> Messages { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Playlist> Playlists { get; set; }
+    [JsonIgnore]
     public virtual ICollection<TrackLike> TrackLikes { get; set; }
 }

@@ -1,7 +1,10 @@
 ﻿using Host.Interfaces;
 using Host.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Models.Database;
 
 namespace Host.Controllers;
@@ -20,6 +23,29 @@ public class TracksController : ControllerBase
         _idGen = idGen;
         _config = config;
         _hub = hub;
+    }
+
+    [HttpGet("/Tracks/User/{id}")]
+    public async Task<ActionResult<IEnumerable<MusicTrack>>> TracksByUser ([FromRoute] string id)
+    {
+        IEnumerable<MusicTrack> tracks = null!;
+
+        try {
+            if (!_database.Users.Any(u => u.ID == id)) {
+                return NotFound("User does not exist");
+            }
+
+            var tracksIDs = _database.TrackLikes.Where(tl => tl.UserID == id).Select(tl => tl.TrackID);
+
+            tracks = await _database.MusicTracks.Where(track => tracksIDs.Contains(track.ID)).ToListAsync();
+
+        }
+        catch (Exception ex) {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+
+        return Ok(tracks);
     }
 
     [HttpGet("/Tracks/File/{id}")]
@@ -100,14 +126,73 @@ public class TracksController : ControllerBase
             await _database.SaveChangesAsync();
 
             await _hub.Clients.Group("Tracks").SendAsync("RecieveTrack", track);
-                    
+
             using FileStream fs = new(filePath, FileMode.Create);
             await file.CopyToAsync(fs);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Console.WriteLine(e.Message);
             return false;
         }
 
         return true;
+    }
+
+    [HttpPost("/Tracks/Dislike/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> DislikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
+    {
+        try {
+            var trackLike = await _database.TrackLikes.FirstOrDefaultAsync(like => like.UserID == userID && like.TrackID == trackID);
+            _database.TrackLikes.Remove(trackLike);
+
+            await _database.SaveChangesAsync(true);
+
+            return NoContent();
+        } catch (Exception e) {
+            return Problem();
+        }
+    }
+
+    [HttpPost("/Tracks/Like/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> LikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
+    {
+        try {
+            TrackLike trackLike = new() {
+                ID = _idGen.GenerateID(),
+                UserID = userID,
+                TrackID = trackID
+            };
+
+            _database.TrackLikes.Add(trackLike);
+            await _database.SaveChangesAsync();
+
+            return NoContent();
+        }
+        catch (Exception e) {
+            return Problem();
+        }
+    }
+
+    [HttpGet("/Tracks/Favorite/{id}")]
+    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetFavoriteTracksByUser (string id)
+    {
+        try {
+            var ids = _database.TrackLikes.Where(e => e.UserID == id)?.Select(e => e.TrackID);
+            if (ids is null || !ids.Any()) {
+                return NotFound();
+            }
+
+            var tracks = _database.MusicTracks.Where(track => ids.Contains(track.ID));
+
+            if (tracks is null || !tracks.Any()) {
+                return NotFound();
+            }
+
+            return Ok(tracks);
+
+        }
+        catch (Exception e) {
+            return Problem();
+        }
     }
 }

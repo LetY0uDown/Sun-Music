@@ -2,7 +2,6 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
-using Desktop_Client.Resources.UserControls;
 using Desktop_Client.Views.Pages;
 using System.Threading.Tasks;
 
@@ -14,7 +13,7 @@ public sealed class MainNavigationViewModel : NavigationViewModel
     private readonly INavigationService _navigation;
     private readonly IMusicPlayer _musicPlayer;
 
-    public MainNavigationViewModel(INavigationService navigation, IMusicPlayer musicPlayer)
+    public MainNavigationViewModel (INavigationService navigation, IMusicPlayer musicPlayer)
     {
         _navigation = navigation;
         _musicPlayer = musicPlayer;
@@ -32,9 +31,10 @@ public sealed class MainNavigationViewModel : NavigationViewModel
 
     public UICommand NavigateToSettingsCommand { get; private set; }
 
-    public override async Task Display()
+    public override async Task Display ()
     {
         MusicPlayer = _musicPlayer;
+        await MusicPlayer.Initialize();
 
         NavigateToUsersCommand = new(async o => {
             await _navigation.SetCurrentPage<UsersPage>();
@@ -46,6 +46,10 @@ public sealed class MainNavigationViewModel : NavigationViewModel
 
         NavigateToTracksCommand = new(async o => {
             await _navigation.SetCurrentPage<TracksPage>();
+        });
+
+        NavigateToPlaylistsCommand = new(async o => {
+            await _navigation.SetCurrentPage<PlaylistsPage>();
         });
 
         await _navigation.SetCurrentPage<TracksPage>();

@@ -6,19 +6,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Models.Client;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Desktop_Client;
 
 public sealed partial class App : Application
 {
+    internal static List<string> FaviriteTracksIDs { get; set; }
+
     internal static AuthorizeData AuthorizeData { get; set; }
 
     internal static IHost Host { get; private set; }
 
-    private void Application_Startup(object sender, StartupEventArgs e)
+    private void Application_Startup (object sender, StartupEventArgs e)
     {
         Host = ConfigureHosting();
 

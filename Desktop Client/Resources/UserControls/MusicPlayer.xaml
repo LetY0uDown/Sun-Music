@@ -13,7 +13,24 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Slider Margin="5"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{Binding TimeElapsed}" FontSize="16"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <ProgressBar Margin="5" Grid.Column="1"
+                         x:Name="ProgressBar"
+                         Value="{Binding ProgressValue}"
+                         Minimum="0" Maximum="{Binding ProgressMaximum}"/>
+
+            <TextBlock Text="{Binding TotalTrackTime}" FontSize="16" Grid.Column="2"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -25,16 +42,18 @@
             </Grid.ColumnDefinitions>
 
             <!-- #region Control Buttons -->
-            <Button Grid.Column="1" Background="Transparent" BorderThickness="0">
+            <Button Grid.Column="1" Background="Transparent" BorderThickness="0"
+                    Command="{Binding PlayPrevCommand}">
                 <icon:MaterialIcon Kind="SkipPrevious"/>
             </Button>
 
             <Button Grid.Column="2" Background="Transparent" BorderThickness="0"
-                                    Click="PlayPauseButton_Click">
+                    Command="{Binding PlayCommand}">
                 <icon:MaterialIcon Kind="Play" x:Name="PlayPauseIcon"/>
             </Button>
 
-            <Button Grid.Column="3" Background="Transparent" BorderThickness="0">
+            <Button Grid.Column="3" Background="Transparent" BorderThickness="0"
+                    Command="{Binding PlayNextCommand}">
                 <icon:MaterialIcon Kind="SkipNext"/>
             </Button>
             <!-- #endregion -->
@@ -52,14 +71,16 @@
                         </Rectangle>
                     </Border>
 
-                    <icon:MaterialIcon Kind="Image"/>
+                    <icon:MaterialIcon Kind="Image" x:Name="PlaceholderImage"/>
                 </Grid>
 
                 <StackPanel Margin="10 0 0 0" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Title}" FontWeight="DemiBold"
+                    <TextBlock Text="{Binding Title, Converter={StaticResource LongTitle},
+                                                     ConverterParameter=20}" FontWeight="DemiBold"
                                FontSize="32" Foreground="{StaticResource PlayerUIForeground}"/>
-                    
-                    <TextBlock Text="{Binding Artist}" 
+
+                    <TextBlock Text="{Binding Artist, Converter={StaticResource LongTitle},
+                                                      ConverterParameter=20}" 
                                FontSize="26" Foreground="{StaticResource PlayerUIForeground}"/>
                 </StackPanel>
             </StackPanel>
@@ -74,25 +95,30 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
-                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <icon:MaterialIcon Kind="Download" />
+                    <ToggleButton Background="Transparent" BorderThickness="0"
+                                  Command="{Binding ShufflePlaylistCommand}">
+                        <icon:MaterialIcon Kind="Shuffle" />
+                    </ToggleButton>
 
-                    <icon:MaterialIcon Kind="Shuffle" Grid.Column="1"/>
 
-                    <icon:MaterialIcon Kind="Repeat" Grid.Column="2"/>
+                    <ToggleButton Background="Transparent" BorderThickness="0"
+                                  Grid.Column="1" Command="{Binding RepeatTrackCommand}"
+                                  IsChecked="{Binding IsRepeating}">
+                        <icon:MaterialIcon Kind="Repeat"/>
+                    </ToggleButton>
                 </Grid>
 
                 <!-- Volume Slider -->
                 <Grid Grid.Row="1" >
                     <icon:MaterialIcon Kind="VolumeHigh" 
-                                                       VerticalAlignment="Center"
-                                                       HorizontalAlignment="Left"/>
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"/>
 
                     <Slider VerticalAlignment="Center" Margin="50 0 50 0"
                             Maximum="100" Minimum="0" Value="50"
-                            x:Name="VolumeSlider"/>
+                            x:Name="VolumeSlider" ValueChanged="VolumeSlider_ValueChanged"/>
 
                     <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                FontSize="20"

@@ -2,7 +2,9 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.Configuration;
+using Models.Database;
 using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -30,6 +32,7 @@ internal sealed class APIClient : IAPIClient
         bool isSuccess = false;
 
         using (RestClient client = new(_hostURL)) {
+            client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
             RestRequest request = new(url, Method.Delete);
 
             try {
@@ -50,6 +53,7 @@ internal sealed class APIClient : IAPIClient
         TEntity entity = default;
 
         using (RestClient client = new(_hostURL)) {
+            client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
             RestRequest request = new(url, Method.Get);
 
             try {
@@ -76,7 +80,15 @@ internal sealed class APIClient : IAPIClient
         TResponse resp = default;
 
         using (RestClient client = new(_hostURL)) {
-            RestRequest request = new RestRequest(url, Method.Post).AddJsonBody(value);
+            if (App.AuthorizeData is not null) {
+                client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
+            }
+
+            RestRequest request = new RestRequest(url, Method.Post);
+
+            if (value is not null) {
+                request.AddJsonBody(value);
+            }
 
             try {
                 var response = await client.PostAsync(request);
@@ -84,6 +96,10 @@ internal sealed class APIClient : IAPIClient
                 if (!response.IsSuccessStatusCode) {
                     InfoBox.Show(response.Content, response.StatusCode.ToString());
 
+                    return default;
+                }
+
+                if (string.IsNullOrWhiteSpace(response.Content)) {
                     return default;
                 }
 
@@ -102,6 +118,7 @@ internal sealed class APIClient : IAPIClient
         TResponse resp = default;
 
         using (RestClient client = new(_hostURL)) {
+            client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
             RestRequest request = new RestRequest(url, Method.Put).AddJsonBody(value);
 
             try {

@@ -1,15 +1,18 @@
 ﻿using Desktop_Client.Core.Tools.Attributes;
 using Models.Database;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.Abstracts;
 
 [BaseType]
 public interface IMusicPlayer : IService
 {
-    void SetTrack(MusicTrack track);
+    Task Initialize ();
 
-    void SetVolume(int volume);
+    Task SetTrack(MusicTrack track);
+
+    void SetVolume(double volume);
 
     void Pause();
 
@@ -19,7 +22,7 @@ public interface IMusicPlayer : IService
 
     void PlayNext();
 
-    void SetPlaylist(LinkedList<MusicTrack> playlist);
+    void SetPlaylist(IEnumerable<MusicTrack> playlist);
 
     void RepeatCurrentTrack(bool repeat);
 
@@ -27,6 +30,4 @@ public interface IMusicPlayer : IService
 
     // TODO: Think more about this method's name (it returns normal order to shuffeled playlist)
     void OrderPlaylist();
-
-    void DownloadCurrentTrack();
 }

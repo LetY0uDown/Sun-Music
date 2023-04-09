@@ -2,6 +2,7 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
+using Desktop_Client.Views.Pages;
 using Desktop_Client.Views.Windows;
 using Models.Database;
 using System.Threading.Tasks;
@@ -22,14 +23,20 @@ public sealed class OptionsViewModel : ViewModel
 
     public UICommand UploadTrackCommand { get; private set; }
 
+    public UICommand CreatePlaylistCommand { get; private set; }
+
     public User CurrentUser { get; set; }
 
     public override async Task Display()
     {
         CurrentUser = await _apiClient.GetAsync<User>($"u/{App.AuthorizeData.ID}");
 
-        UploadTrackCommand ??= new(async o => {
+        UploadTrackCommand = new(async o => {
             await _navigation.DisplayWindow<TrackUploadingWindow>();
+        });
+
+        CreatePlaylistCommand = new(async o => {
+            await _navigation.SetCurrentPage<PlaylistCreatingPage>();
         });
     }
 }

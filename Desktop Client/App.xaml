@@ -8,6 +8,7 @@
             <converter:LongTitleConverter x:Key="LongTitle" />
             <converter:PlaceholderVisibilityConverter x:Key="PlaceholderVisibilty" />
             <converter:BytesToImageConverter x:Key="BytesToImage" />
+            <converter:IsFavoriteConverter x:Key="IsFavorite" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/ColorsDictionary.xaml" />
@@ -22,7 +23,6 @@
                 
                 <!-- Templates -->
                 <ResourceDictionary Source="Resources/Templates/PublicUserTemplate.xaml" />
-                <ResourceDictionary Source="Resources/Templates/TrackTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

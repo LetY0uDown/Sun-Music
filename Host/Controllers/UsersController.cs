@@ -37,7 +37,7 @@ public class UsersController : ControllerBase
         try {
             var users = _db.Users.ToList();
 
-            List<PublicUser> publicUsers = new List<PublicUser>();
+            List<PublicUser> publicUsers = new();
 
             foreach (var u in users) {
                 publicUsers.Add(u);

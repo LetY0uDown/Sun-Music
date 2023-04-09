@@ -1,4 +1,6 @@
-﻿namespace Models.Database;
+﻿using System.Text.Json.Serialization;
+
+namespace Models.Database;
 
 public partial class MusicTrack : Entity
 {
@@ -11,11 +13,12 @@ public partial class MusicTrack : Entity
     public string Title { get; set; } = null!;
     public string ArtistName { get; set; } = null!;
     public string AlbumName { get; set; } = null!;
-    public int DurationMs { get; set; }
     public DateTime ReleaseDate { get; set; }
     public byte[] ImageBytes { get; set; } = null!;
     public string FileName { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<PlaylistTrack> PlaylistTracks { get; set; }
+    [JsonIgnore]
     public virtual ICollection<TrackLike> TrackLikes { get; set; }
 }

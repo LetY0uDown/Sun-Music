@@ -8,7 +8,9 @@ internal sealed class LongTitleConverter : IValueConverter
 {
     public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
     {
-        int maxLenght = (int)parameter;
+        if (value is null) return null;
+
+        int maxLenght = int.Parse(parameter.ToString());
 
         var title = value.ToString();
 

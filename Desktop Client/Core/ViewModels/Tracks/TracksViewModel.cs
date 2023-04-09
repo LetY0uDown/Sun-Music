@@ -5,9 +5,11 @@ using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Models.Database;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ public class TracksViewModel : ViewModel
 {
     List<MusicTrack> _tracks;
 
+    private bool _onlyFavorite;
     private string _searchText;
 
     private readonly IAPIClient _apiClient;
@@ -25,9 +28,10 @@ public class TracksViewModel : ViewModel
     private readonly IConfiguration _config;
     private readonly IFileManager _fileManager;
     private readonly IMusicPlayer _musicPlayer;
+
     private HubConnection _hub;
 
-    public TracksViewModel(IAPIClient apiClient, IHubFactory hubFactory, IConfiguration config, IFileManager fileManager, IMusicPlayer musicPlayer)
+    public TracksViewModel (IAPIClient apiClient, IHubFactory hubFactory, IConfiguration config, IFileManager fileManager, IMusicPlayer musicPlayer)
     {
         _apiClient = apiClient;
         _hubFactory = hubFactory;
@@ -35,6 +39,19 @@ public class TracksViewModel : ViewModel
         _fileManager = fileManager;
         _musicPlayer = musicPlayer;
     }
+
+    public event EventHandler FavoritesUpdated;
+
+    public bool OnlyFavorite
+    {
+        get => _onlyFavorite;
+        set {
+            _onlyFavorite = value;
+            Search();
+        }
+    }
+
+    public UICommand LikeTrackCommand { get; private set; }
 
     public UICommand ListenTrackCommand { get; private set; }
 
@@ -49,12 +66,24 @@ public class TracksViewModel : ViewModel
         get => _searchText;
         set {
             _searchText = value;
-            Tracks = FindTracksByName(value);
+            Search();
         }
     }
 
-    public override async Task Display()
+    public override async Task Display ()
     {
+        LikeTrackCommand = new(async o => {
+            if (App.FaviriteTracksIDs.Contains(o.ToString())) {
+                await _apiClient.PostAsync<object, object>(null, $"/Tracks/Dislike/{o}/{App.AuthorizeData.ID}");
+                App.FaviriteTracksIDs.Remove(o.ToString());
+            } else {
+                await _apiClient.PostAsync<object, object>(null, $"/Tracks/Like/{o}/{App.AuthorizeData.ID}");
+                App.FaviriteTracksIDs.Add(o.ToString());
+            }
+
+            FavoritesUpdated?.Invoke(this, EventArgs.Empty);
+        });
+
         DownloadTrackCommand = new(async o => {
             var stream = await _fileManager.DownloadStream(SelectedTrack.ID, "Tracks/File");
 
@@ -63,11 +92,11 @@ public class TracksViewModel : ViewModel
             using (FileStream fs = new(path, FileMode.OpenOrCreate)) {
                 await stream.CopyToAsync(fs);
             }
-
         }, b => SelectedTrack is not null);
 
         ListenTrackCommand = new(o => {
             _musicPlayer.SetTrack(SelectedTrack);
+            _musicPlayer.SetPlaylist(Tracks);
         }, b => SelectedTrack is not null);
 
         _hub = await _hubFactory.CreateHub();
@@ -80,24 +109,34 @@ public class TracksViewModel : ViewModel
         Tracks = new(_tracks);
     }
 
-    public override async Task Leave()
+    public override async Task Leave ()
     {
         await _hub.SendAsync("LeaveGroup", "Tracks");
     }
 
-    private void ConfigureHubActions()
+    private void ConfigureHubActions ()
     {
         _hub.On<MusicTrack>("RecieveTrack", track => {
             _tracks.Add(track);
 
-            Tracks = FindTracksByName(SearchText);
+            Search();
         });
     }
 
-    private ObservableCollection<MusicTrack> FindTracksByName(string name)
+    private void Search ()
     {
-        return new(_tracks.Where(t =>
-                        t.Title.ToLower()
-                            .Contains(name.ToLower())));
+        IEnumerable<MusicTrack> finded = _tracks;
+
+        if (SearchText is not null) {
+            finded = finded.Where(t =>
+                           t.Title.ToLower()
+                                .Contains(SearchText.ToLower()));
+        }
+
+        if (OnlyFavorite) {
+            finded = finded.Where(track => App.FaviriteTracksIDs.Contains(track.ID));
+        }
+
+        Tracks = new(finded);
     }
 }

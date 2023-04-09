@@ -26,6 +26,12 @@
                 Command="{Binding UploadTrackCommand}"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Margin="25" Width="150"/>
+        
+        <Button Content="Создать плейлист" Grid.Row="1"
+                Style="{StaticResource RegularButton}"
+                Command="{Binding CreatePlaylistCommand}"
+                VerticalAlignment="Center" HorizontalAlignment="Left"
+                Margin="25" Width="150"/>
 
     </Grid>
 </Page>
