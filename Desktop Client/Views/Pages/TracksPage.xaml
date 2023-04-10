@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <!-- Search bar -->
-        <Grid Margin="10,10,0,10" HorizontalAlignment="Left" Width="350">
+        <Grid Margin="10 10 0 10" HorizontalAlignment="Left" Width="350">
             <TextBox x:Name="searchTB" Padding="15 5"
                      MaxLength="16"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"

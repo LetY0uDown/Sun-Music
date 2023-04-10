@@ -36,6 +36,10 @@ public sealed class MainNavigationViewModel : NavigationViewModel
         MusicPlayer = _musicPlayer;
         await MusicPlayer.Initialize();
 
+        NavigateToChatsCommand = new(async o => {
+            await _navigation.SetCurrentPage<ChatsPage>();
+        });
+
         NavigateToUsersCommand = new(async o => {
             await _navigation.SetCurrentPage<UsersPage>();
         });
