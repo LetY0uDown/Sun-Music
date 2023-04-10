@@ -33,6 +33,8 @@ public partial class PlaylistCreatingPage : Page, INavigationPage
             SelectImageButton.Visibility = System.Windows.Visibility.Hidden;
             SavePlaylistButton.Visibility = System.Windows.Visibility.Hidden;
 
+            titleTB.IsReadOnly = true;
+
             var tracks = await _client.GetAsync<IEnumerable<MusicTrack>>($"Playlists/Tracks/{PlaylistID}");
             _viewModel.PlaylistID = PlaylistID;
             _viewModel.Tracks = tracks.ToList();

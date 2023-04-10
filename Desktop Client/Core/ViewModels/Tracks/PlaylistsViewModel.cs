@@ -66,9 +66,7 @@ public sealed class PlaylistsViewModel : ViewModel
         set {
             _searchText = value;
 
-            if (!string.IsNullOrWhiteSpace(value)) {
-                Search();
-            }
+             Search();
         }
     }
 

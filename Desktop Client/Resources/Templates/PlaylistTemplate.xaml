@@ -1,6 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:model="clr-namespace:Models.Database;assembly=Models">
+                    xmlns:model="clr-namespace:Models.Database;assembly=Models"
+                    xmlns:converter="clr-namespace:Desktop_Client.Core.Tools.Converters">
+
+    <converter:BytesToImageConverter x:Key="BytesToImage" />
+    
     <DataTemplate DataType="{x:Type model:Playlist}" x:Key="PlaylistTemplate">
         <Grid>
             <Grid.RowDefinitions>

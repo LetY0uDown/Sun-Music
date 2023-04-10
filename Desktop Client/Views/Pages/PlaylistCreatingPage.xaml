@@ -65,7 +65,7 @@
                   x:Name="TracksList" BorderThickness="0"
                   ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   Background="Transparent"
-                  ItemsSource="{Binding FavoriteTracks}">
+                  ItemsSource="{Binding Tracks}">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:MusicTrack}">
                     <Grid HorizontalAlignment="Stretch">

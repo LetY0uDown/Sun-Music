@@ -1,0 +1,7 @@
+create "Chats/Create" chat in body
+get my chats "Chats/User/{id}"
+get chat by name (get all chats and search by)
+join chat "Chats/{chatID}/Join" user in body
+get messages from chat "Chats/{chatID}/Messages"
+send message in chat "Chats/{chatID}/Send/{senderID}" message in body
+get members of chat "Chats/{chatID}/Members

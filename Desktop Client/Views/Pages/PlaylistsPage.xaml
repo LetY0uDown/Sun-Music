@@ -46,10 +46,19 @@
 
         <ListView Grid.Row="1" Background="Transparent"
                   ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
-                  ItemTemplate="{StaticResource PlaylistTemplate}">
+                  ItemTemplate="{StaticResource PlaylistTemplate}" VerticalContentAlignment="Top"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Прослушать" Command="{Binding ListenPlaylistCommand}"/>
+                    <MenuItem Header="Просмотреть" Command="{Binding ShowPlaylistCommand}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="4" />
+                    <UniformGrid Columns="3" Rows="5"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
