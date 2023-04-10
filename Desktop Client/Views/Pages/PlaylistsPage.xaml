@@ -45,26 +45,8 @@
         </Grid>
 
         <ListView Grid.Row="1" Background="Transparent"
-                  ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}">
-
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type model:Playlist}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-
-                        <Image MaxWidth="297" Source="{Binding ImageBytes, Converter={StaticResource BytesToImage}}"/>
-
-                        <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="DemiBold"/>
-                            <TextBlock Text="{Binding User.Username}" FontSize="14"/>
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            
+                  ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
+                  ItemTemplate="{StaticResource PlaylistTemplate}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="4" />

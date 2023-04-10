@@ -18,8 +18,6 @@ public partial class MainWindow : Window, INavigationWindow
     private double _rowsCount;
     private int _selectedRowIndex = 0;
 
-    private bool _isPlayingTrack = false;
-
     private readonly MainNavigationViewModel _viewModel;
     private readonly INavigationService _navigation;
 

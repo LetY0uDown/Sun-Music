@@ -46,52 +46,9 @@
 
         <ListBox Background="Transparent" Grid.Row="1"
                  HorizontalContentAlignment="Stretch"
-                 ItemsSource="{Binding Tracks}" SelectedItem="{Binding SelectedTrack}" Grid.ColumnSpan="2"
-                 x:Name="TracksList">
-
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type model:MusicTrack}">
-                    <Grid HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="97"/>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <Border CornerRadius="5" BorderBrush="White"
-                                BorderThickness="4" Panel.ZIndex="1" Margin="7">
-                            <Rectangle Panel.ZIndex="1">
-                                <Rectangle.Fill>
-                                    <ImageBrush ImageSource="{Binding ImageBytes, Converter={StaticResource BytesToImage}}"/>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                        </Border>
-
-                        <icon:MaterialIcon Kind="Image"
-                                           Width="90" Height="90"/>
-
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-
-                            <TextBlock HorizontalAlignment="Left"
-                                       FontSize="28" FontWeight="DemiBold" Text="{Binding Title}" />
-
-                            <TextBlock HorizontalAlignment="Left"
-                                       FontSize="26" Text="{Binding ArtistName}" />
-
-                        </StackPanel>
-
-                        <ToggleButton Background="Transparent" BorderThickness="0" Grid.Column="2"
-                                      HorizontalAlignment="Right"
-                                      Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}},
-                                                                        Path=DataContext.LikeTrackCommand}"
-                                      CommandParameter="{Binding ID}"> 
-                            <icon:MaterialIcon Kind="{Binding ID, Converter={StaticResource IsFavorite}}"
-                                               Foreground="Red" Height="35" />
-                        </ToggleButton>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            
+                 ItemsSource="{Binding Tracks}" SelectedItem="{Binding SelectedTrack}"
+                 ItemTemplate="{StaticResource MusicTrackLikeable}"
+                 Grid.ColumnSpan="2" x:Name="TracksList">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Прослушать" Command="{Binding ListenTrackCommand}"/>

@@ -24,6 +24,8 @@
                 
                 <!-- Templates -->
                 <ResourceDictionary Source="Resources/Templates/PublicUserTemplate.xaml" />
+                <ResourceDictionary Source="Resources/Templates/PlaylistTemplate.xaml" />
+                <ResourceDictionary Source="Resources/Templates/MusicTrackLikeableTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
