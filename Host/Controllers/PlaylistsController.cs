@@ -23,6 +23,32 @@ public class PlaylistsController : ControllerBase
         _idGen = idGen;
     }
 
+    [HttpGet("Tracks/{id}")]
+	public async Task<ActionResult<IEnumerable<MusicTrack>>> GetTracksByPlaylist([FromRoute] string id)
+    {
+        try {
+			var tracks = await _context.PlaylistTracks.Include(e => e.Track)
+													  .Where(e => e.PlaylistID == id)
+													  .Select(e => e.Track)
+													  .ToListAsync();
+
+			return Ok(tracks);
+        } catch (Exception e) {
+			return Problem();
+        }
+    }
+
+	[HttpGet("{id}")]
+	public async Task<ActionResult<Playlist>> GetPlaylistByID([FromRoute] string id)
+	{
+		try {
+			return await _context.Playlists.FindAsync(id);
+		}
+		catch (Exception e) {
+			return Problem();
+		}
+	}
+
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylists ()
 	{

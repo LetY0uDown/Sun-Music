@@ -22,7 +22,7 @@ namespace Desktop_Client.Resources.UserControls;
 [Lifetime(Lifetime.Singleton)]
 public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyChanged
 {
-    private readonly DispatcherTimer _timer = new DispatcherTimer() {
+    private readonly DispatcherTimer _timer = new() {
         Interval = TimeSpan.FromSeconds(1)
     };
 
@@ -123,7 +123,8 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
             Artist = value.ArtistName;
             TrackPicture = value.ImageBytes;
 
-            PlaceholderImage.Visibility = TrackPicture == null ? Visibility.Visible : Visibility.Hidden;
+            PlaceholderImage.Visibility = TrackPicture == null ? Visibility.Visible
+                                                               : Visibility.Hidden;
 
             _trackModel = value;
         }
@@ -248,7 +249,7 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
 
         PlayTrack(_currentIndex);
     }
-
+    
     public async Task SetTrack (MusicTrack track)
     {
         _player.Stop();

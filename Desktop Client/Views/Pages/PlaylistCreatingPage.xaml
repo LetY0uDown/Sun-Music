@@ -49,19 +49,19 @@
                            FontSize="{Binding ElementName=titleTB, Path=FontSize}"/>
             </Grid>
 
-            <Button Grid.Column="1" Grid.Row="1"
+            <Button Grid.Column="1" Grid.Row="1" x:Name="SelectImageButton"
                     Content="Выбрать изображение" Margin="15"
                     Command="{Binding SelectImageCommand}"
                     Style="{StaticResource RegularButton}"/>
             
-            <Button Grid.Column="1" Grid.Row="2"
+            <Button Grid.Column="1" Grid.Row="2" x:Name="SavePlaylistButton"
                     Content="Сохранить" Margin="15"
                     CommandParameter="{Binding ElementName=TracksList, Path=SelectedItems}"
                     Command="{Binding CreatePlaylistCommand}"
                     Style="{StaticResource RegularButton}"/>
         </Grid>
 
-        <ListView SelectionMode="Multiple" Grid.Row="1"
+        <ListView Grid.Row="1"
                   x:Name="TracksList" BorderThickness="0"
                   ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   Background="Transparent"

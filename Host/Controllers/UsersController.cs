@@ -1,5 +1,6 @@
 ﻿using Host.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Models.Client;
 using Models.Database;
 

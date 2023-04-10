@@ -1,7 +1,5 @@
 ﻿using Host.Interfaces;
 using Host.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +15,7 @@ public class TracksController : ControllerBase
     private readonly IConfiguration _config;
     private readonly IHubContext<MainHub> _hub;
 
-    public TracksController (DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
+    public TracksController(DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
     {
         _database = database;
         _idGen = idGen;
@@ -25,31 +23,8 @@ public class TracksController : ControllerBase
         _hub = hub;
     }
 
-    [HttpGet("/Tracks/User/{id}")]
-    public async Task<ActionResult<IEnumerable<MusicTrack>>> TracksByUser ([FromRoute] string id)
-    {
-        IEnumerable<MusicTrack> tracks = null!;
-
-        try {
-            if (!_database.Users.Any(u => u.ID == id)) {
-                return NotFound("User does not exist");
-            }
-
-            var tracksIDs = _database.TrackLikes.Where(tl => tl.UserID == id).Select(tl => tl.TrackID);
-
-            tracks = await _database.MusicTracks.Where(track => tracksIDs.Contains(track.ID)).ToListAsync();
-
-        }
-        catch (Exception ex) {
-            Console.WriteLine(ex.Message);
-            return null;
-        }
-
-        return Ok(tracks);
-    }
-
     [HttpGet("/Tracks/File/{id}")]
-    public IActionResult DownloadFile ([FromRoute] string id)
+    public IActionResult DownloadFile([FromRoute] string id)
     {
         var track = _database.MusicTracks.Find(id);
 
@@ -67,14 +42,16 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet("/Tracks")]
-    public ActionResult<IEnumerable<MusicTrack>> GetTracks ()
+    public ActionResult<IEnumerable<MusicTrack>> GetTracks()
     {
         IEnumerable<MusicTrack> tracks;
 
-        try {
+        try
+        {
             tracks = _database.MusicTracks;
         }
-        catch {
+        catch
+        {
             return NotFound();
         }
 
@@ -82,22 +59,25 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("/Tracks/Upload")]
-    public async Task<ActionResult<string>> PostTrack ([FromBody] MusicTrack track)
+    public async Task<ActionResult<string>> PostTrack([FromBody] MusicTrack track)
     {
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
                                                           && t.ArtistName == track.ArtistName);
 
-        if (isTrackExist) {
+        if (isTrackExist)
+        {
             return BadRequest();
         }
 
         track.ID = _idGen.GenerateID();
 
-        try {
+        try
+        {
             await _database.MusicTracks.AddAsync(track);
             await _database.SaveChangesAsync();
         }
-        catch {
+        catch
+        {
             // TODO: catch exception
         }
 
@@ -105,12 +85,13 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("/Tracks/Upload/File/{id}")]
-    public async Task<ActionResult<bool>> PostFile ([FromRoute] string id, [FromForm] IFormFile file)
+    public async Task<ActionResult<bool>> PostMusicFile([FromRoute] string id, [FromForm] IFormFile file)
     {
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
         var filePath = Path.Combine(path, file.FileName);
 
-        try {
+        try
+        {
             var track = _database.MusicTracks.Find(id);
 
             if (track is null)
@@ -130,69 +111,12 @@ public class TracksController : ControllerBase
             using FileStream fs = new(filePath, FileMode.Create);
             await file.CopyToAsync(fs);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             return false;
         }
 
         return true;
-    }
-
-    [HttpPost("/Tracks/Dislike/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> DislikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
-    {
-        try {
-            var trackLike = await _database.TrackLikes.FirstOrDefaultAsync(like => like.UserID == userID && like.TrackID == trackID);
-            _database.TrackLikes.Remove(trackLike);
-
-            await _database.SaveChangesAsync(true);
-
-            return NoContent();
-        } catch (Exception e) {
-            return Problem();
-        }
-    }
-
-    [HttpPost("/Tracks/Like/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> LikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
-    {
-        try {
-            TrackLike trackLike = new() {
-                ID = _idGen.GenerateID(),
-                UserID = userID,
-                TrackID = trackID
-            };
-
-            _database.TrackLikes.Add(trackLike);
-            await _database.SaveChangesAsync();
-
-            return NoContent();
-        }
-        catch (Exception e) {
-            return Problem();
-        }
-    }
-
-    [HttpGet("/Tracks/Favorite/{id}")]
-    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetFavoriteTracksByUser (string id)
-    {
-        try {
-            var ids = _database.TrackLikes.Where(e => e.UserID == id)?.Select(e => e.TrackID);
-            if (ids is null || !ids.Any()) {
-                return NotFound();
-            }
-
-            var tracks = _database.MusicTracks.Where(track => ids.Contains(track.ID));
-
-            if (tracks is null || !tracks.Any()) {
-                return NotFound();
-            }
-
-            return Ok(tracks);
-
-        }
-        catch (Exception e) {
-            return Problem();
-        }
     }
 }

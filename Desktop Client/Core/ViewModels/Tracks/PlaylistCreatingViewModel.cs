@@ -19,7 +19,7 @@ namespace Desktop_Client.Core.ViewModels.Tracks;
 [Lifetime(Lifetime.Transient)]
 public sealed class PlaylistCreatingViewModel : ViewModel
 {
-    private readonly Playlist _playlist;
+    private Playlist _playlist;
 
     private readonly IAPIClient _client;
     private readonly IConfiguration _config;
@@ -33,6 +33,8 @@ public sealed class PlaylistCreatingViewModel : ViewModel
         _playlist = new Playlist();
     }
 
+    public string PlaylistID { get; set; }
+
     public UICommand CreatePlaylistCommand { get; private set; }
 
     public UICommand SelectImageCommand { get; private set; }
@@ -41,11 +43,18 @@ public sealed class PlaylistCreatingViewModel : ViewModel
 
     public BitmapImage Image { get; set; }
 
-    public List<MusicTrack> FavoriteTracks { get; private set; }
+    public List<MusicTrack> Tracks { get; set; }
 
     public override async Task Display ()
     {
-        FavoriteTracks = await _client.GetAsync<List<MusicTrack>>($"Tracks/User/{App.AuthorizeData.ID}");
+        if (!string.IsNullOrWhiteSpace(PlaylistID)) {
+            _playlist = await _client.GetAsync<Playlist>($"Playlists/{PlaylistID}");
+
+            Title = _playlist.Title;
+            Image = ImageConverter.ImageFromBytes(_playlist.ImageBytes);
+        }
+
+        Tracks ??= await _client.GetAsync<List<MusicTrack>>($"Tracks/User/{App.AuthorizeData.ID}");
 
         SelectImageCommand = new(o => {
             var fileDialog = new OpenFileDialog {

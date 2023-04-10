@@ -22,8 +22,12 @@ public partial class TracksPage : Page, INavigationPage
     }
     public async Task Display ()
     {
-        var favorite = await _client.GetAsync<IEnumerable<MusicTrack>>($"Tracks/User/{App.AuthorizeData.ID}");
-        App.FaviriteTracksIDs = favorite.Select(track => track.ID).ToList();
+        var favorite = await _client.GetAsync<IEnumerable<MusicTrack>>($"Likes/User/{App.AuthorizeData.ID}");
+
+        if (favorite is not null)
+            App.FaviriteTracksIDs = favorite.Select(track => track.ID).ToList();
+        else
+            App.FaviriteTracksIDs = new();
 
         InitializeComponent();
 

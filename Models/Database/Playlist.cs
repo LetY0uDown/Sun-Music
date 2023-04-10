@@ -20,5 +20,5 @@ public partial class Playlist : Entity
     public virtual ICollection<PlaylistTrack> PlaylistTracks { get; set; }
 
     [NotMapped]
-    public IEnumerable<MusicTrack> MusicTracks { get; set; } = null!;
+    public IEnumerable<MusicTrack>? MusicTracks { get; set; } = null;
 }

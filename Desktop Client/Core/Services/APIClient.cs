@@ -60,7 +60,7 @@ internal sealed class APIClient : IAPIClient
                 var response = await client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode) {
-                    InfoBox.Show(response.Content, response.StatusCode.ToString());
+                    //InfoBox.Show(response.Content, response.StatusCode.ToString());
 
                     return default;
                 }

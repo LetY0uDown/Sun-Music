@@ -3,6 +3,7 @@ using Host.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models.Database;
 using Models.Client;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Host.Controllers;
 
@@ -12,15 +13,17 @@ public class AuthController : ControllerBase
     private readonly IPasswordEncoder _passEncoder;
     private readonly IIDGenerator _hashGen;
     private readonly IAuthTokenGen _authTokenGen;
+    private readonly IHubContext<MainHub> _hub;
     private readonly ILogger _logger;
     private readonly DatabaseContext _db;
 
-    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen)
+    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen, IHubContext<MainHub> hub)
     {
         _db = db;
         _hashGen = hashGen;
         _passEncoder = passEncoder;
         _authTokenGen = authTokenGen;
+        _hub = hub;
     }
 
     [HttpPost("/Register")]
@@ -39,6 +42,8 @@ public class AuthController : ControllerBase
 
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
+
+            await _hub.Clients.Group("Users").SendAsync("RecieveUser", (PublicUser)user);
 
             return new AuthorizeData (
                 user.ID,
