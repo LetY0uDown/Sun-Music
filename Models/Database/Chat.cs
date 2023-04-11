@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Models.Database;
 
@@ -16,7 +14,6 @@ public partial class Chat : Entity
     public byte[] ImageBytes { get; set; } = null!;
     public string CreatorID { get; set; } = null!;
 
-    [AllowNull]
     public User Creator { get; set; } = null!;
 
     [JsonIgnore]

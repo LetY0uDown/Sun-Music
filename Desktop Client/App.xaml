@@ -9,6 +9,9 @@
             <converter:PlaceholderVisibilityConverter x:Key="PlaceholderVisibilty" />
             <converter:BytesToImageConverter x:Key="BytesToImage" />
             <converter:IsFavoriteConverter x:Key="IsFavorite" />
+            <converter:MessageTimeConverter x:Key="MessageTime" />
+
+            <converter:MessageTemplateSelector x:Key="MessageTemplateSelector" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/ColorsDictionary.xaml" />

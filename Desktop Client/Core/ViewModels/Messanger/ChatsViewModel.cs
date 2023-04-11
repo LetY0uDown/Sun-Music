@@ -20,7 +20,7 @@ namespace Desktop_Client.Core.ViewModels.Messanger;
 public sealed class ChatsViewModel : ViewModel
 {
     private List<Chat> _allChats;
-    private IEnumerable<Chat> _myChats;
+    private List<Chat> _myChats;
 
     private readonly IHubFactory _hubFactory;
     private readonly IAPIClient _client;
@@ -51,14 +51,31 @@ public sealed class ChatsViewModel : ViewModel
 
     public UICommand JoinChatCommand { get; private set; }
 
+    public UICommand LeaveChatCommand { get; private set; }
+
     public UICommand CreateChatCommand { get; private set; }
 
     public ObservableCollection<Chat> Chats { get; private set; }
 
     public override async Task Display()
     {
+        LeaveChatCommand = new(async o => {
+            if (ChatPage is not null)
+                await ChatPage.Leave();
+
+            await _client.PostAsync<object, object>(await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}"), $"Chats/{SelectedChat.ID}/Leave");
+
+            ChatPage = null;
+            _myChats.Remove(SelectedChat);
+            Chats = new (_myChats);
+        }, b => SelectedChat is not null &&
+                _myChats.Contains(SelectedChat));
+
         JoinChatCommand = new(async o => {
-            await ChatPage?.Leave();
+            if (ChatPage is not null)
+                await ChatPage.Leave();
+
+            await _client.PostAsync<object, object>(await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}"), $"Chats/{SelectedChat.ID}/Join");
 
             var page = (ChatPage)App.Host.Services.GetService(typeof(ChatPage));
             page.ChatID = SelectedChat.ID;
@@ -66,6 +83,7 @@ public sealed class ChatsViewModel : ViewModel
             ChatPage = page;
             await page.Display();
 
+            _myChats.Add(SelectedChat);
         }, b => SelectedChat is not null);
 
         CreateChatCommand = new(async o => {
@@ -77,7 +95,7 @@ public sealed class ChatsViewModel : ViewModel
 
         _allChats = await _client.GetAsync<List<Chat>>("Chats");
 
-        _myChats = await _client.GetAsync<IEnumerable<Chat>>($"Chats/User/{App.AuthorizeData.ID}");
+        _myChats = await _client.GetAsync<List<Chat>>($"Chats/User/{App.AuthorizeData.ID}");
         Chats = new ObservableCollection<Chat>(_myChats);
     }
 

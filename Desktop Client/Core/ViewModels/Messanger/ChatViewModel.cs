@@ -8,6 +8,7 @@ using Models.Client;
 using Models.Database;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Desktop_Client.Core.ViewModels.Messanger;
@@ -47,10 +48,13 @@ public sealed class ChatViewModel : ViewModel
 
         SendMessageCommand = new(async o => {
             Message msg = new() {
+                ID = "id",
                 ChatID = Chat.ID,
                 Chat = Chat,
                 SenderID = App.AuthorizeData.ID,
-                Text = MessageText
+                Sender = await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}"),
+                Text = MessageText,
+                TimeSended = System.DateTime.Now
             };
 
             await _client.PostAsync<Message, object>(msg, $"Chats/{Chat.ID}/Send/{App.AuthorizeData.ID}");
@@ -71,6 +75,14 @@ public sealed class ChatViewModel : ViewModel
 
         _currentChatGroup = $"Chat - {Chat.Title}";
         await _hub.JoinGroup(_currentChatGroup);
+
+        _hub.On<PublicUser>("RecieveMember", member => {
+            CurrentChatMembers.Add(member);
+        });
+        
+        _hub.On<PublicUser>("RemoveMember", member => {
+            CurrentChatMembers.Remove(member);
+        });
 
         _hub.On<Message>("RecieveMessage", msg => {
             Messages.Add(msg);

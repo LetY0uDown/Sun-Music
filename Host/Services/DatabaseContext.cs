@@ -26,8 +26,8 @@ public sealed class DatabaseContext : DbContext
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured) {
-            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
+            optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
+            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
         }
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
@@ -79,6 +79,8 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.ChatID).HasColumnName("ChatID");
 
             entity.Property(e => e.SenderID).HasColumnName("SenderID");
+
+            entity.Property(e => e.TimeSended).HasColumnName("TimeSended").HasColumnType("datetime");
 
             entity.HasOne(d => d.Chat)
                 .WithMany(p => p.Messages)
@@ -167,6 +169,13 @@ public sealed class DatabaseContext : DbContext
             entity.ToTable("users");
 
             entity.Property(e => e.ID).HasColumnName("ID");
+
+            entity.HasData(new User {
+                ID = Guid.Empty.ToString(),
+                ImageBytes = Array.Empty<byte>(),
+                Username = string.Empty,
+                Password = string.Empty
+            });
         });
     }
 }

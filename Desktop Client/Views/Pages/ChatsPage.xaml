@@ -50,22 +50,24 @@
                 <DataTemplate DataType="{x:Type model:Chat}">
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=".35"/>
+                            <ColumnDefinition Width=".35*"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 
                         <Image Margin="5" Source="{Binding ImageBytes,
-                                                           Converter={StaticResource BytesToImage}}"/>
+                                                           Converter={StaticResource BytesToImage}}"
+                               Width="65" Height="65"/>
 
-                        <TextBlock FontWeight="DemiBold" Text="{Binding Title}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock FontWeight="DemiBold" Text="{Binding Title}" FontSize="24"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
 
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Войти" Command="{Binding JoinChatCommand}"/>
+                    <MenuItem Header="Войти" Command="{Binding JoinChatCommand}" />
+                    <MenuItem Header="Выйти" Command="{Binding LeaveChatCommand}" />
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

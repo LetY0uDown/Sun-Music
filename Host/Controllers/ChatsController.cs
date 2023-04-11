@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Models.Client;
 using Models.Database;
+using System;
 
 namespace Host.Controllers;
 
@@ -39,13 +40,15 @@ public class ChatsController : ControllerBase
     public async Task<ActionResult<Chat>> CreateChat ([FromBody] Chat chat)
     {
         try {
-            var isUnique = _context.Chats.Any(c => c.Title == chat.Title);
+            var isTitleExist = _context.Chats.Any(c => c.Title == chat.Title);
 
-            if (!isUnique) {
+            if (isTitleExist) {
                 return BadRequest();
             }
 
             chat.ID = _idGen.GenerateID();
+
+            _context.Users.Attach(chat.Creator);
 
             await _context.Chats.AddAsync(chat);
             await _context.SaveChangesAsync();
@@ -67,11 +70,7 @@ public class ChatsController : ControllerBase
                                                     .Select(e => e.ChatId)
                                                     .ToListAsync();
 
-            List<Chat> result = new List<Chat>();
-
-            chatIDs.ForEach(async id => {
-                result.Add(await _context.Chats.FindAsync(id));
-            });
+            List<Chat> result = _context.Chats.Where(chat => chatIDs.Contains(chat.ID)).ToList();
 
             return Ok(result);
         }
@@ -84,7 +83,8 @@ public class ChatsController : ControllerBase
     public async Task<ActionResult<Chat>> GetChatByID ([FromRoute] string id)
     {
         try {
-            var chat = await _context.Chats.FindAsync(id);
+            var chat = await _context.Chats.Include(chat => chat.Creator)
+                                           .FirstOrDefaultAsync(chat => chat.ID == id);
 
             if (chat is null) {
                 return NotFound();
@@ -97,14 +97,53 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpGet("{chatID}/Join"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("{chatID}/Leave")]
+    public async Task<ActionResult> LeaveChat ([FromBody] User user, [FromRoute] string chatID)
+    {
+        try {
+            var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
+
+            if (cm is null) {
+                return NotFound();
+            }
+
+            _context.ChatMembers.Remove(cm);
+
+            var chat = await _context.Chats.FindAsync(chatID);
+
+            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RemoveMember", (PublicUser)user);
+
+            var emptyUser = await _context.Users.FindAsync(Guid.Empty.ToString());
+
+            var serverMsg = new Message {
+                Chat = chat,
+                ChatID = chatID,
+                ID = _idGen.GenerateID(),
+                TimeSended = DateTime.Now,
+                SenderID = emptyUser.ID,
+                Sender = emptyUser,
+                Text = $"Пользователь {user.Username} покинул чат"
+            };
+
+            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RecieveMessage", serverMsg);
+
+            await _context.Messages.AddAsync(serverMsg);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        } catch (Exception ex) {
+            return Problem();
+        }
+    }
+
+    [HttpPost("{chatID}/Join")]
     public async Task<ActionResult> JoinChat ([FromBody] User user, [FromRoute] string chatID)
     {
         try {
             var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
 
             if (cm is not null) {
-                return BadRequest();
+                return NoContent();
             }
 
             cm = new() {
@@ -114,11 +153,27 @@ public class ChatsController : ControllerBase
             };
 
             await _context.ChatMembers.AddAsync(cm);
-            await _context.SaveChangesAsync();
 
             var chat = await _context.Chats.FindAsync(chatID);
 
-            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RecieveMember", user);
+            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RecieveMember", (PublicUser)user);
+
+            var emptyUser = await _context.Users.FindAsync(Guid.Empty.ToString());
+
+            var serverMsg = new Message {
+                Chat = chat,
+                ChatID = chatID,
+                ID = _idGen.GenerateID(),
+                TimeSended = DateTime.Now,
+                SenderID = emptyUser.ID,
+                Sender = emptyUser,
+                Text = $"Пользователь {user.Username} присоединился к чату"
+            };
+
+            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RecieveMessage", serverMsg);
+
+            await _context.Messages.AddAsync(serverMsg);
+            await _context.SaveChangesAsync();
 
             return NoContent();
 
@@ -132,14 +187,14 @@ public class ChatsController : ControllerBase
     public async Task<ActionResult<IEnumerable<Message>>> GetMessagesFromChat ([FromRoute] string chatID)
     {
         try {
-            return await _context.Messages.Include(msg => msg.Sender).Where(msg => msg.ChatID == chatID).ToListAsync();
+            return await _context.Messages.Include(msg => msg.Sender).Where(msg => msg.ChatID == chatID).OrderBy(chat => chat.TimeSended).ToListAsync();
         }
         catch (Exception ex) {
             return Problem();
         }
     }
 
-    [HttpPost("{chatID}/Send/{senderID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("{chatID}/Send/{senderID}")]
     public async Task<ActionResult> SendMessageToChat ([FromBody] Message message, [FromRoute] string chatID, [FromRoute] string senderID)
     {
         try {
@@ -148,6 +203,7 @@ public class ChatsController : ControllerBase
             message.ID = _idGen.GenerateID();
 
             message.Sender = await _context.Users.FindAsync(senderID);
+            message.Chat = await _context.Chats.FindAsync(chatID);
 
             await _context.Messages.AddAsync(message);
             await _context.SaveChangesAsync();

@@ -1,12 +1,12 @@
 ﻿using Host.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Models.Client;
 using Models.Database;
 
 namespace Host.Controllers;
 
-[ApiController, Route("[controller]")]
+[ApiController, Route("[controller]/")]
 public class UsersController : ControllerBase
 {
     private readonly DatabaseContext _db;
@@ -16,7 +16,7 @@ public class UsersController : ControllerBase
         _db = db;
     }
 
-    [HttpGet("/u/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUserByID ([FromRoute] string id)
     {
         try {
@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<PublicUser>>> GetUserList ()
     {
         try {
-            var users = _db.Users.ToList();
+            var users = await _db.Users.Where(user => user.ID != Guid.Empty.ToString()).ToListAsync();
 
             List<PublicUser> publicUsers = new();
 

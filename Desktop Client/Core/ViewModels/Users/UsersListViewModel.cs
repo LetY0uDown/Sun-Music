@@ -73,7 +73,7 @@ public sealed class UsersListViewModel : ViewModel
 
             Users = new(_usersOriginal.Where(u =>
                                            u.Username.ToLower()
-                                                .Contains(SearchText.ToLower())));
+                                                .Contains(SearchText?.ToLower())));
         });
     }
 }

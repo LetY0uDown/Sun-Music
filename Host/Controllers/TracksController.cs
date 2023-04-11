@@ -97,11 +97,10 @@ public class TracksController : ControllerBase
             if (track is null)
                 return NotFound();
 
-            if (System.IO.File.Exists(filePath))
-                return BadRequest();
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            if (!System.IO.File.Exists(filePath)) {
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
 
             track.FileName = file.FileName;
             await _database.SaveChangesAsync();

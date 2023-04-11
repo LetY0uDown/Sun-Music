@@ -10,6 +10,43 @@
       Title="ChatPage"
       d:DataContext="{d:DesignInstance Type={x:Type vm:ChatViewModel}}">
 
+    <Page.Resources>
+        <DataTemplate x:Key="ServerMessageTemplate" DataType="{x:Type model:Message}" >
+            <Border CornerRadius="10" Background="LightGray" HorizontalAlignment="Center" 
+                    Margin="5" Padding="10 5">
+                <TextBlock Text="{Binding Text}" FontSize="18"
+                           HorizontalAlignment="Center"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="UserMessageTemplate" DataType="{x:Type model:Message}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Image Source="{Binding Sender.ImageBytes, Converter={StaticResource BytesToImage}}"
+                                       Width="70" Height="70" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Margin="15 0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="DemiBold" FontSize="24"
+                                                   Text="{Binding Sender.Username}"/>
+
+                        <TextBlock Foreground="Gray" FontSize="14"
+                                                   VerticalAlignment="Center" Margin="10 4 0 0"
+                                                   Text="{Binding TimeSended, Converter={StaticResource MessageTime}}"/>
+                    </StackPanel>
+
+                    <TextBlock FontSize="18"
+                                               Text="{Binding Text}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height=".2*"/>
@@ -18,19 +55,23 @@
 
         <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Chat.ImageBytes,
-                                    Converter={StaticResource BytesToImage}}"/>
+                                    Converter={StaticResource BytesToImage}}"
+                   Margin="10"/>
 
             <TextBlock VerticalAlignment="Center" Margin="10"
-                       FontSize="22" Text="{Binding Chat.Title}"/>
+                       FontSize="32" Text="{Binding Chat.Title}"/>
         </StackPanel>
 
-        <Border VerticalAlignment="Bottom" BorderBrush="Black"
-                BorderThickness="2"/>
+        <Border VerticalAlignment="Bottom" Background="Black"
+                Height="2"/>
+        
+        <Border HorizontalAlignment="Left" Background="Black"
+                Width="2" Grid.RowSpan="2"/>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height=".3*"/>
+                <RowDefinition Height=".2*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -40,36 +81,16 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.ColumnSpan="2"
                           HorizontalContentAlignment="Stretch">
-                <ItemsControl ItemsSource="{Binding Messages}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type model:Message}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Source="{Binding Sender.ImageBytes, Converter={StaticResource BytesToImage}}"
-                                       Width="70" Height="70" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock FontWeight="DemiBold" FontSize="20"
-                                               Text="{Binding Sender.Username}"/>
-
-                                    <TextBlock FontSize="18"
-                                               Text="{Binding Text}"/>
-                                </StackPanel>                                
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding Messages}"
+                              ItemTemplateSelector="{StaticResource MessageTemplateSelector}"/>
             </ScrollViewer>
 
             <!-- Message -->
             <Grid Margin="10" Grid.Row="3">
                 <TextBox x:Name="msgTextTB" Padding="15 5"
                      MaxLength="16"
-                     Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged,
+                                    Mode=TwoWay}"
                      Style="{StaticResource UserDataTextBox}"/>
 
                 <TextBlock Text="Сообщение.." VerticalAlignment="Center"

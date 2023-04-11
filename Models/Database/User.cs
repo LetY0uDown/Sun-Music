@@ -27,4 +27,11 @@ public partial class User : Entity
     public virtual ICollection<Playlist> Playlists { get; set; }
     [JsonIgnore]
     public virtual ICollection<TrackLike> TrackLikes { get; set; }
+
+    public static User Empty { get; } = new User {
+        ID = Guid.Empty.ToString(),
+        ImageBytes = Array.Empty<byte>(),
+        Username = string.Empty,
+        Password = string.Empty
+    };
 }
