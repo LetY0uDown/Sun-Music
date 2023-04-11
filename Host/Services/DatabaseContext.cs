@@ -26,8 +26,8 @@ public sealed class DatabaseContext : DbContext
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
+            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
+            optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
         }
     }
     protected override void OnModelCreating (ModelBuilder modelBuilder)
@@ -63,7 +63,8 @@ public sealed class DatabaseContext : DbContext
             entity.HasOne(d => d.User)
                 .WithMany(p => p.Chatmembers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_ChatMembers_Users_UserID");
+                .HasConstraintName("FK_ChatMembers_Users_UserID")
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<Message>(entity => {
@@ -87,7 +88,8 @@ public sealed class DatabaseContext : DbContext
             entity.HasOne(d => d.Sender)
                 .WithMany(p => p.Messages)
                 .HasForeignKey(d => d.SenderID)
-                .HasConstraintName("FK_Messages_Users_SenderID");
+                .HasConstraintName("FK_Messages_Users_SenderID")
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<MusicTrack>(entity => {

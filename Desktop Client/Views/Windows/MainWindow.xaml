@@ -115,7 +115,7 @@
 
                         <RadioButton Grid.Row="3" Style="{StaticResource NavigationButton}"
                                      Click="NavButton_Click" Foreground="#16e4ff"
-                                     GroupName="NavButtons">
+                                     GroupName="NavButtons" Command="{Binding NavigateToChatsCommand}">
                             <StackPanel>
                                 <icon:MaterialIcon Kind="Message"  />
                                 <TextBlock HorizontalAlignment="Center"

@@ -1,0 +1,94 @@
+﻿<Window x:Class="Desktop_Client.Views.Windows.ChatCreatingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Desktop_Client.Core.ViewModels.Messanger"        
+        xmlns:icon="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
+        mc:Ignorable="d"
+        Title="ChatCreatingWindow" Height="450" Width="600"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        WindowStyle="None"
+        d:DataContext="{d:DesignInstance Type={x:Type vm:ChatCreatingViewModel}}">
+
+    <Border BorderBrush="Black" BorderThickness="3">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Grid Background="{StaticResource TitlebarBackground}"
+                  MouseLeftButtonDown="TitleBar_LeftMouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Sun Music" 
+                           Foreground="White" FontWeight="DemiBold"
+                           VerticalAlignment="Center" FontSize="18" Margin="5"/>
+
+                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}"
+                        Click="CloseButton_Click">
+                    <icon:MaterialIcon Kind="Close" />
+                </Button>
+            </Grid>
+
+            <!-- Title -->
+            <Grid Margin="10" Grid.Row="1">
+                <TextBox x:Name="trackTitleTB" Padding="15 5"
+                         MaxLength="16"
+                         Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource UserDataTextBox}"/>
+
+                <TextBlock Text="Название.." VerticalAlignment="Center"
+                       IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=trackTitleTB,
+                                           Path=Text,
+                                            Converter={StaticResource
+                                                       PlaceholderVisibilty}}"
+                       Margin="15 5" Foreground="{StaticResource PlaceholderTextForeground}"
+                       FontSize="{Binding ElementName=trackTitleTB, Path=FontSize}"/>
+
+            </Grid>
+
+            <!-- Image -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".14*"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <icon:MaterialIcon Kind="Image" />
+
+                <Border CornerRadius="5" BorderBrush="White"
+                    BorderThickness="4" Panel.ZIndex="1" Margin="7">
+                    <Rectangle Panel.ZIndex="1">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="{Binding Image}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Border>
+
+                <Button Content="Выбрать" Grid.Column="1"
+                        HorizontalAlignment="Right" Margin="10"
+                        Style="{StaticResource RegularButton}"
+                        Command="{Binding SelectImageCommand}"/>
+            </Grid>
+
+            <Button Grid.Row="6" Content="Создать"
+                    Style="{StaticResource RegularButton}"
+                    Command="{Binding CreateChatCommand}"
+                    Margin="15 5" HorizontalAlignment="Right"
+                    Click="CloseButton_Click"/>
+
+        </Grid>
+    </Border>
+</Window>

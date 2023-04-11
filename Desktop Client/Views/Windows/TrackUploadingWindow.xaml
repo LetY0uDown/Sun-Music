@@ -148,9 +148,10 @@
             </Grid>
 
             <Button Grid.Row="6" Content="Загрузить"
-                Style="{StaticResource RegularButton}"
-                Command="{Binding UploadTrackCommand}"
-                Margin="15 5" HorizontalAlignment="Left" />
+                    Style="{StaticResource RegularButton}"
+                    Command="{Binding UploadTrackCommand}"
+                    Margin="15 5" HorizontalAlignment="Left"
+                    Click="CloseButton_Click"/>
         </Grid>
     </Border>
 </Window>

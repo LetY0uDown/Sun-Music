@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Models.Database;
 
@@ -13,6 +15,9 @@ public partial class Chat : Entity
     public string Title { get; set; } = null!;
     public byte[] ImageBytes { get; set; } = null!;
     public string CreatorID { get; set; } = null!;
+
+    [AllowNull]
+    public User Creator { get; set; } = null!;
 
     [JsonIgnore]
     public virtual ICollection<ChatMember> Chatmembers { get; set; }

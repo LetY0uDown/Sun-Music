@@ -24,6 +24,17 @@ public class ChatsController : ControllerBase
         _idGen = idGen;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Chat>>> GetAllChats()
+    {
+        try {
+            return await _context.Chats.Include(chat => chat.Creator)
+                                       .ToListAsync();
+        } catch (Exception e) {
+            return Problem();
+        }
+    }
+
     [HttpPost("Create")]
     public async Task<ActionResult<Chat>> CreateChat ([FromBody] Chat chat)
     {
@@ -42,7 +53,6 @@ public class ChatsController : ControllerBase
             await _hub.Clients.Group("Chats").SendAsync("RecieveChat", chat);
 
             return Ok(chat);
-
         }
         catch (Exception ex) {
             return Problem();
@@ -53,7 +63,9 @@ public class ChatsController : ControllerBase
     public async Task<ActionResult<IEnumerable<Chat>>> GetChatsByUser ([FromRoute] string id)
     {
         try {
-            var chatIDs = await _context.ChatMembers.Where(e => e.UserId == id).Select(e => e.ChatId).ToListAsync();
+            var chatIDs = await _context.ChatMembers.Where(e => e.UserId == id)
+                                                    .Select(e => e.ChatId)
+                                                    .ToListAsync();
 
             List<Chat> result = new List<Chat>();
 
@@ -62,7 +74,6 @@ public class ChatsController : ControllerBase
             });
 
             return Ok(result);
-
         }
         catch (Exception ex) {
             return Problem();
