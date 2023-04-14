@@ -7,7 +7,7 @@ using Models.Database;
 
 namespace Host.Controllers;
 
-[ApiController, Route("[controller]")]
+[ApiController, Route("[controller]/")]
 public class TracksController : ControllerBase
 {
     private readonly DatabaseContext _database;
@@ -23,7 +23,7 @@ public class TracksController : ControllerBase
         _hub = hub;
     }
 
-    [HttpGet("/Tracks/File/{id}")]
+    [HttpGet("File/{id}")]
     public IActionResult DownloadFile([FromRoute] string id)
     {
         var track = _database.MusicTracks.Find(id);
@@ -41,24 +41,22 @@ public class TracksController : ControllerBase
         return File(stream, "application/octet-stream");
     }
 
-    [HttpGet("/Tracks")]
+    [HttpGet]
     public ActionResult<IEnumerable<MusicTrack>> GetTracks()
     {
         IEnumerable<MusicTrack> tracks;
 
-        try
-        {
+        try {
             tracks = _database.MusicTracks;
         }
-        catch
-        {
+        catch {
             return NotFound();
         }
 
         return Ok(tracks);
     }
 
-    [HttpPost("/Tracks/Upload")]
+    [HttpPost("Upload")]
     public async Task<ActionResult<string>> PostTrack([FromBody] MusicTrack track)
     {
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
@@ -71,20 +69,18 @@ public class TracksController : ControllerBase
 
         track.ID = _idGen.GenerateID();
 
-        try
-        {
+        try {
             await _database.MusicTracks.AddAsync(track);
             await _database.SaveChangesAsync();
         }
-        catch
-        {
+        catch {
             // TODO: catch exception
         }
 
         return track.ID;
     }
 
-    [HttpPost("/Tracks/Upload/File/{id}")]
+    [HttpPost("Upload/File/{id}")]
     public async Task<ActionResult<bool>> PostMusicFile([FromRoute] string id, [FromForm] IFormFile file)
     {
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);

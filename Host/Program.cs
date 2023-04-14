@@ -1,6 +1,5 @@
 using Host.Interfaces;
 using Host.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
@@ -16,9 +15,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddSingleton<IIDGenerator, IDGenerator>();
-builder.Services.AddSingleton<IPasswordEncoder, PasswordEncoder>();
-builder.Services.AddSingleton<IAuthTokenGen, JWTTokenGenerator>();
+builder.Services.AddTransient<IIDGenerator, IDGenerator>();
+builder.Services.AddTransient<IPasswordEncoder, PasswordEncoder>();
+builder.Services.AddTransient<IAuthTokenGen, JWTTokenGenerator>();
 
 builder.Services.Configure<FormOptions>(options => {
     options.ValueLengthLimit = int.MaxValue;
@@ -57,8 +56,6 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

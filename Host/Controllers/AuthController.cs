@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Database;
 using Models.Client;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Host.Controllers;
 
@@ -17,13 +18,14 @@ public class AuthController : ControllerBase
     private readonly ILogger _logger;
     private readonly DatabaseContext _db;
 
-    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen, IHubContext<MainHub> hub)
+    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen, IHubContext<MainHub> hub, ILogger logger)
     {
         _db = db;
         _hashGen = hashGen;
         _passEncoder = passEncoder;
         _authTokenGen = authTokenGen;
         _hub = hub;
+        _logger = logger;
     }
 
     [HttpPost("/Register")]
@@ -33,7 +35,7 @@ public class AuthController : ControllerBase
             var isNameUnique = _db.Users.Any(u => u.Username == user.Username);
 
             if (isNameUnique) {
-                return Forbid("Bearer");
+                return Problem("Пользователь с таким именем уже существует, попробуйте другое");
             }
 
             user.Password = _passEncoder.Encode(user.Password);
@@ -50,8 +52,9 @@ public class AuthController : ControllerBase
                 _authTokenGen.GetToken(user.ID, user.Password)
             );
         }
-        catch {
-            return null!; // Handle error :D
+        catch (Exception e) {
+            _logger.Log(LogLevel.Warning, e, "Registration process went wrong");
+            return Problem("Что-то пошло не так. Попробуйте ещё раз или обратитесь к администратору", e.Message);
         }
     }
 
@@ -61,13 +64,12 @@ public class AuthController : ControllerBase
         user.Password = _passEncoder.Encode(user.Password);
         User? userInDB = null!;
 
-        try
-        {
-            userInDB = _db.Users.FirstOrDefault(u => u.Username == user.Username);
+        try {
+            userInDB = await _db.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
         }
-        catch
-        {
-            return null!; // Handle error :D
+        catch (Exception e)  {
+            _logger.Log(LogLevel.Warning, e, "Login process went wrong");
+            return Problem("Что-то пошло не так. Попробуйте ещё раз или обратитесь к администратору", e.Message);
         }
 
         if (userInDB is null) {
@@ -81,6 +83,6 @@ public class AuthController : ControllerBase
         return new AuthorizeData (
             userInDB.ID, 
             _authTokenGen.GetToken(userInDB.ID, user.Password)
-            ); 
+        ); 
     }
 }
