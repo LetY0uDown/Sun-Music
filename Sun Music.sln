@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desktop Client", "Desktop C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Host", "Host\Host.csproj", "{5FA55310-29BE-4335-96AE-A35AFBBE3288}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{11E1A4AF-9C97-4459-B09B-FCB115528526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{11E1A4AF-9C97-4459-B09B-FCB115528526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

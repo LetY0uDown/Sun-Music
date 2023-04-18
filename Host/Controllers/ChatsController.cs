@@ -17,12 +17,14 @@ public class ChatsController : ControllerBase
     private readonly IHubContext<MainHub> _hub;
     private readonly DatabaseContext _context;
     private readonly IIDGenerator _idGen;
+    private readonly ILogger<ChatsController> _logger;
 
-    public ChatsController (IHubContext<MainHub> hub, DatabaseContext context, IIDGenerator idGen)
+    public ChatsController (IHubContext<MainHub> hub, DatabaseContext context, IIDGenerator idGen, ILogger<ChatsController> logger)
     {
         _hub = hub;
         _context = context;
         _idGen = idGen;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -32,6 +34,7 @@ public class ChatsController : ControllerBase
             return await _context.Chats.Include(chat => chat.Creator)
                                        .ToListAsync();
         } catch (Exception e) {
+            _logger.LogWarning(e, "Failed to get chats list");
             return Problem();
         }
     }
@@ -56,8 +59,8 @@ public class ChatsController : ControllerBase
             await _hub.Clients.Group("Chats").SendAsync("RecieveChat", chat);
 
             return Ok(chat);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex)  {
+            _logger.LogWarning(ex, "Failed to create chat");
             return Problem();
         }
     }
@@ -73,8 +76,8 @@ public class ChatsController : ControllerBase
             List<Chat> result = _context.Chats.Where(chat => chatIDs.Contains(chat.ID)).ToList();
 
             return Ok(result);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to get chats by user");
             return Problem();
         }
     }
@@ -91,8 +94,8 @@ public class ChatsController : ControllerBase
             }
 
             return Ok(chat);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to get chat by ID");
             return Problem();
         }
     }
@@ -132,6 +135,7 @@ public class ChatsController : ControllerBase
 
             return NoContent();
         } catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to leave chat");
             return Problem();
         }
     }
@@ -165,7 +169,7 @@ public class ChatsController : ControllerBase
                 ChatID = chatID,
                 ID = _idGen.GenerateID(),
                 TimeSended = DateTime.Now,
-                SenderID = emptyUser.ID,
+                SenderID = emptyUser!.ID,
                 Sender = emptyUser,
                 Text = $"Пользователь {user.Username} присоединился к чату"
             };
@@ -177,8 +181,8 @@ public class ChatsController : ControllerBase
 
             return NoContent();
 
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to join chat");
             return Problem();
         }
     }
@@ -187,9 +191,13 @@ public class ChatsController : ControllerBase
     public async Task<ActionResult<IEnumerable<Message>>> GetMessagesFromChat ([FromRoute] string chatID)
     {
         try {
-            return await _context.Messages.Include(msg => msg.Sender).Where(msg => msg.ChatID == chatID).OrderBy(chat => chat.TimeSended).ToListAsync();
+            return await _context.Messages.Include(msg => msg.Sender)
+                                          .Where(msg => msg.ChatID == chatID)
+                                          .OrderBy(chat => chat.TimeSended)
+                                          .ToListAsync();
         }
         catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to get messages from chat");
             return Problem();
         }
     }
@@ -208,11 +216,12 @@ public class ChatsController : ControllerBase
             await _context.Messages.AddAsync(message);
             await _context.SaveChangesAsync();
 
-            await _hub.Clients.Group($"Chat - {chat.Title}").SendAsync("RecieveMessage", message);
+            await _hub.Clients.Group($"Chat - {chat.Title}")
+                              .SendAsync("RecieveMessage", message);
 
             return NoContent();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to send message");
             return Problem();
         }
     }
@@ -228,13 +237,14 @@ public class ChatsController : ControllerBase
 
             List<PublicUser> publicUsers = new();
 
-            foreach (var u in users) {
-                publicUsers.Add(u);
-            }
+            users.ForEach(u =>
+                publicUsers.Add(u)
+            );
 
             return Ok(publicUsers);
         }
         catch (Exception ex) {
+            _logger.LogWarning(ex, "Failed to get members by chat");
             return Problem();
         }
     }

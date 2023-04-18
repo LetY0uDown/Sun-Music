@@ -15,10 +15,11 @@ public class AuthController : ControllerBase
     private readonly IIDGenerator _hashGen;
     private readonly IAuthTokenGen _authTokenGen;
     private readonly IHubContext<MainHub> _hub;
-    private readonly ILogger _logger;
+    private readonly ILogger<AuthController> _logger;
     private readonly DatabaseContext _db;
 
-    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder, IAuthTokenGen authTokenGen, IHubContext<MainHub> hub, ILogger logger)
+    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder,
+                          IAuthTokenGen authTokenGen, IHubContext<MainHub> hub, ILogger<AuthController> logger)
     {
         _db = db;
         _hashGen = hashGen;

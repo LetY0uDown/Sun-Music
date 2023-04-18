@@ -53,7 +53,6 @@ public sealed class UsersListViewModel : ViewModel
 
     public override async Task Display()
     {
-        _hub = await _hubFactory.CreateHub();
         await ConfigureHub();
 
         _usersOriginal = await _apiClient.GetAsync<ObservableCollection<PublicUser>>("Users");
@@ -66,6 +65,7 @@ public sealed class UsersListViewModel : ViewModel
 
     private async Task ConfigureHub()
     {
+        _hub = await _hubFactory.CreateHub();
         await _hub.JoinGroup("Users");
 
         _hub.On<PublicUser>("RecieveUser", user => {

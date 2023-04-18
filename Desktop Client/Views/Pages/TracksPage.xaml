@@ -38,11 +38,11 @@
                            FontSize="{Binding ElementName=searchTB, Path=FontSize}"/>
         </Grid>
 
-        <CheckBox Grid.Column="1" Content="Только понравившиеся"
+        <CheckBox Grid.Column="1" Content="Только любимые"
                   IsChecked="{Binding OnlyFavorite}"
+                  Style="{StaticResource RegularCheckBox}"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                  VerticalContentAlignment="Center"
-                  FontSize="16"/>
+                  VerticalContentAlignment="Center"/>
 
         <ListBox Background="Transparent" Grid.Row="1"
                  HorizontalContentAlignment="Stretch"

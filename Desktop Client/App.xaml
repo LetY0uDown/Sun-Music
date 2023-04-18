@@ -23,7 +23,9 @@
                 <ResourceDictionary Source="Resources/Styles/RegularButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/UserDataTextBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RedirectButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/RegularCheckBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/MusicPlayerButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ComboBoxStyle.xaml" />
                 
                 <!-- Templates -->
                 <ResourceDictionary Source="Resources/Templates/PublicUserTemplate.xaml" />

@@ -34,11 +34,12 @@
 
         <ListBox Background="Transparent" Grid.Row="1"
                  ItemTemplate="{StaticResource ResourceKey=PublicUserTemplate}"
-                 ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}">
+                 ItemsSource="{Binding Users}"
+                 SelectedItem="{Binding SelectedUser}">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Открыть профиль" Command="{Binding OpenUserProfile}"/>
-                    <MenuItem Header="Написать сообщение" />
+                    <MenuItem Header="Открыть профиль"
+                              Command="{Binding OpenUserProfile}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
