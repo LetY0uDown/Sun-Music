@@ -20,11 +20,12 @@ public partial class UserProfilePage : Page, INavigationPage
 
     public async Task Display ()
     {
-        InitializeComponent();
+        _viewModel.UserID = UserID;
 
         await _viewModel.Display();
-        _viewModel.UserID = UserID;
         DataContext = _viewModel;
+
+        InitializeComponent();
     }
 
     public async Task Leave()

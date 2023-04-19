@@ -16,7 +16,7 @@ namespace Desktop_Client.Core.ViewModels.Users;
 [Lifetime(Lifetime.Transient)]
 public sealed class UsersListViewModel : ViewModel
 {
-    private string _searchText;
+    private string _searchText = string.Empty;
 
     private IEnumerable<PublicUser> _usersOriginal;
 

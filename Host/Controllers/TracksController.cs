@@ -1,5 +1,7 @@
 ﻿using Host.Interfaces;
 using Host.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,6 @@ public class TracksController : ControllerBase
     private readonly IIDGenerator _idGen;
     private readonly IConfiguration _config;
     private readonly IHubContext<MainHub> _hub;
-
     public TracksController(DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
     {
         _database = database;
@@ -56,7 +57,7 @@ public class TracksController : ControllerBase
         return Ok(tracks);
     }
 
-    [HttpPost("Upload")]
+    [HttpPost("Upload"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<string>> PostTrack([FromBody] MusicTrack track)
     {
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
@@ -71,7 +72,6 @@ public class TracksController : ControllerBase
 
         try {
             await _database.MusicTracks.AddAsync(track);
-            await _database.SaveChangesAsync();
         }
         catch {
             // TODO: catch exception
@@ -80,7 +80,7 @@ public class TracksController : ControllerBase
         return track.ID;
     }
 
-    [HttpPost("Upload/File/{id}")]
+    [HttpPost("Upload/File/{id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<bool>> PostMusicFile([FromRoute] string id, [FromForm] IFormFile file)
     {
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);

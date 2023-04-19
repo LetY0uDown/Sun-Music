@@ -1,4 +1,5 @@
-﻿using Desktop_Client.Core.Abstracts;
+﻿using ATL;
+using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
@@ -33,9 +34,11 @@ public sealed class RegistrationViewModel : ViewModel
 
     public UICommand SelectPictureCommand { get; private set; }
 
-    public string Username { get; set; }
+    public bool DoRememberData { get; set; } = Properties.Settings.Default.DoRememberData;
 
-    public string Password { get; set; }
+    public string Username { get; set; } = Properties.Settings.Default.SavedUsername;
+
+    public string Password { get; set; } = Properties.Settings.Default.SavedPassword;
 
     public BitmapImage ProfilePicture { get; set; }
 
@@ -58,9 +61,12 @@ public sealed class RegistrationViewModel : ViewModel
             if (authData is not null) {
                 App.AuthorizeData = authData;
                 await _navigation.SetMainWindow<MainWindow>();
+
+                SaveData();
             }
         }, b => !string.IsNullOrWhiteSpace(Username) &&
-                !string.IsNullOrWhiteSpace(Password));
+                !string.IsNullOrWhiteSpace(Password) &&
+                ProfilePicture is not null);
 
         SelectPictureCommand = new(o => {
             var fileDialog = new OpenFileDialog {
@@ -73,5 +79,20 @@ public sealed class RegistrationViewModel : ViewModel
         });
 
         return base.Display();
+    }
+
+    private void SaveData ()
+    {
+        Properties.Settings.Default.DoRememberData = DoRememberData;
+
+        if (DoRememberData) {
+            Properties.Settings.Default.SavedPassword = Password;
+            Properties.Settings.Default.SavedUsername = Username;
+        } else {
+            Properties.Settings.Default.SavedPassword = string.Empty;
+            Properties.Settings.Default.SavedUsername = string.Empty;
+        }
+
+        Properties.Settings.Default.Save();
     }
 }

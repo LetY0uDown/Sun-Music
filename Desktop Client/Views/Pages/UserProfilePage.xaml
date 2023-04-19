@@ -21,20 +21,34 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Ellipse Panel.ZIndex="1" Width="120" Height="120">
+            <Ellipse Panel.ZIndex="1" Width="160" Height="160">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding User.ImageBytes, Converter={StaticResource BytesToImage}}"/>
+                    <ImageBrush ImageSource="{Binding User.ImageBytes,
+                                              Converter={StaticResource BytesToImage}}"/>
                 </Ellipse.Fill>
             </Ellipse>
 
             <icon:MaterialIcon Kind="UserCircleOutline"
-                               Width="120" Height="120"/>
+                               Width="160" Height="160"/>
 
             <TextBlock Text="{Binding User.Username}" Grid.Column="1"
-                       VerticalAlignment="Top" HorizontalAlignment="Left"
-                       Margin="10" FontSize="20" />
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="10" FontSize="32" />
 
         </Grid>
-                        
+
+        <ListBox Background="Transparent" Grid.Row="1"
+                 HorizontalContentAlignment="Stretch"
+                 ItemsSource="{Binding Tracks}" SelectedItem="{Binding SelectedTrack}"
+                 ItemTemplate="{StaticResource MusicTrackLikeable}"
+                 Grid.ColumnSpan="2" x:Name="TracksList">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Прослушать" Command="{Binding ListenTrackCommand}"/>
+                    <MenuItem Header="Скачать" Command="{Binding DownloadTrackCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
     </Grid>
 </Page>

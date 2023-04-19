@@ -29,8 +29,11 @@ public partial class LoginPage : Page, INavigationPage
         await _viewModel.Leave();
     }
 
-    private void passVisibileCB_Click (object sender, System.Windows.RoutedEventArgs e)
+    private void passTB_PasswordChanged (object sender, System.Windows.RoutedEventArgs e)
     {
-
+        passwordPlaceholder.Visibility = string.IsNullOrWhiteSpace(passTB.Password) 
+                                            ? System.Windows.Visibility.Visible
+                                            : System.Windows.Visibility.Hidden;
+        _viewModel.Password = passTB.Password;
     }
 }

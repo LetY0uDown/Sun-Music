@@ -10,10 +10,12 @@ namespace Host.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly DatabaseContext _db;
+    private readonly ILogger<UsersController> _logger;
 
-    public UsersController (DatabaseContext db)
+    public UsersController (DatabaseContext db, ILogger<UsersController> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     [HttpGet("{id}")]
@@ -27,8 +29,9 @@ public class UsersController : ControllerBase
 
             return user;
         }
-        catch {
-            return BadRequest();
+        catch (Exception e) {
+            _logger.LogWarning(e.Message);
+            return Problem(e.Message);
         }
     }
 
@@ -46,8 +49,24 @@ public class UsersController : ControllerBase
 
             return Ok(publicUsers);
         }
-        catch {
-            return BadRequest();
+        catch (Exception e) {
+            _logger.LogWarning(e.Message);
+            return Problem(e.Message);
+        }
+    }
+
+    [HttpPut("Edit/{id}")]
+    public async Task<ActionResult> EditUser ([FromRoute] string id, [FromBody] User user)
+    {
+        try {
+            _db.Entry(user).State = EntityState.Modified;
+
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        } catch (Exception e) { 
+            _logger.LogWarning(e.Message);
+            return Problem(e.Message);
         }
     }
 }

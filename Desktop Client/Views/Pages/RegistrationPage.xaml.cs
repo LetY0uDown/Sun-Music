@@ -30,13 +30,11 @@ public partial class RegistrationPage : Page, INavigationPage
         await _viewModel.Leave();
     }
 
-    private void passVisibileCB_Click (object sender, RoutedEventArgs e)
+    private void passTB_PasswordChanged (object sender, RoutedEventArgs e)
     {
-        var isVisible = (bool)(sender as CheckBox).IsChecked;
-
-        if (isVisible)
-            passVisibilityIcon.Kind = Material.Icons.MaterialIconKind.Visibility;
-        else
-            passVisibilityIcon.Kind = Material.Icons.MaterialIconKind.VisibilityOff;
+        passwordPlaceholder.Visibility = string.IsNullOrWhiteSpace(passTB.Password)
+                                            ? Visibility.Visible
+                                            : Visibility.Hidden;
+        _viewModel.Password = passTB.Password;
     }
 }

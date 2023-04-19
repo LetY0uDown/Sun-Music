@@ -72,6 +72,11 @@ public sealed class PlaylistCreatingViewModel : ViewModel
             IList items = (IList)o;
             var selectedTracks = items.Cast<MusicTrack>().ToList();
 
+            if (selectedTracks is null || selectedTracks.Count == 0) {
+                InfoBox.Show("Выберите треки для плейлиста!");
+                return;
+            }
+
             var user = await _client.GetAsync<User>($"u/{App.AuthorizeData.ID}");
             _playlist.User = user;
             _playlist.UserID = user.ID;

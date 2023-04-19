@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Models.Client;
 using Models.Database;
-using System;
 
 namespace Host.Controllers;
 
@@ -28,18 +27,19 @@ public class ChatsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Chat>>> GetAllChats()
+    public async Task<ActionResult<IEnumerable<Chat>>> GetAllChats ()
     {
         try {
             return await _context.Chats.Include(chat => chat.Creator)
                                        .ToListAsync();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             _logger.LogWarning(e, "Failed to get chats list");
             return Problem();
         }
     }
 
-    [HttpPost("Create")]
+    [HttpPost("Create"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<Chat>> CreateChat ([FromBody] Chat chat)
     {
         try {
@@ -59,7 +59,8 @@ public class ChatsController : ControllerBase
             await _hub.Clients.Group("Chats").SendAsync("RecieveChat", chat);
 
             return Ok(chat);
-        } catch (Exception ex)  {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to create chat");
             return Problem();
         }
@@ -76,7 +77,8 @@ public class ChatsController : ControllerBase
             List<Chat> result = _context.Chats.Where(chat => chatIDs.Contains(chat.ID)).ToList();
 
             return Ok(result);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get chats by user");
             return Problem();
         }
@@ -94,13 +96,14 @@ public class ChatsController : ControllerBase
             }
 
             return Ok(chat);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get chat by ID");
             return Problem();
         }
     }
 
-    [HttpPost("{chatID}/Leave")]
+    [HttpPost("{chatID}/Leave"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> LeaveChat ([FromBody] User user, [FromRoute] string chatID)
     {
         try {
@@ -134,13 +137,14 @@ public class ChatsController : ControllerBase
             await _context.SaveChangesAsync();
 
             return NoContent();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to leave chat");
             return Problem();
         }
     }
 
-    [HttpPost("{chatID}/Join")]
+    [HttpPost("{chatID}/Join"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> JoinChat ([FromBody] User user, [FromRoute] string chatID)
     {
         try {
@@ -181,7 +185,8 @@ public class ChatsController : ControllerBase
 
             return NoContent();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to join chat");
             return Problem();
         }
@@ -202,7 +207,7 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpPost("{chatID}/Send/{senderID}")]
+    [HttpPost("{chatID}/Send/{senderID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> SendMessageToChat ([FromBody] Message message, [FromRoute] string chatID, [FromRoute] string senderID)
     {
         try {
@@ -220,7 +225,8 @@ public class ChatsController : ControllerBase
                               .SendAsync("RecieveMessage", message);
 
             return NoContent();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to send message");
             return Problem();
         }

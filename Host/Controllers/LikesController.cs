@@ -3,6 +3,7 @@ using Host.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Models.Database;
 
@@ -13,23 +14,27 @@ public class LikesController : ControllerBase
 {
     private readonly DatabaseContext _database;
     private readonly IIDGenerator _idGen;
-    private readonly IConfiguration _config;
+    private readonly IHubContext<MainHub> _hub;
 
-    public LikesController (DatabaseContext database, IIDGenerator idGen, IConfiguration config)
+    public LikesController (DatabaseContext database, IIDGenerator idGen, IHubContext<MainHub> hub)
     {
         _database = database;
         _idGen = idGen;
-        _config = config;
+        _hub = hub;
     }
 
     [HttpPost("Dislike/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> DislikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
     {
         try {
-            var trackLike = await _database.TrackLikes.FirstOrDefaultAsync(like => like.UserID == userID && like.TrackID == trackID);
+            var trackLike = await _database.TrackLikes.Include(e => e.Track)
+                                                      .FirstOrDefaultAsync(like => like.UserID == userID &&
+                                                                                   like.TrackID == trackID);
             _database.TrackLikes.Remove(trackLike);
 
-            await _database.SaveChangesAsync(true);
+            await _database.SaveChangesAsync();
+
+            await _hub.Clients.Group($"Likes-{userID}").SendAsync("TrackDisliked", trackLike.Track);
 
             return NoContent();
         }
@@ -51,6 +56,8 @@ public class LikesController : ControllerBase
             _database.TrackLikes.Add(trackLike);
             await _database.SaveChangesAsync();
 
+            await _hub.Clients.Group($"Likes-{userID}").SendAsync("TrackLiked", await _database.MusicTracks.FindAsync(trackID));
+
             return NoContent();
         }
         catch (Exception e) {
@@ -62,15 +69,18 @@ public class LikesController : ControllerBase
     public async Task<ActionResult<IEnumerable<MusicTrack>>> GetFavoriteTracksByUser (string id)
     {
         try {
-            var ids = await _database.TrackLikes.Where(e => e.UserID == id)?.Select(e => e.TrackID).ToListAsync();
+            var ids = await _database.TrackLikes.Where(e => e.UserID == id)
+                                                .Select(e => e.TrackID)
+                                                .ToListAsync();
 
-            if (ids is null || !ids.Any()) {
+            if (ids is null) {
                 return NotFound();
             }
 
-            var tracks = await _database.MusicTracks.Where(track => ids.Contains(track.ID)).ToListAsync();
+            var tracks = await _database.MusicTracks.Where(track => ids.Contains(track.ID))
+                                                    .ToListAsync();
 
-            if (tracks is null || !tracks.Any()) {
+            if (tracks is null) {
                 return NotFound();
             }
 

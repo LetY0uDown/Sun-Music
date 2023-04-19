@@ -29,9 +29,14 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <icon:MaterialIcon Kind="ShieldSunOutline" Foreground="White" Margin="3" />
+
+                    <TextBlock Text="Sun Music" Foreground="White" FontWeight="DemiBold"
+                           VerticalAlignment="Center" FontSize="18" Margin="3"/>
+                </StackPanel>
                 
-                <TextBlock Text="Sun Music" Foreground="White" FontWeight="DemiBold"
-                           VerticalAlignment="Center" FontSize="18" Margin="5"/>
 
                 <Button Grid.Column="1" Style="{StaticResource TitleBarButton}"
                         Click="MinimizeButton_Click">
@@ -59,7 +64,7 @@
                     </Grid.RowDefinitions>
 
                     <Viewbox>
-                        <icon:MaterialIcon Kind="UserCircleOutline" Foreground="White"
+                        <icon:MaterialIcon Kind="ShieldSunOutline" Foreground="White"
                                            Margin="5"/>
                     </Viewbox>
 

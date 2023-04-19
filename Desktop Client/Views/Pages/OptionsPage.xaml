@@ -16,10 +16,56 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Инфа про юзера" 
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   FontSize="64" FontFamily="Comic Sans MS"/>
+        <Grid Background="#5555a9ff">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".5*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Ellipse Panel.ZIndex="1" Width="160" Height="160"
+                     Grid.RowSpan="2">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding CurrentUser.ImageBytes,
+                                              Converter={StaticResource BytesToImage}}"/>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <icon:MaterialIcon Kind="UserCircleOutline"
+                               Width="160" Height="160"
+                               Grid.RowSpan="2"/>
+
+            <!-- Search bar -->
+            <Grid Margin="10" HorizontalAlignment="Left" Width="350"
+                  Grid.Column="1" VerticalAlignment="Bottom">
+                <TextBox x:Name="usernameTB" Padding="15 5" MaxLength="16"
+                         Text="{Binding CurrentUser.Username, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
+
+                <TextBlock Text="Ваше имя.." VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Visibility="{Binding ElementName=usernameTB,
+                                                Path=Text,
+                                                Converter={StaticResource
+                                                           PlaceholderVisibilty}}"
+                           Margin="15 5" Foreground="{StaticResource PlaceholderTextForeground}"
+                           FontSize="{Binding ElementName=usernameTB, Path=FontSize}"/>
+            </Grid>
+
+            <Button Grid.Column="1" Grid.Row="1" Command="{Binding SelectImageCommand}"
+                    Content="Сменить картинку" Style="{StaticResource RegularButton}"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" Width="350"/>
+
+            <Button Grid.Column="2" Grid.Row="1" Command="{Binding SaveProfileCommand}"
+                    Style="{StaticResource RegularButton}" Content="Сохранить профиль"
+                    Margin="10" VerticalAlignment="Center" Width="350" Height="85"/>
+
+        </Grid>
 
         <Button Content="Загрузить трек" Grid.Row="1"
                 Style="{StaticResource RegularButton}"

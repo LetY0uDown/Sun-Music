@@ -2,7 +2,6 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.Configuration;
-using Models.Database;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;

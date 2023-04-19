@@ -27,9 +27,11 @@ public sealed class LoginViewModel : ViewModel
 
     public UICommand RedirectToRegistrationCommand { get; private set; }
 
-    public string Username { get; set; }
+    public bool DoRememberData { get; set; } = Properties.Settings.Default.DoRememberData;
 
-    public string Password { get; set; }
+    public string Username { get; set; } = Properties.Settings.Default.SavedUsername;
+
+    public string Password { get; set; } = Properties.Settings.Default.SavedPassword;
 
     public bool IsPasswordVisible { get; set; } = true;
 
@@ -48,13 +50,31 @@ public sealed class LoginViewModel : ViewModel
             if (authData is not null) {
                 App.AuthorizeData = authData;
                 await _navigation.SetMainWindow<MainWindow>();
+
+                SaveData();
             }
-        });
+        }, b => !string.IsNullOrWhiteSpace(Username) &&
+                !string.IsNullOrWhiteSpace(Password));
 
         RedirectToRegistrationCommand = new(async o => {
             await _navigation.SetCurrentPage<RegistrationPage>();
         });
 
         return base.Display();
+    }
+
+    private void SaveData ()
+    {
+        Properties.Settings.Default.DoRememberData = DoRememberData;
+
+        if (DoRememberData) {
+            Properties.Settings.Default.SavedPassword = Password;
+            Properties.Settings.Default.SavedUsername = Username;
+        } else {
+            Properties.Settings.Default.SavedPassword = string.Empty;
+            Properties.Settings.Default.SavedUsername = string.Empty;
+        }
+
+        Properties.Settings.Default.Save();
     }
 }
