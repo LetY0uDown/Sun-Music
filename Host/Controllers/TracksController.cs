@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using Models.Database;
 
 namespace Host.Controllers;
@@ -16,7 +15,7 @@ public class TracksController : ControllerBase
     private readonly IIDGenerator _idGen;
     private readonly IConfiguration _config;
     private readonly IHubContext<MainHub> _hub;
-    public TracksController(DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
+    public TracksController (DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
     {
         _database = database;
         _idGen = idGen;
@@ -25,7 +24,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet("File/{id}")]
-    public IActionResult DownloadFile([FromRoute] string id)
+    public IActionResult DownloadFile ([FromRoute] string id)
     {
         var track = _database.MusicTracks.Find(id);
 
@@ -43,7 +42,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<MusicTrack>> GetTracks()
+    public ActionResult<IEnumerable<MusicTrack>> GetTracks ()
     {
         IEnumerable<MusicTrack> tracks;
 
@@ -58,13 +57,12 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("Upload"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<string>> PostTrack([FromBody] MusicTrack track)
+    public async Task<ActionResult<string>> PostTrack ([FromBody] MusicTrack track)
     {
         var isTrackExist = _database.MusicTracks.Any(t => t.Title == track.Title
                                                           && t.ArtistName == track.ArtistName);
 
-        if (isTrackExist)
-        {
+        if (isTrackExist) {
             return BadRequest();
         }
 
@@ -72,6 +70,7 @@ public class TracksController : ControllerBase
 
         try {
             await _database.MusicTracks.AddAsync(track);
+            await _database.SaveChangesAsync();
         }
         catch {
             // TODO: catch exception
@@ -81,13 +80,12 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("Upload/File/{id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<bool>> PostMusicFile([FromRoute] string id, [FromForm] IFormFile file)
+    public async Task<ActionResult<bool>> PostMusicFile ([FromRoute] string id, [FromForm] IFormFile file)
     {
         var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
         var filePath = Path.Combine(path, file.FileName);
 
-        try
-        {
+        try {
             var track = _database.MusicTracks.Find(id);
 
             if (track is null)
@@ -106,8 +104,7 @@ public class TracksController : ControllerBase
             using FileStream fs = new(filePath, FileMode.Create);
             await file.CopyToAsync(fs);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Console.WriteLine(e.Message);
             return false;
         }

@@ -72,7 +72,7 @@
             <!-- Title -->
             <Grid Margin="10" Grid.Row="2">
                 <TextBox x:Name="trackTitleTB" Padding="15 5"
-                     MaxLength="16"
+                     MaxLength="32"
                      Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource UserDataTextBox}"/>
 
@@ -90,7 +90,7 @@
             <!-- Artist Name -->
             <Grid Margin="10" Grid.Row="3">
                 <TextBox x:Name="artistNameTB" Padding="15 5"
-                     MaxLength="16"
+                     MaxLength="32"
                      Text="{Binding Artist, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource UserDataTextBox}"/>
 
@@ -108,7 +108,7 @@
             <!-- Album Name -->
             <Grid Margin="10" Grid.Row="4">
                 <TextBox x:Name="albumNameTB" Padding="15 5"
-                     MaxLength="16"
+                     MaxLength="32"
                      Text="{Binding Album, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource UserDataTextBox}"/>
 

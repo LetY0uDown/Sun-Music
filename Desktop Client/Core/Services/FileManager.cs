@@ -3,6 +3,7 @@ using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ internal class FileManager : IFileManager
         Stream stream = null!;
 
         using (RestClient client = new(_hostURL)) {
+            client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
             RestRequest request = new(fullPath, Method.Get);
 
             try {
@@ -44,6 +46,7 @@ internal class FileManager : IFileManager
     public async Task UploadFileAsync(string filePath, string path)
     {
         using (RestClient client = new(_hostURL)) {
+            client.Authenticator = new JwtAuthenticator(App.AuthorizeData.Token);
             RestRequest request = new RestRequest(path, Method.Post).AddFile("file", filePath, "multipart/form-data");
 
             try {

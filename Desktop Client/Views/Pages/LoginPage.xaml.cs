@@ -20,6 +20,8 @@ public partial class LoginPage : Page, INavigationPage
     {
         InitializeComponent();
 
+        passTB.Password = Properties.Settings.Default.SavedPassword;
+
         await _viewModel.Display();
         DataContext = _viewModel;
     }

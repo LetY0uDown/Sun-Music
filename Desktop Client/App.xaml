@@ -21,6 +21,7 @@
                 <ResourceDictionary Source="Resources/Styles/TitleBarButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/OptionsButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RegularButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/UserDataTextBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RedirectButtonStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/RegularCheckBoxStyle.xaml" />

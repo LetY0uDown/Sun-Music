@@ -28,8 +28,8 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
 
     private bool _isPaused;
 
-    private bool _isPlaylistShuffled;
-    private bool _isRepeatingTrack;
+    private bool _isPlaylistShuffled = false;
+    private bool _isRepeatingTrack = false;
 
     private int _currentIndex;
     private int _indexIncrement = 0;
@@ -37,10 +37,10 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
     private readonly IFileManager _fileManager;
     private readonly IConfiguration _config;
 
+    private readonly MediaPlayer _player = new();
+
     private MusicTrack _trackModel;
     private Track _trackInfo;
-
-    private readonly MediaPlayer _player = new();
 
     private List<MusicTrack> _playlistOrigin;
 

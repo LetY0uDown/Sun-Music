@@ -101,13 +101,16 @@
                     </Grid.ColumnDefinitions>
 
                     <ToggleButton Background="Transparent" BorderThickness="0"
-                                  Command="{Binding ShufflePlaylistCommand}">
-                        <icon:MaterialIcon Kind="Shuffle" />
+                                  Command="{Binding ShufflePlaylistCommand}"
+                                  Style="{StaticResource MusicPlayerToggleButton}"
+                                  IsChecked="{Binding IsPlaylistShuffled}">
+                        <icon:MaterialIcon Kind="Shuffle"/>
                     </ToggleButton>
 
 
                     <ToggleButton Background="Transparent" BorderThickness="0"
                                   Grid.Column="1" Command="{Binding RepeatTrackCommand}"
+                                  Style="{StaticResource MusicPlayerToggleButton}"
                                   IsChecked="{Binding IsRepeating}">
                         <icon:MaterialIcon Kind="Repeat"/>
                     </ToggleButton>
