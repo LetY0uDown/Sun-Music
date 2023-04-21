@@ -2,6 +2,7 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Base;
+using Desktop_Client.Properties;
 using Desktop_Client.Views.Pages;
 using Desktop_Client.Views.Windows;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,30 @@ public sealed class OptionsViewModel : ViewModel
         _apiClient = client;
         _navigation = navigation;
         _config = config;
+    }
+
+    public string MusicSavePath
+    {
+        get => _config["DownloadedMusicPath"];
+        set => _config["DownloadedMusicPath"] = value;
+    }
+
+    public bool SaveAuthData
+    {
+        get => Settings.Default.DoRememberData;
+        set {
+            Settings.Default.DoRememberData = value;
+            Settings.Default.Save();
+        }
+    }
+    
+    public bool IsWindowDraggable
+    {
+        get => Settings.Default.IsWindowDraggable;
+        set {
+            Settings.Default.IsWindowDraggable = value;
+            Settings.Default.Save();
+        }
     }
 
     public UICommand SelectImageCommand { get; private set; }

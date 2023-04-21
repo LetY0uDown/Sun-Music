@@ -38,6 +38,7 @@ public partial class ChatCreatingWindow : Window, INavigationWindow
 
     private void TitleBar_LeftMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        DragMove();
+        if (Settings.Default.IsWindowDraggable)
+            DragMove();
     }
 }
