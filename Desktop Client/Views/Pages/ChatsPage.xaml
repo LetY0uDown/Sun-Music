@@ -67,7 +67,7 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Войти" Command="{Binding JoinChatCommand}" />
-                    <MenuItem Header="Покинуть чат" Command="{Binding LeaveChatCommand}" />
+                    <MenuItem Header="Выйти" Command="{Binding LeaveChatCommand}" />
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

@@ -54,7 +54,7 @@ public sealed class PlaylistCreatingViewModel : ViewModel
             Image = ImageConverter.ImageFromBytes(_playlist.ImageBytes);
         }
 
-        Tracks ??= await _client.GetAsync<List<MusicTrack>>($"Likes/User/{App.AuthorizeData.ID}");
+        Tracks ??= await _client.GetAsync<List<MusicTrack>>($"Tracks/User/{App.AuthorizeData.ID}");
 
         SelectImageCommand = new(o => {
             var fileDialog = new OpenFileDialog {
@@ -77,7 +77,7 @@ public sealed class PlaylistCreatingViewModel : ViewModel
                 return;
             }
 
-            var user = await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}");
+            var user = await _client.GetAsync<User>($"u/{App.AuthorizeData.ID}");
             _playlist.User = user;
             _playlist.UserID = user.ID;
 

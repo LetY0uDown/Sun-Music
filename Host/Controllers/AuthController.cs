@@ -74,11 +74,11 @@ public class AuthController : ControllerBase
         }
 
         if (userInDB is null) {
-            return NotFound("Неверное имя пользователя");
+            return NotFound("Wrong username");
         }
 
         if (userInDB.Password != user.Password) {
-            return Problem("Неверный пароль");
+            return Forbid("Bearer");
         }
 
         return new AuthorizeData (

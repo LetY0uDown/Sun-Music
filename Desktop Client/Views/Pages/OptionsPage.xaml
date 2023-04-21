@@ -16,7 +16,6 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <!-- Top panel -->
         <Grid Background="#5555a9ff">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width=".5*"/>
@@ -58,83 +57,27 @@
                            FontSize="{Binding ElementName=usernameTB, Path=FontSize}"/>
             </Grid>
 
-            <!-- Profile description -->
-            <Grid Margin="10" HorizontalAlignment="Left" Width="350"
-                  Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch">
-                <TextBox x:Name="descriptionTB" Padding="15 5" MaxLength="64"
-                         TextWrapping="Wrap"
-                         Text="{Binding CurrentUser.ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
-
-                <TextBlock Text="О вас.." VerticalAlignment="Top"
-                           IsHitTestVisible="False"
-                           Visibility="{Binding ElementName=descriptionTB,
-                                                Path=Text,
-                                                Converter={StaticResource
-                                                           PlaceholderVisibilty}}"
-                           Margin="15 5" Foreground="{StaticResource PlaceholderTextForeground}"
-                           FontSize="{Binding ElementName=descriptionTB, Path=FontSize}"/>
-            </Grid>
-
-            
-            
-            <Button Grid.Column="2" Grid.Row="0" Command="{Binding SelectImageCommand}"
+            <Button Grid.Column="1" Grid.Row="1" Command="{Binding SelectImageCommand}"
                     Content="Сменить картинку" Style="{StaticResource RegularButton}"
-                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" Width="350"/>
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" Width="350"/>
 
             <Button Grid.Column="2" Grid.Row="1" Command="{Binding SaveProfileCommand}"
                     Style="{StaticResource RegularButton}" Content="Сохранить профиль"
-                    Margin="10" VerticalAlignment="Top" Width="350" Height="85"/>
+                    Margin="10" VerticalAlignment="Center" Width="350" Height="85"/>
 
         </Grid>
 
-        <!-- Options panel -->
-        <Grid Grid.Row="1">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!-- Search bar -->
-            <Grid Margin="10" VerticalAlignment="Center">
-                <TextBox x:Name="savePathTB" Padding="15 5"
-                         Text="{Binding MusicSavePath, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
-
-                <TextBlock Text="Путь сохранения музыки.." VerticalAlignment="Center"
-                           IsHitTestVisible="False"
-                           Visibility="{Binding ElementName=savePathTB,
-                                                Path=Text,
-                                                Converter={StaticResource
-                                                           PlaceholderVisibilty}}"
-                           Margin="15 5" Foreground="{StaticResource PlaceholderTextForeground}"
-                           FontSize="{Binding ElementName=savePathTB, Path=FontSize}"/>
-            </Grid>
-            
-            <CheckBox Style="{StaticResource RegularCheckBox}" Content="Запомнить данные авторизации"
-                      Grid.Row="1" IsChecked="{Binding SaveAuthData}"/>
-
-            <CheckBox Style="{StaticResource RegularCheckBox}" Content="Перемещать окно с помощью ЛКМ"
-                      Grid.Row="2" IsChecked="{Binding IsWindowDraggable}"/>
-
-            <Button Content="Загрузить трек" Grid.Column="1"
-                    Style="{StaticResource RegularButton}"
-                    Command="{Binding UploadTrackCommand}"
-                    Margin="25" Width="150"/>
-
-            <Button Content="Создать плейлист"
-                    Grid.Column="1" Grid.Row="1"
-                    Style="{StaticResource RegularButton}"
-                    Command="{Binding CreatePlaylistCommand}"
-                    Margin="25" Width="150"/>
-        </Grid>
+        <Button Content="Загрузить трек" Grid.Row="1"
+                Style="{StaticResource RegularButton}"
+                Command="{Binding UploadTrackCommand}"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Margin="25" Width="150"/>
+        
+        <Button Content="Создать плейлист" Grid.Row="1"
+                Style="{StaticResource RegularButton}"
+                Command="{Binding CreatePlaylistCommand}"
+                VerticalAlignment="Center" HorizontalAlignment="Left"
+                Margin="25" Width="150"/>
 
     </Grid>
 </Page>
