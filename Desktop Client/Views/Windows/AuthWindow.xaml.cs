@@ -53,6 +53,7 @@ public partial class AuthWindow : Window, INavigationWindow
 
     private void Titlebar_LeftMouseButtonDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        DragMove();
+        if (Settings.Default.IsWindowDraggable)
+            DragMove();
     }
 }

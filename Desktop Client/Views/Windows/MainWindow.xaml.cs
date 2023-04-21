@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels;
+using Desktop_Client.Properties;
 using Material.Icons;
 using System;
 using System.Threading.Tasks;
@@ -85,7 +86,8 @@ public partial class MainWindow : Window, INavigationWindow
 
     private void TitleBar_LeftMouseDown (object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        DragMove();
+        if (Settings.Default.IsWindowDraggable)
+            DragMove();
     }
 
     private void MinimizeButton_Click (object sender, RoutedEventArgs e)

@@ -6,15 +6,16 @@
     <converter:BytesToImageConverter x:Key="BytesToImage" />
     
     <DataTemplate DataType="{x:Type model:Playlist}" x:Key="PlaylistTemplate">
-        <Grid>
+        <Grid HorizontalAlignment="Center" >
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Image MaxWidth="297" Source="{Binding ImageBytes, Converter={StaticResource BytesToImage}}"/>
+            <Image MaxWidth="297" Source="{Binding ImageBytes, Converter={StaticResource BytesToImage}}"
+                   MaxHeight="297" HorizontalAlignment="Center"/>
 
-            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="DemiBold"/>
                 <TextBlock Text="{Binding User.Username}" FontSize="14"/>
             </StackPanel>
