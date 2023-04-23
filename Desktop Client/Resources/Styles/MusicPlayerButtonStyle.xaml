@@ -39,25 +39,10 @@
                     <Condition Property="IsEnabled" Value="True" />
                 </MultiTrigger.Conditions>
 
-                <MultiTrigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation To="#555555"
-                                            Duration="0:0:0.2"
-                                            Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </MultiTrigger.EnterActions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </MultiTrigger.Setters>
 
-                <MultiTrigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation To="Black"
-                                            Duration="0:0:0.1"
-                                            Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </MultiTrigger.ExitActions>
             </MultiTrigger>
         </Style.Triggers>
     </Style>

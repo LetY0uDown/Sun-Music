@@ -61,7 +61,7 @@
             <!-- Profile description -->
             <Grid Margin="10" HorizontalAlignment="Left" Width="350"
                   Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch">
-                <TextBox x:Name="descriptionTB" Padding="15 5" MaxLength="64"
+                <TextBox x:Name="descriptionTB" Padding="15 5" MaxLength="128"
                          TextWrapping="Wrap"
                          Text="{Binding CurrentUser.ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource UserDataTextBox}" FontSize="26"/>

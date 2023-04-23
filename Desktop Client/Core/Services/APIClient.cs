@@ -124,10 +124,11 @@ internal sealed class APIClient : IAPIClient
                 var response = await client.PutAsync(request);
 
                 if (!response.IsSuccessStatusCode) {
-                    InfoBox.Show(response.Content, response.StatusCode.ToString());
-
                     return default;
                 }
+
+                if (string.IsNullOrWhiteSpace(response.Content))
+                    return default;
 
                 resp = JsonSerializer.Deserialize<TResponse>(response.Content, _jsonOptions);
             }

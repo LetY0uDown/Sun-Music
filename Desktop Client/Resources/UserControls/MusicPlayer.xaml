@@ -51,7 +51,7 @@
             <Button Grid.Column="2" BorderThickness="0"
                     Style="{StaticResource MusicPlayerButton}"
                     Command="{Binding PlayCommand}">
-                <icon:MaterialIcon Kind="Play" x:Name="PlayPauseIcon"/>
+                <icon:MaterialIcon Kind="Pause" x:Name="PlayPauseIcon"/>
             </Button>
 
             <Button Grid.Column="3" BorderThickness="0"

@@ -31,9 +31,22 @@
             <icon:MaterialIcon Kind="UserCircleOutline"
                                Width="160" Height="160"/>
 
-            <TextBlock Text="{Binding User.Username}" Grid.Column="1"
-                       VerticalAlignment="Center" HorizontalAlignment="Left"
-                       Margin="10" FontSize="32" />
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".5*"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                
+                <TextBlock Text="{Binding User.Username}"
+                           VerticalAlignment="Top" HorizontalAlignment="Left"
+                           Margin="10" FontSize="36" />
+
+                <TextBox IsReadOnly="True" Grid.Row="1" Margin="10"
+                         Style="{StaticResource UserDataTextBox}"
+                         Text="{Binding User.ProfileDescription}"
+                         Padding="10"
+                         TextWrapping="Wrap" VerticalContentAlignment="Top"/>
+            </Grid>            
 
         </Grid>
 

@@ -198,6 +198,9 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
 
         _currentIndex = 0;
 
+        Playlist.Remove(MusicTrack);
+        Playlist.Insert(0, MusicTrack);
+
         PlayTrack(_currentIndex);
     }
 
@@ -208,6 +211,9 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
         Playlist = Playlist.Shuffle();
 
         _currentIndex = 0;
+
+        Playlist.Remove(MusicTrack);
+        Playlist.Insert(0, MusicTrack);
 
         PlayTrack(_currentIndex);
     }
@@ -263,7 +269,7 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
 
         Directory.CreateDirectory(_config["DownloadedMusicPath"]);
 
-        var localPath = _config["DownloadedMusicPath"] + "\\" + track.FileName;
+        var localPath = Path.Combine(_config["DownloadedMusicPath"], MusicTrack.FileName);
 
         if (!File.Exists(localPath)) {
             var stream = await _fileManager.DownloadStream(MusicTrack.ID, "Tracks/File");
@@ -296,7 +302,7 @@ public partial class MusicPlayer : UserControl, IMusicPlayer, INotifyPropertyCha
 
     private void OpenTrack (string fileName)
     {
-        var localPath = _config["DownloadedMusicPath"] + "\\" + fileName;
+        var localPath = Path.Combine(_config["DownloadedMusicPath"], fileName);
         _player.Open(new(localPath, UriKind.Absolute));
 
         _trackInfo = new(localPath);

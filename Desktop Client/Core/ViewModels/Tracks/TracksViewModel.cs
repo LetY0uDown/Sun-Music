@@ -96,8 +96,7 @@ public class TracksViewModel : ViewModel
 
             var path = Path.Combine(_config["DownloadedMusicPath"], SelectedTrack.FileName);
 
-            using (FileStream fs = new(path, FileMode.OpenOrCreate))
-            {
+            using (FileStream fs = new(path, FileMode.OpenOrCreate)) {
                 await stream.CopyToAsync(fs);
             }
         }, b => SelectedTrack is not null);
