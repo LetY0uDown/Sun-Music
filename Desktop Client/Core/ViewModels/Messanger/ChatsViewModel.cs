@@ -6,13 +6,11 @@ using Desktop_Client.Core.ViewModels.Base;
 using Desktop_Client.Views.Pages;
 using Desktop_Client.Views.Windows;
 using Microsoft.AspNetCore.SignalR.Client;
-using Models.Client;
 using Models.Database;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Desktop_Client.Core.ViewModels.Messanger;
 
@@ -26,10 +24,10 @@ public sealed class ChatsViewModel : ViewModel
     private readonly IAPIClient _client;
     private readonly INavigationService _navigation;
     private HubConnection _hub;
-    
+
     private string _searchText = string.Empty;
 
-    public ChatsViewModel(IHubFactory hubFactory, IAPIClient client, INavigationService navigation)
+    public ChatsViewModel (IHubFactory hubFactory, IAPIClient client, INavigationService navigation)
     {
         _hubFactory = hubFactory;
         _client = client;
@@ -57,17 +55,19 @@ public sealed class ChatsViewModel : ViewModel
 
     public ObservableCollection<Chat> Chats { get; private set; }
 
-    public override async Task Display()
+    public override async Task Display ()
     {
         LeaveChatCommand = new(async o => {
             if (ChatPage is not null)
                 await ChatPage.Leave();
 
-            await _client.PostAsync<object, object>(await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}"), $"Chats/{SelectedChat.ID}/Leave");
+            var user = await _client.GetAsync<User>($"Users/{App.AuthorizeData.ID}");
+
+            await _client.PostAsync<object, object>(user, $"Chats/{SelectedChat.ID}/Leave");
 
             ChatPage = null;
             _myChats.Remove(SelectedChat);
-            Chats = new (_myChats);
+            Chats = new(_myChats);
         }, b => SelectedChat is not null &&
                 _myChats.Contains(SelectedChat));
 
@@ -82,7 +82,7 @@ public sealed class ChatsViewModel : ViewModel
 
             ChatPage = page;
             await page.Display();
-
+            
             _myChats.Add(SelectedChat);
         }, b => SelectedChat is not null);
 
@@ -99,22 +99,23 @@ public sealed class ChatsViewModel : ViewModel
         Chats = new ObservableCollection<Chat>(_myChats);
     }
 
-    public override async Task Leave()
+    public override async Task Leave ()
     {
         await _hub.LeaveGroup("Chats");
     }
 
-    private async Task ConfigureHub()
+    private async Task ConfigureHub ()
     {
         await _hub.JoinGroup("Chats");
 
-        _hub.On<Chat>("RecieveChat", chat => {
+        _hub.On<Chat>("RecieveChat", async chat => {
             _allChats.Add(chat);
+            _myChats = await _client.GetAsync<List<Chat>>($"Chats/User/{App.AuthorizeData.ID}");
             Search();
         });
     }
 
-    private void Search()
+    private void Search ()
     {
         if (string.IsNullOrWhiteSpace(SearchText)) {
             Chats = new(_myChats);

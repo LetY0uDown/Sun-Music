@@ -52,8 +52,7 @@ public class AuthController : ControllerBase
                 user.ID,
                 _authTokenGen.GetToken(user.ID, user.Password)
             );
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             _logger.Log(LogLevel.Warning, e, "Registration process went wrong");
             return Problem("Что-то пошло не так. Попробуйте ещё раз или обратитесь к администратору", e.Message);
         }
@@ -67,8 +66,7 @@ public class AuthController : ControllerBase
 
         try {
             userInDB = await _db.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
-        }
-        catch (Exception e)  {
+        }  catch (Exception e)  {
             _logger.Log(LogLevel.Warning, e, "Login process went wrong");
             return Problem("Что-то пошло не так. Попробуйте ещё раз или обратитесь к администратору", e.Message);
         }

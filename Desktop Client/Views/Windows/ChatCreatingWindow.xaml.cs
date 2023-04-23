@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Messanger;
+using Desktop_Client.Properties;
 using System.Threading.Tasks;
 using System.Windows;
 

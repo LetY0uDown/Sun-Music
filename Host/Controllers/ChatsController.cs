@@ -35,7 +35,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception e) {
             _logger.LogWarning(e, "Failed to get chats list");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -46,13 +46,20 @@ public class ChatsController : ControllerBase
             var isTitleExist = _context.Chats.Any(c => c.Title == chat.Title);
 
             if (isTitleExist) {
-                return BadRequest();
+                return BadRequest("Чат с данным названием уже существует. Попробуйте другое название");
             }
 
             chat.ID = _idGen.GenerateID();
 
             _context.Users.Attach(chat.Creator);
 
+            var chatMember = new ChatMember() {
+                ChatId = chat.ID,
+                UserId = chat.Creator.ID,
+                ID = _idGen.GenerateID()
+            };
+
+            await _context.ChatMembers.AddAsync(chatMember);
             await _context.Chats.AddAsync(chat);
             await _context.SaveChangesAsync();
 
@@ -62,7 +69,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to create chat");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -80,7 +87,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get chats by user");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -99,7 +106,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get chat by ID");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -110,7 +117,7 @@ public class ChatsController : ControllerBase
             var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
 
             if (cm is null) {
-                return NotFound();
+                return NotFound("Произошла ошибка. Уточните у администратора");
             }
 
             _context.ChatMembers.Remove(cm);
@@ -140,7 +147,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to leave chat");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -151,6 +158,7 @@ public class ChatsController : ControllerBase
             var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
 
             if (cm is not null) {
+                // It's ok, do not change it!!
                 return NoContent();
             }
 
@@ -188,7 +196,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to join chat");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -203,7 +211,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get messages from chat");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -228,7 +236,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to send message");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 
@@ -251,7 +259,7 @@ public class ChatsController : ControllerBase
         }
         catch (Exception ex) {
             _logger.LogWarning(ex, "Failed to get members by chat");
-            return Problem();
+            return Problem("Произошла ошибка. Уточните у администратора");
         }
     }
 }

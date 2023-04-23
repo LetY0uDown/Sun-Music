@@ -1,6 +1,7 @@
 ﻿using Desktop_Client.Core.Abstracts;
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Auth;
+using Desktop_Client.Properties;
 using Desktop_Client.Views.Pages;
 using System.Threading.Tasks;
 using System.Windows;
