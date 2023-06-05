@@ -16,14 +16,12 @@ public class ChatsController : ControllerBase
 {
     private readonly IHubContext<MainHub> _hub;
     private readonly DatabaseContext _context;
-    private readonly IIDGenerator _idGen;
     private readonly ILogger<ChatsController> _logger;
 
-    public ChatsController (IHubContext<MainHub> hub, DatabaseContext context, IIDGenerator idGen, ILogger<ChatsController> logger)
+    public ChatsController (IHubContext<MainHub> hub, DatabaseContext context, ILogger<ChatsController> logger)
     {
         _hub = hub;
         _context = context;
-        _idGen = idGen;
         _logger = logger;
     }
 
@@ -50,14 +48,14 @@ public class ChatsController : ControllerBase
                 return BadRequest("Чат с данным названием уже существует. Попробуйте другое название");
             }
 
-            chat.ID = _idGen.GenerateID();
+            chat.ID = Guid.NewGuid();
 
             _context.Users.Attach(chat.Creator);
 
             var chatMember = new ChatMember() {
                 ChatId = chat.ID,
                 UserId = chat.Creator.ID,
-                ID = _idGen.GenerateID()
+                ID = Guid.NewGuid()
             };
 
             await _context.ChatMembers.AddAsync(chatMember);
@@ -74,8 +72,8 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpGet("User/{id}")]
-    public async Task<ActionResult<IEnumerable<Chat>>> GetChatsByUser ([FromRoute] string id)
+    [HttpGet("User/{id:guid}")]
+    public async Task<ActionResult<IEnumerable<Chat>>> GetChatsByUser ([FromRoute] Guid id)
     {
         try {
             var chatIDs = await _context.ChatMembers.Where(e => e.UserId == id)
@@ -92,8 +90,8 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Chat>> GetChatByID ([FromRoute] string id)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Chat>> GetChatByID ([FromRoute] Guid id)
     {
         try {
             var chat = await _context.Chats.Include(chat => chat.Creator)
@@ -111,8 +109,8 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpPost("{chatID}/Leave"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> LeaveChat ([FromBody] User user, [FromRoute] string chatID)
+    [HttpPost("{chatID:guid}/Leave"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> LeaveChat ([FromBody] User user, [FromRoute] Guid chatID)
     {
         try {
             var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
@@ -132,7 +130,7 @@ public class ChatsController : ControllerBase
             var serverMsg = new Message {
                 Chat = chat,
                 ChatID = chatID,
-                ID = _idGen.GenerateID(),
+                ID = Guid.NewGuid(),
                 TimeSended = DateTime.Now,
                 SenderID = emptyUser.ID,
                 Sender = emptyUser,
@@ -152,19 +150,18 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpPost("{chatID}/Join"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> JoinChat ([FromBody] User user, [FromRoute] string chatID)
+    [HttpPost("{chatID:guid}/Join"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> JoinChat ([FromBody] User user, [FromRoute] Guid chatID)
     {
         try {
             var cm = await _context.ChatMembers.FirstOrDefaultAsync(e => e.UserId == user.ID && e.ChatId == chatID);
 
             if (cm is not null) {
-                // It's ok, do not change it!!
-                return NoContent();
+                return NotFound();
             }
 
             cm = new() {
-                ID = _idGen.GenerateID(),
+                ID = Guid.NewGuid(),
                 ChatId = chatID,
                 UserId = user.ID
             };
@@ -180,7 +177,7 @@ public class ChatsController : ControllerBase
             var serverMsg = new Message {
                 Chat = chat,
                 ChatID = chatID,
-                ID = _idGen.GenerateID(),
+                ID = Guid.NewGuid(),
                 TimeSended = DateTime.Now,
                 SenderID = emptyUser!.ID,
                 Sender = emptyUser,
@@ -201,8 +198,8 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpGet("{chatID}/Messages")]
-    public async Task<ActionResult<IEnumerable<Message>>> GetMessagesFromChat ([FromRoute] string chatID)
+    [HttpGet("{chatID:guid}/Messages")]
+    public async Task<ActionResult<IEnumerable<Message>>> GetMessagesFromChat ([FromRoute] Guid chatID)
     {
         try {
             return await _context.Messages.Include(msg => msg.Sender)
@@ -216,13 +213,13 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpPost("{chatID}/Send/{senderID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> SendMessageToChat ([FromBody] Message message, [FromRoute] string chatID, [FromRoute] string senderID)
+    [HttpPost("{chatID:guid}/Send/{senderID:guid}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> SendMessageToChat ([FromBody] Message message, [FromRoute] Guid chatID, [FromRoute] Guid senderID)
     {
         try {
             var chat = await _context.Chats.FindAsync(chatID);
 
-            message.ID = _idGen.GenerateID();
+            message.ID = Guid.NewGuid();
 
             message.Sender = await _context.Users.FindAsync(senderID);
             message.Chat = await _context.Chats.FindAsync(chatID);
@@ -241,8 +238,8 @@ public class ChatsController : ControllerBase
         }
     }
 
-    [HttpGet("{chatID}/Members")]
-    public async Task<ActionResult<IEnumerable<PublicUser>>> GetMembersByChat ([FromRoute] string chatID)
+    [HttpGet("{chatID:guid}/Members")]
+    public async Task<ActionResult<IEnumerable<PublicUser>>> GetMembersByChat ([FromRoute] Guid chatID)
     {
         try {
             var users = await _context.ChatMembers.Include(e => e.User)

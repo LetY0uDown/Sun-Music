@@ -3,17 +3,8 @@ using Models.Database;
 
 namespace Host.Services.Database;
 
-public sealed class DatabaseContext : DbContext
+public abstract class DatabaseContext : DbContext
 {
-    private readonly IConfiguration _configuration;
-
-    public DatabaseContext(IConfiguration configuration)
-    {
-        _configuration = configuration;
-
-        Database.EnsureCreated();
-    }
-
     public DbSet<Chat> Chats { get; set; }
     public DbSet<ChatMember> ChatMembers { get; set; }
     public DbSet<Message> Messages { get; set; }
@@ -23,14 +14,6 @@ public sealed class DatabaseContext : DbContext
     public DbSet<TrackLike> TrackLikes { get; set; }
     public DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
-            //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
-        }
-    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
@@ -64,7 +47,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_ChatMembers_Chats_ChatID");
 
             entity.HasOne(d => d.User)
-                .WithMany(p => p.Chatmembers)
+                .WithMany()
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_ChatMembers_Users_UserID")
                 .OnDelete(DeleteBehavior.NoAction);
@@ -92,7 +75,7 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_Messages_Chats_ChatID");
 
             entity.HasOne(d => d.Sender)
-                .WithMany(p => p.Messages)
+                .WithMany()
                 .HasForeignKey(d => d.SenderID)
                 .HasConstraintName("FK_Messages_Users_SenderID")
                 .OnDelete(DeleteBehavior.NoAction);
@@ -118,7 +101,7 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.UserID).HasColumnName("UserID");
 
             entity.HasOne(d => d.User)
-                .WithMany(p => p.Playlists)
+                .WithMany()
                 .HasForeignKey(d => d.UserID)
                 .HasConstraintName("FK_Playlists_Users_UserID");
         });
@@ -136,16 +119,6 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.PlaylistID).HasColumnName("PlaylistID");
 
             entity.Property(e => e.TrackID).HasColumnName("TrackID");
-
-            entity.HasOne(d => d.Playlist)
-                .WithMany(p => p.PlaylistTracks)
-                .HasForeignKey(d => d.PlaylistID)
-                .HasConstraintName("FK_PlaylistTracks_Playlists_PlaylistID");
-
-            entity.HasOne(d => d.Track)
-                .WithMany(p => p.PlaylistTracks)
-                .HasForeignKey(d => d.TrackID)
-                .HasConstraintName("FK_PlaylistTracks_MusicTracks_TrackID");
         });
 
         modelBuilder.Entity<TrackLike>(entity =>
@@ -166,11 +139,6 @@ public sealed class DatabaseContext : DbContext
                 .WithMany(p => p.TrackLikes)
                 .HasForeignKey(d => d.TrackID)
                 .HasConstraintName("FK_TrackLikes_MusicTracks_TrackID");
-
-            entity.HasOne(d => d.User)
-                .WithMany(p => p.TrackLikes)
-                .HasForeignKey(d => d.UserID)
-                .HasConstraintName("FK_TrackLikes_Users_UserID");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -181,7 +149,7 @@ public sealed class DatabaseContext : DbContext
 
             entity.HasData(new User
             {
-                ID = Guid.Empty.ToString(),
+                ID = Guid.Empty,
                 ImageBytes = Array.Empty<byte>(),
                 Username = string.Empty,
                 Password = string.Empty

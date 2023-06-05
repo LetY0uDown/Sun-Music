@@ -2,7 +2,7 @@
 
 namespace Models.Database;
 
-public partial class Chat : Entity
+public class Chat : Entity
 {
     public Chat ()
     {

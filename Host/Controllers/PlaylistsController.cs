@@ -15,25 +15,24 @@ public class PlaylistsController : ControllerBase
 {
     private readonly DatabaseContext _context;
     private readonly IHubContext<MainHub> _hub;
-    private readonly IIDGenerator _idGen;
 
-    public PlaylistsController (DatabaseContext context, IHubContext<MainHub> hub, IIDGenerator idGen)
+    public PlaylistsController (DatabaseContext context, IHubContext<MainHub> hub)
     {
         _context = context;
         _hub = hub;
-        _idGen = idGen;
     }
 
-    [HttpGet("Tracks/{id}")]
-    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetTracksByPlaylist ([FromRoute] string id)
+    [HttpGet("Tracks/{id:guid}")]
+    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetTracksByPlaylist ([FromRoute] Guid id)
     {
-        try {
-            var tracks = await _context.PlaylistTracks.Include(e => e.Track)
-                                                      .Where(e => e.PlaylistID == id)
-                                                      .Select(e => e.Track)
-                                                      .ToListAsync();
+        try { // fix asap
+            //var tracks = await _context.PlaylistTracks.Include(e => e.Track)
+            //                                          .Where(e => e.PlaylistID == id)
+            //                                          .Select(e => e.Track)
+            //                                          .ToListAsync();
 
-            return Ok(tracks);
+            //return Ok(tracks);
+            return null;
         }
         catch (Exception e) {
             return Problem();
@@ -66,7 +65,7 @@ public class PlaylistsController : ControllerBase
     public async Task<ActionResult<Playlist>> CreatePlaylist ([FromBody] Playlist playlist)
     {
         try {
-            playlist.ID = _idGen.GenerateID();
+            playlist.ID = Guid.NewGuid();
 
             var user = await _context.Users.FindAsync(playlist.UserID);
 
@@ -82,14 +81,11 @@ public class PlaylistsController : ControllerBase
             if (playlist.MusicTracks is not null) {
                 foreach (var track in playlist.MusicTracks) {
                     PlaylistTrack playlistTrack = new() {
-                        ID = _idGen.GenerateID(),
-                        Track = track,
+                        ID = Guid.NewGuid(),
                         TrackID = track.ID,
-                        Playlist = playlist,
                         PlaylistID = playlist.ID
                     };
 
-                    _context.MusicTracks.Attach(playlistTrack.Track);
                     _context.PlaylistTracks.Add(playlistTrack);
                 }
 

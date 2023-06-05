@@ -4,7 +4,7 @@ namespace Models.Client;
 
 public record class PublicUser
 {
-    public string ID { get; init; }
+    public Guid ID { get; init; }
 
     public string Username { get; init; }
 

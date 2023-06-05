@@ -39,7 +39,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<PublicUser>>> GetUserList ()
     {
         try {
-            var users = await _db.Users.Where(user => user.ID != Guid.Empty.ToString()).ToListAsync();
+            var users = await _db.Users.Where(user => user.ID != Guid.Empty).ToListAsync();
 
             List<PublicUser> publicUsers = new();
 

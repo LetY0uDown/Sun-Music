@@ -1,10 +1,10 @@
 ﻿namespace Models.Database;
 
-public partial class ChatMember : Entity
+public class ChatMember : Entity
 {
-    public string ChatId { get; set; } = null!;
-    public string UserId { get; set; } = null!;
+    public Guid ChatId { get; set; }
+    public Guid UserId { get; set; }
 
-    public virtual Chat Chat { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
+    public Chat Chat { get; set; } = null!;
+    public User User { get; set; } = null!;
 }

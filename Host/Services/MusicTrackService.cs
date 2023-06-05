@@ -1,9 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Host.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Models.Database;
 
 namespace Host.Services;
 
 public class MusicTrackService : IMusicTrackService
 {
+    public MusicTrackService(IAsyncRepository<MusicTrack> repository)
+    {
+        Repository = repository;
+    }
+
+    public IAsyncRepository<MusicTrack> Repository { get; private init; }
+
     public FileStreamResult GetStream(string path)
     {
         var stream = new FileStream(path, FileMode.Open);

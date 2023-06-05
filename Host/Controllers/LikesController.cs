@@ -14,18 +14,16 @@ namespace Host.Controllers;
 public class LikesController : ControllerBase
 {
     private readonly DatabaseContext _database;
-    private readonly IIDGenerator _idGen;
     private readonly IHubContext<MainHub> _hub;
 
-    public LikesController (DatabaseContext database, IIDGenerator idGen, IHubContext<MainHub> hub)
+    public LikesController (DatabaseContext database, IHubContext<MainHub> hub)
     {
         _database = database;
-        _idGen = idGen;
         _hub = hub;
     }
 
-    [HttpPost("Dislike/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> DislikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
+    [HttpPost("Dislike/{trackID:guid}/{userID:guid}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> DislikeTrack ([FromRoute] Guid trackID, [FromRoute] Guid userID)
     {
         try {
             var trackLike = await _database.TrackLikes.Include(e => e.Track)
@@ -44,12 +42,12 @@ public class LikesController : ControllerBase
         }
     }
 
-    [HttpPost("Like/{trackID}/{userID}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> LikeTrack ([FromRoute] string trackID, [FromRoute] string userID)
+    [HttpPost("Like/{trackID:guid}/{userID:guid}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> LikeTrack ([FromRoute] Guid trackID, [FromRoute] Guid userID)
     {
         try {
             TrackLike trackLike = new() {
-                ID = _idGen.GenerateID(),
+                ID = Guid.NewGuid(),
                 UserID = userID,
                 TrackID = trackID
             };
@@ -66,8 +64,8 @@ public class LikesController : ControllerBase
         }
     }
 
-    [HttpGet("User/{id}")]
-    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetFavoriteTracksByUser (string id)
+    [HttpGet("User/{id:guid}")]
+    public async Task<ActionResult<IEnumerable<MusicTrack>>> GetFavoriteTracksByUser (Guid id)
     {
         try {
             var ids = await _database.TrackLikes.Where(e => e.UserID == id)

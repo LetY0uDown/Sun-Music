@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Music\" />
-    <Folder Include="Tools\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -13,17 +13,15 @@ namespace Host.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IPasswordEncoder _passEncoder;
-    private readonly IIDGenerator _hashGen;
     private readonly IAuthTokenGen _authTokenGen;
     private readonly IHubContext<MainHub> _hub;
     private readonly ILogger<AuthController> _logger;
     private readonly DatabaseContext _db;
 
-    public AuthController(DatabaseContext db, IIDGenerator hashGen, IPasswordEncoder passEncoder,
+    public AuthController(DatabaseContext db, IPasswordEncoder passEncoder,
                           IAuthTokenGen authTokenGen, IHubContext<MainHub> hub, ILogger<AuthController> logger)
     {
         _db = db;
-        _hashGen = hashGen;
         _passEncoder = passEncoder;
         _authTokenGen = authTokenGen;
         _hub = hub;
@@ -42,7 +40,7 @@ public class AuthController : ControllerBase
 
             user.Password = _passEncoder.Encode(user.Password);
 
-            user.ID = _hashGen.GenerateID();
+            user.ID = Guid.NewGuid();
 
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
@@ -51,7 +49,7 @@ public class AuthController : ControllerBase
 
             return new AuthorizeData (
                 user.ID,
-                _authTokenGen.GetToken(user.ID, user.Password)
+                _authTokenGen.GetToken(user.Username, user.Password)
             );
         } catch (Exception e) {
             _logger.Log(LogLevel.Warning, e, "Registration process went wrong");
@@ -82,7 +80,7 @@ public class AuthController : ControllerBase
 
         return new AuthorizeData (
             userInDB.ID, 
-            _authTokenGen.GetToken(userInDB.ID, user.Password)
+            _authTokenGen.GetToken(userInDB.Username, user.Password)
         ); 
     }
 }
