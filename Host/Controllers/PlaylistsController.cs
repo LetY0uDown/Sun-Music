@@ -1,5 +1,6 @@
 ﻿using Host.Interfaces;
 using Host.Services;
+using Host.Services.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

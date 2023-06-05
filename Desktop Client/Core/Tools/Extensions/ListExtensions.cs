@@ -9,11 +9,9 @@ internal static class ListExtensions
     {
         List<T> copy = new(list);
 
-        Random random = new();
-
         for (int i = 0; i < list.Count; i++) {
-            int first = random.Next(list.Count);
-            int second = random.Next(list.Count);
+            int first = Random.Shared.Next(list.Count);
+            int second = Random.Shared.Next(list.Count);
 
             (copy[first], copy[second]) = (copy[second], copy[first]);
         }

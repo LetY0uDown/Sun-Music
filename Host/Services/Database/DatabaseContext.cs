@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.Database;
 
-namespace Host.Services;
+namespace Host.Services.Database;
 
 public sealed class DatabaseContext : DbContext
 {
     private readonly IConfiguration _configuration;
 
-    public DatabaseContext (IConfiguration configuration)
+    public DatabaseContext(IConfiguration configuration)
     {
         _configuration = configuration;
 
@@ -23,17 +23,18 @@ public sealed class DatabaseContext : DbContext
     public DbSet<TrackLike> TrackLikes { get; set; }
     public DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured) {
+        if (!optionsBuilder.IsConfigured)
+        {
             //optionsBuilder.UseMySql(_configuration["ConnectionStrings:Home:MySql"], ServerVersion.AutoDetect(_configuration["ConnectionStrings:Home:MySql"]));
             //optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:Colledge:SqlServer"]);
-            optionsBuilder.UseSqlite(_configuration["ConnectionStrings:SqlLite"]);
         }
     }
-    protected override void OnModelCreating (ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Chat>(entity => {
+        modelBuilder.Entity<Chat>(entity =>
+        {
             entity.ToTable("chats");
 
             entity.HasIndex(e => e.CreatorID, "IX_Chats_CreatorID");
@@ -43,7 +44,8 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.CreatorID).HasColumnName("CreatorID");
         });
 
-        modelBuilder.Entity<ChatMember>(entity => {
+        modelBuilder.Entity<ChatMember>(entity =>
+        {
             entity.ToTable("chatmembers");
 
             entity.HasIndex(e => e.ChatId, "IX_ChatMembers_ChatID");
@@ -68,7 +70,8 @@ public sealed class DatabaseContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
-        modelBuilder.Entity<Message>(entity => {
+        modelBuilder.Entity<Message>(entity =>
+        {
             entity.ToTable("messages");
 
             entity.HasIndex(e => e.ChatID, "IX_Messages_ChatID");
@@ -95,7 +98,8 @@ public sealed class DatabaseContext : DbContext
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
-        modelBuilder.Entity<MusicTrack>(entity => {
+        modelBuilder.Entity<MusicTrack>(entity =>
+        {
             entity.ToTable("musictracks");
 
             entity.Property(e => e.ID).HasColumnName("ID");
@@ -103,7 +107,8 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.ReleaseDate).HasMaxLength(6);
         });
 
-        modelBuilder.Entity<Playlist>(entity => {
+        modelBuilder.Entity<Playlist>(entity =>
+        {
             entity.ToTable("playlists");
 
             entity.HasIndex(e => e.UserID, "IX_Playlists_UserID");
@@ -118,7 +123,8 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_Playlists_Users_UserID");
         });
 
-        modelBuilder.Entity<PlaylistTrack>(entity => {
+        modelBuilder.Entity<PlaylistTrack>(entity =>
+        {
             entity.ToTable("playlisttracks");
 
             entity.HasIndex(e => e.PlaylistID, "IX_PlaylistTracks_PlaylistID");
@@ -142,7 +148,8 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_PlaylistTracks_MusicTracks_TrackID");
         });
 
-        modelBuilder.Entity<TrackLike>(entity => {
+        modelBuilder.Entity<TrackLike>(entity =>
+        {
             entity.ToTable("tracklikes");
 
             entity.HasIndex(e => e.TrackID, "IX_TrackLikes_TrackID");
@@ -166,12 +173,14 @@ public sealed class DatabaseContext : DbContext
                 .HasConstraintName("FK_TrackLikes_Users_UserID");
         });
 
-        modelBuilder.Entity<User>(entity => {
+        modelBuilder.Entity<User>(entity =>
+        {
             entity.ToTable("users");
 
             entity.Property(e => e.ID).HasColumnName("ID");
 
-            entity.HasData(new User {
+            entity.HasData(new User
+            {
                 ID = Guid.Empty.ToString(),
                 ImageBytes = Array.Empty<byte>(),
                 Username = string.Empty,

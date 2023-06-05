@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Desktop_Client.Core.Tools.Extensions;
 
@@ -22,10 +20,12 @@ internal static class ServiceCollectionExtensions
     {
         var interfaces = type.GetInterfaces();
 
-        foreach (var i in interfaces) {
+        foreach (var i in interfaces)
+        {
             var attributes = i.GetCustomAttributes();
 
-            if (attributes.Any(a => a is BaseTypeAttribute)) {
+            if (attributes.Any(a => a is BaseTypeAttribute))
+            {
                 return i;
             }
         }
@@ -47,17 +47,20 @@ internal static class ServiceCollectionExtensions
 
     private static void AddServiceTypesAsBaseTypes(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services) {
+        foreach (var service in services)
+        {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
             var baseType = GetBaseType(service);
 
-            if (lifetime == Lifetime.Singleton) {
+            if (lifetime == Lifetime.Singleton)
+            {
                 serviceCollection.AddSingleton(baseType, service);
                 continue;
             }
 
-            if (lifetime == Lifetime.Transient) {
+            if (lifetime == Lifetime.Transient)
+            {
                 serviceCollection.AddTransient(baseType, service);
             }
         }
@@ -65,15 +68,18 @@ internal static class ServiceCollectionExtensions
 
     private static void AddServiceTypesDirectly(IServiceCollection serviceCollection, IEnumerable<Type> services, bool inheritAttributes)
     {
-        foreach (var service in services) {
+        foreach (var service in services)
+        {
             var lifetime = DetermineLifetime(service, inheritAttributes);
 
-            if (lifetime == Lifetime.Singleton) {
+            if (lifetime == Lifetime.Singleton)
+            {
                 serviceCollection.AddSingleton(service, service);
                 continue;
             }
 
-            if (lifetime == Lifetime.Transient) {
+            if (lifetime == Lifetime.Transient)
+            {
                 serviceCollection.AddTransient(service, service);
             }
         }

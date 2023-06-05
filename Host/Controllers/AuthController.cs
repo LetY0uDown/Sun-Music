@@ -5,6 +5,7 @@ using Models.Database;
 using Models.Client;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Host.Services.Database;
 
 namespace Host.Controllers;
 

@@ -1,5 +1,6 @@
 ﻿using Host.Interfaces;
 using Host.Services;
+using Host.Services.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,19 @@ public class TracksController : ControllerBase
     private readonly IIDGenerator _idGen;
     private readonly IConfiguration _config;
     private readonly IHubContext<MainHub> _hub;
-    public TracksController (DatabaseContext database, IIDGenerator idGen, IConfiguration config, IHubContext<MainHub> hub)
+    private readonly IPathHelper _pathHelper;
+    private readonly IMusicTrackService _trackService;
+
+    public TracksController (DatabaseContext database, IIDGenerator idGen, IConfiguration config,
+        IHubContext<MainHub> hub, IPathHelper pathHelper,
+        IMusicTrackService trackService)
     {
         _database = database;
         _idGen = idGen;
         _config = config;
         _hub = hub;
+        _pathHelper = pathHelper;
+        _trackService = trackService;
     }
 
     [HttpGet("File/{id}")]
@@ -31,14 +39,12 @@ public class TracksController : ControllerBase
         if (track is null)
             return NotFound();
 
-        var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"], track.FileName);
+        var path = _pathHelper.GetTrackPath(track);
 
         if (!System.IO.File.Exists(path))
             return NotFound();
 
-        var stream = new FileStream(path, FileMode.Open);
-
-        return File(stream, "application/octet-stream");
+        return _trackService.GetStream(path);
     }
 
     [HttpGet]
@@ -80,10 +86,10 @@ public class TracksController : ControllerBase
     }
 
     [HttpPost("Upload/File/{id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<bool>> PostMusicFile ([FromRoute] string id, [FromForm] IFormFile file)
+    public async Task<ActionResult<bool>> PostMusicFile ([FromRoute] string id, [FromForm] IFormFile trackFile)
     {
-        var path = Path.Combine(Environment.CurrentDirectory, _config["Directories:Music"]);
-        var filePath = Path.Combine(path, file.FileName);
+        var path = _pathHelper.GetMusicFolder();
+        var filePath = Path.Combine(path, trackFile.FileName);
 
         try {
             var track = _database.MusicTracks.Find(id);
@@ -91,18 +97,16 @@ public class TracksController : ControllerBase
             if (track is null)
                 return NotFound();
 
-            if (!System.IO.File.Exists(filePath)) {
-                if (!Directory.Exists(path))
+            if (!System.IO.File.Exists(filePath) && !Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
             }
 
-            track.FileName = file.FileName;
+            track.FileName = trackFile.FileName;
             await _database.SaveChangesAsync();
 
             await _hub.Clients.Group("Tracks").SendAsync("RecieveTrack", track);
 
-            using FileStream fs = new(filePath, FileMode.Create);
-            await file.CopyToAsync(fs);
+            await _trackService.SaveFile(trackFile, filePath);
         }
         catch (Exception e) {
             Console.WriteLine(e.Message);

@@ -1,5 +1,6 @@
 using Host.Interfaces;
 using Host.Services;
+using Host.Services.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
@@ -18,6 +19,7 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<IIDGenerator, IDGenerator>();
 builder.Services.AddTransient<IPasswordEncoder, PasswordEncoder>();
 builder.Services.AddTransient<IAuthTokenGen, JWTTokenGenerator>();
+builder.Services.AddSingleton<IPathHelper, PathHelper>();
 
 builder.Services.Configure<FormOptions>(options => {
     options.ValueLengthLimit = int.MaxValue;
