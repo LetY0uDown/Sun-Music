@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Desktop Client\Desktop Client.csproj" />
+    <ProjectReference Include="..\Host\Host.csproj" />
   </ItemGroup>
 
 </Project>

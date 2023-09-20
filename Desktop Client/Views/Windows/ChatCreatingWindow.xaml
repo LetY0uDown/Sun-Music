@@ -35,7 +35,7 @@
                            Foreground="White" FontWeight="DemiBold"
                            VerticalAlignment="Center" FontSize="18" Margin="5"/>
 
-                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="2"
                         Click="CloseButton_Click">
                     <icon:MaterialIcon Kind="Close" />
                 </Button>
@@ -45,8 +45,7 @@
             <Grid Margin="10" Grid.Row="1">
                 <TextBox x:Name="trackTitleTB" Padding="15 5"
                          MaxLength="16"
-                         Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}"/>
+                         Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Название.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -79,12 +78,10 @@
 
                 <Button Content="Выбрать" Grid.Column="1"
                         HorizontalAlignment="Right" Margin="10"
-                        Style="{StaticResource RegularButton}"
                         Command="{Binding SelectImageCommand}"/>
             </Grid>
 
             <Button Grid.Row="6" Content="Создать"
-                    Style="{StaticResource RegularButton}"
                     Command="{Binding CreateChatCommand}"
                     Margin="15 5" HorizontalAlignment="Right"
                     Click="CloseButton_Click"/>

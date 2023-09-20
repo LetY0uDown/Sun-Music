@@ -9,7 +9,7 @@
         Title="Sun Music" Height="650" Width="400"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         WindowStyle="None" Background="{StaticResource MainBackground}"
-        d:DataContext="{d:DesignInstance Type={x:Type vm:AuthViewModel}}">
+        d:DataContext="{d:DesignInstance Type={x:Type vm:MainNavigationViewModel}}">
     <Border>
         <Grid>
             <Grid.RowDefinitions>
@@ -29,14 +29,14 @@
                            FontWeight="DemiBold" Foreground="{StaticResource TitlebarForeground}"
                            MouseLeftButtonDown="Titlebar_LeftMouseButtonDown"/>
 
-                <Button Grid.Column="1" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}"
                         Click="MinimizeButton_Click">
                     <icon:MaterialIcon Kind="Minimize" />
                 </Button>
 
-                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="2" Style="{DynamicResource MaterialDesignFlatLightButton}"
                         Click="CloseButton_Click">
-                    <icon:MaterialIcon Kind="Close" />
+                    <icon:MaterialIcon Kind="Close" FontSize="32"/>
                 </Button>
             </Grid>
 

@@ -37,7 +37,7 @@
                 <TextBox x:Name="titleTB" Padding="15 5"
                          MaxLength="16"
                          Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="36"/>
+                          FontSize="36"/>
 
                 <TextBlock Text="Название.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -52,13 +52,13 @@
             <Button Grid.Column="1" Grid.Row="1" x:Name="SelectImageButton"
                     Content="Выбрать изображение" Margin="15"
                     Command="{Binding SelectImageCommand}"
-                    Style="{StaticResource RegularButton}"/>
+                    />
             
             <Button Grid.Column="1" Grid.Row="2" x:Name="SavePlaylistButton"
                     Content="Сохранить" Margin="15"
                     CommandParameter="{Binding ElementName=TracksList, Path=SelectedItems}"
                     Command="{Binding CreatePlaylistCommand}"
-                    Style="{StaticResource RegularButton}"/>
+                    />
         </Grid>
 
         <ListView Grid.Row="1"

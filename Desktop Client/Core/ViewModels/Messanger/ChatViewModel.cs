@@ -48,7 +48,7 @@ public sealed class ChatViewModel : ViewModel
 
         SendMessageCommand = new(async o => {
             Message msg = new() {
-                ID = "id",
+                ID = System.Guid.Empty,
                 ChatID = Chat.ID,
                 Chat = Chat,
                 SenderID = App.AuthorizeData.ID,

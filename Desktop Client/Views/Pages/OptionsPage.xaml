@@ -46,7 +46,7 @@
                   Grid.Column="1" VerticalAlignment="Bottom">
                 <TextBox x:Name="usernameTB" Padding="15 5" MaxLength="16"
                          Text="{Binding CurrentUser.Username, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
+                          FontSize="26"/>
 
                 <TextBlock Text="Ваше имя.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -64,7 +64,7 @@
                 <TextBox x:Name="descriptionTB" Padding="15 5" MaxLength="128"
                          TextWrapping="Wrap"
                          Text="{Binding CurrentUser.ProfileDescription, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
+                          FontSize="26"/>
 
                 <TextBlock Text="О вас.." VerticalAlignment="Top"
                            IsHitTestVisible="False"
@@ -79,11 +79,11 @@
             
             
             <Button Grid.Column="2" Grid.Row="0" Command="{Binding SelectImageCommand}"
-                    Content="Сменить картинку" Style="{StaticResource RegularButton}"
+                    Content="Сменить картинку" 
                     HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" Width="350"/>
 
             <Button Grid.Column="2" Grid.Row="1" Command="{Binding SaveProfileCommand}"
-                    Style="{StaticResource RegularButton}" Content="Сохранить профиль"
+                     Content="Сохранить профиль"
                     Margin="10" VerticalAlignment="Top" Width="350" Height="85"/>
 
         </Grid>
@@ -106,7 +106,7 @@
             <Grid Margin="10" VerticalAlignment="Center">
                 <TextBox x:Name="savePathTB" Padding="15 5"
                          Text="{Binding MusicSavePath, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}" FontSize="26"/>
+                          FontSize="26"/>
 
                 <TextBlock Text="Путь сохранения музыки.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -118,20 +118,20 @@
                            FontSize="{Binding ElementName=savePathTB, Path=FontSize}"/>
             </Grid>
             
-            <CheckBox Style="{StaticResource RegularCheckBox}" Content="Запомнить данные авторизации"
+            <CheckBox  Content="Запомнить данные авторизации"
                       Grid.Row="1" IsChecked="{Binding SaveAuthData}"/>
 
-            <CheckBox Style="{StaticResource RegularCheckBox}" Content="Перемещать окно с помощью ЛКМ"
+            <CheckBox  Content="Перемещать окно с помощью ЛКМ"
                       Grid.Row="2" IsChecked="{Binding IsWindowDraggable}"/>
 
             <Button Content="Загрузить трек" Grid.Column="1"
-                    Style="{StaticResource RegularButton}"
+                    
                     Command="{Binding UploadTrackCommand}"
                     Margin="25" Width="150"/>
 
             <Button Content="Создать плейлист"
                     Grid.Column="1" Grid.Row="1"
-                    Style="{StaticResource RegularButton}"
+                    
                     Command="{Binding CreatePlaylistCommand}"
                     Margin="25" Width="150"/>
         </Grid>

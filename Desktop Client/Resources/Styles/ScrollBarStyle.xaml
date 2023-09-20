@@ -28,7 +28,7 @@
 
             <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1 0 1 0" 
+                    <Thumb  Margin="1 0 1 0" 
                            Background="SteelBlue"/>
                 </Track.Thumb>
             </Track>

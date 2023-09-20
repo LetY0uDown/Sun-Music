@@ -1,5 +1,7 @@
 using Desktop_Client.Core.Tools;
 using Desktop_Client.Core.Tools.Converters;
+using Host.Interfaces;
+using Host.Services;
 
 namespace TestProject;
 
@@ -45,5 +47,16 @@ public class Tests
     public void PropertiesSetter_ThrowsIsDidNotFoundPropertyWithPublicSet()
     {
         Assert.Throws<InvalidOperationException>(() => PropertiesSetter.SetParameters(_parametrizedClass, ("PrivateNumber", "test")));
+    }
+
+    [Test]
+    public void PropertiesSetter_SetsParameterOnce_IfTwoSameParameters ()
+    {
+        const string TEST_1 = "test 1";
+        const string TEST_2 = "test 2";
+
+        PropertiesSetter.SetParameters(_parametrizedClass, ("String", TEST_1), ("String", TEST_2));
+
+        Assert.That(_parametrizedClass.String, Is.EqualTo(TEST_1));
     }
 }

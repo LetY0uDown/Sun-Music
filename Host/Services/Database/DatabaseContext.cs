@@ -136,7 +136,7 @@ public abstract class DatabaseContext : DbContext
             entity.Property(e => e.UserID).HasColumnName("UserID");
 
             entity.HasOne(d => d.Track)
-                .WithMany(p => p.TrackLikes)
+                .WithMany()
                 .HasForeignKey(d => d.TrackID)
                 .HasConstraintName("FK_TrackLikes_MusicTracks_TrackID");
         });
@@ -147,13 +147,7 @@ public abstract class DatabaseContext : DbContext
 
             entity.Property(e => e.ID).HasColumnName("ID");
 
-            entity.HasData(new User
-            {
-                ID = Guid.Empty,
-                ImageBytes = Array.Empty<byte>(),
-                Username = string.Empty,
-                Password = string.Empty
-            });
+            
         });
     }
 }

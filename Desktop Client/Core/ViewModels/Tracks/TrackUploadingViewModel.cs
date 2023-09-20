@@ -63,7 +63,7 @@ public class TrackUploadingViewModel : ViewModel
                     Title = Title,
                     ArtistName = Artist,
                     AlbumName = Album,
-                    ID = Guid.Empty.ToString(),
+                    ID = Guid.Empty,
                     FileName = fileDialog.FileName,
                     ReleaseDate = DateTime.Now
                 };

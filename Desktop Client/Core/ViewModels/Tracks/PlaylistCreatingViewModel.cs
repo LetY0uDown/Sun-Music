@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Database;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,7 @@ public sealed class PlaylistCreatingViewModel : ViewModel
             _playlist.ImageBytes = ImageConverter.BytesFromImage(Image);
             _playlist.MusicTracks = selectedTracks;
 
-            _playlist.ID = "id";
+            _playlist.ID = Guid.Empty;
 
             await _client.PostAsync<Playlist, Playlist>(_playlist, "Playlists/Create");
 

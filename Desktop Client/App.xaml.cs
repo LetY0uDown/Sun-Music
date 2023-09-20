@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Models.Client;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -14,7 +15,7 @@ namespace Desktop_Client;
 
 public sealed partial class App : Application
 {
-    internal static List<string> FaviriteTracksIDs { get; set; }
+    internal static List<Guid> FaviriteTracksIDs { get; set; }
 
     internal static AuthorizeData AuthorizeData { get; set; }
 

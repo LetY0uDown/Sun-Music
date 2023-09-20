@@ -38,12 +38,12 @@
                 </StackPanel>
                 
 
-                <Button Grid.Column="1" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="1"
                         Click="MinimizeButton_Click">
                     <icon:MaterialIcon Kind="Minimize" />
                 </Button>
 
-                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="2"
                         Click="CloseButton_Click">
                     <icon:MaterialIcon Kind="Close" />
                 </Button>
@@ -84,8 +84,7 @@
                                     x:Name="SelectionFlag" Canvas.Top="10"/>
                         </Canvas>
 
-                        <RadioButton Style="{StaticResource NavigationButton}"
-                                     Click="NavButton_Click" IsChecked="True"
+                        <RadioButton Click="NavButton_Click" IsChecked="True"
                                      Command="{Binding NavigateToTracksCommand}"
                                      Foreground="#ede7f3" GroupName="NavButtons">
                             <StackPanel>
@@ -95,7 +94,7 @@
                             </StackPanel>
                         </RadioButton>
 
-                        <RadioButton Grid.Row="1" Style="{StaticResource NavigationButton}"
+                        <RadioButton Grid.Row="1"
                                      Click="NavButton_Click" Foreground="#46a9ff"
                                      Command="{Binding NavigateToPlaylistsCommand}"
                                      GroupName="NavButtons">
@@ -109,8 +108,7 @@
                         <RadioButton Grid.Row="2"
                                      Click="NavButton_Click" Foreground="#54fdf6"
                                      GroupName="NavButtons" 
-                                     Command="{Binding NavigateToUsersCommand}"
-                                     Style="{StaticResource NavigationButton}">
+                                     Command="{Binding NavigateToUsersCommand}">
                             <StackPanel>
                                 <icon:MaterialIcon Kind="AccountGroup"/>
                                 <TextBlock HorizontalAlignment="Center"
@@ -118,7 +116,7 @@
                             </StackPanel>
                         </RadioButton>
 
-                        <RadioButton Grid.Row="3" Style="{StaticResource NavigationButton}"
+                        <RadioButton Grid.Row="3"
                                      Click="NavButton_Click" Foreground="#16e4ff"
                                      GroupName="NavButtons" Command="{Binding NavigateToChatsCommand}">
                             <StackPanel>
@@ -131,7 +129,6 @@
 
                     <RadioButton Grid.Row="2" VerticalAlignment="Top"
                                  Margin="25" GroupName="NavButtons"
-                                 Style="{StaticResource OptionsButton}"
                                  Checked="OptionsButton_Checked"
                                  Unchecked="OptionsButton_Unchecked"
                                  Command="{Binding NavigateToSettingsCommand}">

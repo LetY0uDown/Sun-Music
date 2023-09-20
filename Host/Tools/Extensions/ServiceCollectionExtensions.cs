@@ -25,7 +25,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IAuthTokenGen, JWTTokenGenerator>();
         services.AddSingleton<IPathHelper, PathHelper>();
 
-        services.AddSingleton<IMusicTrackService, MusicTrackService>();
+        services.AddTransient<IMusicTrackService, MusicTrackService>();
     }
 
     internal static void AddRepositories(this IServiceCollection services)

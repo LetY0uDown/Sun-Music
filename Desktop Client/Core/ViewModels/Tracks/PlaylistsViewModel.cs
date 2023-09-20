@@ -88,7 +88,7 @@ public sealed class PlaylistsViewModel : ViewModel
 
         Users = await _client.GetAsync<List<PublicUser>>("Users");
         Users.Insert(0, new() {
-            ID = Guid.Empty.ToString(),
+            ID = Guid.Empty,
             Username = "- - -"
         });
 

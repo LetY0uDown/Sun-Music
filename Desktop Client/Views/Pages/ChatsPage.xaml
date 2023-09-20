@@ -27,7 +27,7 @@
             <TextBox x:Name="trackTitleTB" Padding="15 5"
                      MaxLength="16"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource UserDataTextBox}"/>
+                     />
 
             <TextBlock Text="Поиск.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -40,7 +40,7 @@
 
         </Grid>
 
-        <Button Content="Создать" Style="{StaticResource RegularButton}"
+        <Button Content="Создать" 
                 Margin="10" Command="{Binding CreateChatCommand}"/>
 
         <ListBox Grid.Row="2" Background="Transparent"

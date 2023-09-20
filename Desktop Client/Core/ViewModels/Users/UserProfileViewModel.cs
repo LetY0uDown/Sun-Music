@@ -63,12 +63,12 @@ public sealed class UserProfileViewModel : ViewModel
         await ConfigureHub();
 
         LikeTrackCommand = new(async o => {
-            if (App.FaviriteTracksIDs.Contains(o.ToString())) {
+            if (App.FaviriteTracksIDs.Contains((Guid)o)) {
                 await _apiClient.PostAsync<object, object>(null, $"/Likes/Dislike/{o}/{App.AuthorizeData.ID}");
-                App.FaviriteTracksIDs.Remove(o.ToString());
+                App.FaviriteTracksIDs.Remove((Guid)o);
             } else {
                 await _apiClient.PostAsync<object, object>(null, $"/Likes/Like/{o}/{App.AuthorizeData.ID}");
-                App.FaviriteTracksIDs.Add(o.ToString());
+                App.FaviriteTracksIDs.Add((Guid)o);
             }
         });
 

@@ -91,7 +91,7 @@
                      MaxLength="16"
                      Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged,
                                     Mode=TwoWay}"
-                     Style="{StaticResource UserDataTextBox}"/>
+                     />
 
                 <TextBlock Text="Сообщение.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -106,7 +106,7 @@
 
             <Button Grid.Column="1" Grid.Row="3"
                     Content="Отправить" Command="{Binding SendMessageCommand}"
-                    FontSize="22" Margin="10" Style="{StaticResource RegularButton}"/>
+                    FontSize="22" Margin="10" />
         </Grid>        
     </Grid>
 </Page>

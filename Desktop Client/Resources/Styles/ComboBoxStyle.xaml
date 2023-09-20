@@ -73,7 +73,7 @@
 
                     <Grid>
                         <!-- Видимый элемент ComboBox`a -->
-                        <ToggleButton Name="ToggleButton" Style="{StaticResource ComboBoxToggleButton}"
+                        <ToggleButton Name="ToggleButton" 
                                       Grid.Column="2" Focusable="False"
                                       IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                                       ClickMode="Press"/>

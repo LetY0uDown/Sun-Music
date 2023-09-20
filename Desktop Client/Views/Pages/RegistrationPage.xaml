@@ -38,7 +38,7 @@
             <Button Content="Выбрать файл" HorizontalAlignment="Center"
                     Width="100" FontWeight="DemiBold"
                     Padding="10 5" Grid.Row="1"
-                    Style="{StaticResource RegularButton}"
+                    
                     Command="{Binding SelectPictureCommand}"/>
         </Grid>
 
@@ -54,7 +54,7 @@
                 <TextBox x:Name="usernameTB" Padding="15 5"
                          MaxLength="16"
                          Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}"/>
+                         />
 
                 <TextBlock Text="Имя Пользователя.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -70,7 +70,7 @@
             <Grid Margin="10" Grid.Row="1">
 
                 <PasswordBox x:Name="passTB" Padding="15 5" MaxLength="12"
-                         Style="{StaticResource PassBox}"
+                         
                              PasswordChanged="passTB_PasswordChanged"/>
 
                 <TextBlock Text="Пароль.." VerticalAlignment="Center"
@@ -80,20 +80,20 @@
             </Grid>
 
             <CheckBox Grid.Row="2" HorizontalAlignment="Right"
-                      VerticalAlignment="Center" Style="{StaticResource RegularCheckBox}"
+                      VerticalAlignment="Center" 
                       Content="Запомнить" FontSize="14" FontWeight="DemiBold"
                       IsChecked="{Binding DoRememberData}"/>
         </Grid>
 
         <StackPanel Grid.Row="2" VerticalAlignment="Center">
-            <Button Style="{StaticResource RegularButton}"
+            <Button 
                     Command="{Binding RegistrationCommand}"
                     Content="Зарегистрироваться" Width="200"/>
 
             <Button Margin="5" HorizontalAlignment="Center"
                     Content="У меня есть аккаунт"
                     Command="{Binding RedirectToLoginCommand}"
-                    Style="{StaticResource RedirectButton}"/>
+                    />
         </StackPanel>
         
     </Grid>

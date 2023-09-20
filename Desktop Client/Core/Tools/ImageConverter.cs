@@ -6,7 +6,7 @@ namespace Desktop_Client.Core.Tools;
 
 internal static class ImageConverter
 {
-    internal static BitmapImage CreateImageFromFile(string fileName)
+    internal static BitmapImage CreateImageFromFile (string fileName)
     {
         BitmapImage picture = new();
 
@@ -20,15 +20,14 @@ internal static class ImageConverter
         return picture;
     }
 
-    internal static BitmapImage ImageFromBytes(byte[] bytes)
+    internal static BitmapImage ImageFromBytes (byte[] bytes)
     {
         BitmapImage image = new();
 
         if (bytes is null || bytes.Length == 0)
             return null;
 
-        using (MemoryStream ms = new(bytes))
-        {
+        using (MemoryStream ms = new(bytes)) {
             image.BeginInit();
             image.StreamSource = ms;
             image.CacheOption = BitmapCacheOption.OnLoad;
@@ -38,7 +37,7 @@ internal static class ImageConverter
         return image;
     }
 
-    internal static byte[] BytesFromImage(BitmapImage image)
+    internal static byte[] BytesFromImage (BitmapImage image)
     {
         if (image is null)
             return Array.Empty<byte>();
@@ -48,8 +47,7 @@ internal static class ImageConverter
 
         byte[] imageBytes;
 
-        using (MemoryStream stream = new())
-        {
+        using (MemoryStream stream = new()) {
             encoder.Save(stream);
             imageBytes = stream.ToArray();
         }

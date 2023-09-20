@@ -39,7 +39,7 @@ public sealed class LoginViewModel : ViewModel
     {
         LoginCommand = new(async o => {
             User user = new() {
-                ID = string.Empty,
+                ID = Guid.Empty,
                 Username = Username,
                 Password = Password,
                 ImageBytes = Array.Empty<byte>()

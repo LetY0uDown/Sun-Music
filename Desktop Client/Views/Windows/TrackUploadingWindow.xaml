@@ -36,7 +36,7 @@
                        Foreground="White" FontWeight="DemiBold"
                        VerticalAlignment="Center" FontSize="18" Margin="5"/>
 
-                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}"
+                <Button Grid.Column="2"
                     Click="CloseButton_Click">
                     <icon:MaterialIcon Kind="Close" />
                 </Button>
@@ -51,8 +51,7 @@
 
                 <TextBox x:Name="filePathTB" Padding="15 5"
                          MaxLength="16" IsReadOnly="True"
-                         Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}"/>
+                         Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Имя файла.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -64,7 +63,7 @@
                            FontSize="{Binding ElementName=filePathTB, Path=FontSize}"/>
 
                 <Button Grid.Column="1" Margin="10 0"
-                    Content="Выбрать" Style="{StaticResource RegularButton}"
+                    Content="Выбрать"
                     Command="{Binding SelectFileCommand}"/>
 
             </Grid>
@@ -73,8 +72,7 @@
             <Grid Margin="10" Grid.Row="2">
                 <TextBox x:Name="trackTitleTB" Padding="15 5"
                      MaxLength="32"
-                     Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource UserDataTextBox}"/>
+                     Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Название.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -91,8 +89,7 @@
             <Grid Margin="10" Grid.Row="3">
                 <TextBox x:Name="artistNameTB" Padding="15 5"
                      MaxLength="32"
-                     Text="{Binding Artist, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource UserDataTextBox}"/>
+                     Text="{Binding Artist, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Исполнитель.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -109,8 +106,7 @@
             <Grid Margin="10" Grid.Row="4">
                 <TextBox x:Name="albumNameTB" Padding="15 5"
                      MaxLength="32"
-                     Text="{Binding Album, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource UserDataTextBox}"/>
+                     Text="{Binding Album, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Альбом.." VerticalAlignment="Center"
                        IsHitTestVisible="False"
@@ -143,12 +139,10 @@
 
                 <Button Content="Выбрать" Grid.Column="1"
                         HorizontalAlignment="Right" Margin="10"
-                        Style="{StaticResource RegularButton}"
                         Command="{Binding SelectImageCommand}"/>
             </Grid>
 
             <Button Grid.Row="6" Content="Загрузить"
-                    Style="{StaticResource RegularButton}"
                     Command="{Binding UploadTrackCommand}"
                     Margin="15 5" HorizontalAlignment="Left"
                     Click="CloseButton_Click"/>

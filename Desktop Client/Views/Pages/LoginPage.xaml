@@ -36,7 +36,7 @@
                 <TextBox x:Name="usernameTB" Padding="15 5"
                          MaxLength="16"
                          Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource UserDataTextBox}"/>
+                         />
 
                 <TextBlock Text="Имя Пользователя.." VerticalAlignment="Center"
                            IsHitTestVisible="False"
@@ -52,7 +52,7 @@
             <Grid Margin="10" Grid.Row="1">
 
                 <PasswordBox x:Name="passTB" Padding="15 5" MaxLength="12"
-                             Style="{StaticResource PassBox}"
+                             
                              PasswordChanged="passTB_PasswordChanged"/>
 
                 <TextBlock Text="Пароль.." VerticalAlignment="Center"
@@ -61,21 +61,26 @@
                            FontSize="{Binding ElementName=passTB, Path=FontSize}"/>
             </Grid>
 
-            <CheckBox Grid.Row="2" HorizontalAlignment="Right"
-                      VerticalAlignment="Center" Style="{StaticResource RegularCheckBox}"
-                      Content="Запомнить" FontSize="14" FontWeight="DemiBold"
-                      IsChecked="{Binding DoRememberData}"/>
+            <CheckBox HorizontalAlignment="Right"
+                      IsChecked="{Binding DoRememberData}"
+                      Grid.Row="2" VerticalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      Foreground="{DynamicResource MaterialDesignDarkForeground}">
+                <TextBlock Text="Запомнить" VerticalAlignment="Center"
+                           Margin="0 -4 0 0" FontSize="14"
+                           Foreground="Black"/>
+            </CheckBox>
         </Grid>
 
         <StackPanel Grid.Row="2" VerticalAlignment="Center" >
-            <Button Style="{StaticResource RegularButton}"
-                    Command="{Binding LoginCommand}"
+            <Button Command="{Binding LoginCommand}"
                     Content="Войти" Width="200" Height="50"/>
 
             <Button Margin="5" HorizontalAlignment="Center"
+                    Style="{DynamicResource MaterialDesignFlatAccentButton}"
                     Content="У меня нет аккаунта"
                     Command="{Binding RedirectToRegistrationCommand}"
-                    Style="{StaticResource RedirectButton}"/>
+                    />
         </StackPanel>
         
     </Grid>

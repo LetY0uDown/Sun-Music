@@ -2,6 +2,7 @@
 using Desktop_Client.Core.Tools.Attributes;
 using Desktop_Client.Core.ViewModels.Messanger;
 using Models.Database;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -19,7 +20,7 @@ public partial class ChatPage : Page, INavigationPage
         _client = client;
     }
 
-    public string ChatID { get; set; }
+    public Guid ChatID { get; set; }
 
     public async Task Display()
     {

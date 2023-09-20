@@ -12,7 +12,7 @@ public class Chat : Entity
 
     public string Title { get; set; } = null!;
     public byte[] ImageBytes { get; set; } = null!;
-    public string CreatorID { get; set; } = null!;
+    public Guid CreatorID { get; set; }
 
     public User Creator { get; set; } = null!;
 

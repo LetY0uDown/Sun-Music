@@ -5,6 +5,7 @@ using Desktop_Client.Core.ViewModels.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Database;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -35,7 +36,7 @@ public sealed class ChatCreatingViewModel : ViewModel
     {
         CreateChatCommand = new(async o => {
             Chat chat = new() {
-                ID = "id",
+                ID = Guid.Empty,
                 Title = Title,
                 ImageBytes = ImageConverter.BytesFromImage(Image),
                 CreatorID = App.AuthorizeData.ID,

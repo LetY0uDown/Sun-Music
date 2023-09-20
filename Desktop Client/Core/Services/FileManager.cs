@@ -23,9 +23,9 @@ internal class FileManager : IFileManager
         _hostURL = _config["HostURL:HTTP"];
     }
 
-    public async Task<Stream> DownloadStream(string fileID, string path)
+    public async Task<Stream> DownloadStream(Guid fileID, string path)
     {
-        var fullPath = Path.Combine(path, fileID);
+        var fullPath = Path.Combine(path, fileID.ToString());
 
         Stream stream = null!;
 

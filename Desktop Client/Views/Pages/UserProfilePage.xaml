@@ -42,7 +42,7 @@
                            Margin="10" FontSize="36" />
 
                 <TextBox IsReadOnly="True" Grid.Row="1" Margin="10"
-                         Style="{StaticResource UserDataTextBox}"
+                         
                          Text="{Binding User.ProfileDescription}"
                          Padding="10"
                          TextWrapping="Wrap" VerticalContentAlignment="Top"/>

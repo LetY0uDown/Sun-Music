@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using Models.Client;
 using Models.Database;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -50,7 +51,7 @@ public sealed class RegistrationViewModel : ViewModel
 
         RegistrationCommand = new(async o => {
             User user = new() {
-                ID = string.Empty,
+                ID = Guid.Empty,
                 Username = Username,
                 Password = Password,
                 ImageBytes = ImageConverter.BytesFromImage(ProfilePicture)
